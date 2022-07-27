@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
-import { VStack, Heading, Text, Icon, useTheme } from 'native-base';
+import { VStack, Heading, Icon, useTheme } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import { Envelope, Key } from 'phosphor-react-native';
 
 import { SafeAreaView } from '../../styles/styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Logo from '../../assets/imgs/savegame.svg';
 
 const SignIn = () => {
   const { colors } = useTheme();
@@ -48,21 +49,10 @@ const SignIn = () => {
   return (
     <SafeAreaView>
       <VStack flex={1} alignItems="center" bg="gray.600" px={8} pt={24}>
-        <Heading color="secondary.700">GameSaved</Heading>
-        <Text
-          fontSize="4xl"
-          color="secondary.700"
-          fontFamily="body"
-          fontWeight={600}
-          fontStyle="italic">
-          "aghsyagsyagsa"
-        </Text>
+        <Logo width={200} height={200} />
         <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">
           GAMESAVED
         </Heading>
-        <Text fontFamily="body" fontWeight={600} fontStyle="italic">
-          Teste
-        </Text>
 
         <Input
           placeholder="E-mail"
