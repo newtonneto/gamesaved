@@ -1,0 +1,41 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Gamer.ttf",
+      "sha1": "913ecaf494eda45fdf0d5161e659a1a39410322a"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-Bold.ttf",
+      "sha1": "d313ab2c45756bf4e972647f5b2ad691ad250990"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-BoldItalic.ttf",
+      "sha1": "9cfd661f459c98f17d3c88191d9df87b960c2ae6"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-Italic.ttf",
+      "sha1": "2a5ad885c7e58322832e6e651156ffc131e27f2e"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-Light.ttf",
+      "sha1": "7d0421de4e1398fb9087378a9ccc9297bdbc84b9"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-LightItalic.ttf",
+      "sha1": "96a08acd0c07254c1ce8002db5ab7b67659e9f21"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-Medium.ttf",
+      "sha1": "01d4ccbdf1ba0a8e14497521686e1246f8dc57c4"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-MediumItalic.ttf",
+      "sha1": "20f9a9872535ea3f82c1641249944be9ed9968e7"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-Regular.ttf",
+      "sha1": "a18dcbf99c8d2325c2fbf22a64e8cc28a0cf4d3b"
+    }
+  ]
+}
