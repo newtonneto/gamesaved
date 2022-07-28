@@ -4,7 +4,6 @@ import { VStack, Heading, Icon, useTheme } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import { Envelope, Key } from 'phosphor-react-native';
 
-import { SafeAreaView } from '../../styles/styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Logo from '../../assets/imgs/savegame.svg';
@@ -26,6 +25,7 @@ const SignIn = () => {
       .signInWithEmailAndPassword(email, password)
       .then(response => {
         console.log(response);
+        setIsLoading(false);
       })
       .catch(error => {
         setIsLoading(false);
@@ -47,40 +47,38 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView>
-      <VStack flex={1} alignItems="center" bg="gray.600" px={8} pt={24}>
-        <Logo width={200} height={200} />
-        <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">
-          GAMESAVED
-        </Heading>
+    <VStack flex={1} alignItems="center" bg="gray.600" px={8} pt={24}>
+      <Logo width={200} height={200} />
+      <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">
+        GAMESAVED
+      </Heading>
 
-        <Input
-          placeholder="E-mail"
-          mb={4}
-          InputLeftElement={
-            <Icon as={<Envelope color={colors.gray[300]} />} ml={4} />
-          }
-          onChangeText={setEmail}
-          isDisabled={isLoading}
-        />
-        <Input
-          placeholder="Senha"
-          mb={8}
-          InputLeftElement={
-            <Icon as={<Key color={colors.gray[300]} />} ml={4} />
-          }
-          secureTextEntry
-          onChangeText={setPassword}
-          isDisabled={isLoading}
-        />
-        <Button
-          title="Entrar"
-          w="full"
-          onPress={handleSignIn}
-          isLoading={isLoading}
-        />
-      </VStack>
-    </SafeAreaView>
+      <Input
+        placeholder="E-mail"
+        mb={4}
+        InputLeftElement={
+          <Icon as={<Envelope color={colors.gray[300]} />} ml={4} />
+        }
+        onChangeText={setEmail}
+        isDisabled={isLoading}
+        autoCapitalize="none"
+      />
+      <Input
+        placeholder="Senha"
+        mb={8}
+        InputLeftElement={<Icon as={<Key color={colors.gray[300]} />} ml={4} />}
+        secureTextEntry
+        onChangeText={setPassword}
+        isDisabled={isLoading}
+        autoCapitalize="none"
+      />
+      <Button
+        title="Entrar"
+        w="full"
+        onPress={handleSignIn}
+        isLoading={isLoading}
+      />
+    </VStack>
   );
 };
 
