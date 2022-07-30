@@ -3,13 +3,16 @@ import { Alert } from 'react-native';
 import { VStack, Heading, Icon, useTheme } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import { Envelope, Key } from 'phosphor-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Logo from '../../assets/imgs/savegame.svg';
+import TextButton from '../../components/TextButton';
 
 const SignIn = () => {
   const { colors } = useTheme();
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -77,6 +80,12 @@ const SignIn = () => {
         w="full"
         onPress={handleSignIn}
         isLoading={isLoading}
+      />
+      <TextButton
+        title="Registrar-se"
+        w="full"
+        onPress={() => navigation.navigate('signup')}
+        disabled={isLoading}
       />
     </VStack>
   );
