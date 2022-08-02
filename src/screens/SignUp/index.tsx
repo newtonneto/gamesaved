@@ -96,31 +96,6 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isHidden, setIsHidden] = useState<boolean>(true);
 
-  // const handleSignUp = (
-  //   email: string,
-  //   password: string,
-  //   name: string,
-  //   phone: string,
-  // ) => {
-  //   setIsLoading(true);
-
-  //   auth()
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .then(response =>
-  //       firestore()
-  //         .collection('profiles')
-  //         .doc(response.user.uid)
-  //         .set({
-  //           name,
-  //           email,
-  //           phone,
-  //         })
-  //         .then(response1 => console.log(response1)),
-  //     );
-
-  //   setIsLoading(false);
-  // };
-
   const createUser = async (email: string, password: string) => {
     try {
       return await auth().createUserWithEmailAndPassword(email, password);
@@ -128,6 +103,7 @@ const SignUp = () => {
       throw new Error('createUser Error');
     }
   };
+
   const createProfile = async (
     uid: string,
     firstName: string,
@@ -372,7 +348,7 @@ const SignUp = () => {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Input
-                  placeholder="+55 (84) 9 9621-3383"
+                  placeholder="84996128883"
                   onChangeText={onChange}
                   value={value}
                   autoComplete="tel-country-code"
