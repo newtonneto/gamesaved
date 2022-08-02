@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { FormControl, Select as NativeBaseSelect } from 'native-base';
+import {
+  FormControl,
+  IconButton,
+  Select as NativeBaseSelect,
+  useTheme,
+} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { Eye, EyeClosed } from 'phosphor-react-native';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -44,7 +50,7 @@ const schema = yup
       .test(
         'len',
         'Data de Nascimento deve seguir o formato DD/MM/AAAA',
-        (value: string | undefined): boolean => value?.toString().length === 11,
+        (value: string | undefined): boolean => value?.toString().length === 10,
       ),
     gender: yup.string().required('Prenchimento obrigatorio'),
     email: yup
@@ -78,17 +84,24 @@ const schema = yup
         (value: string | undefined): boolean => value?.toString().length === 11,
       ),
   })
-  .required();
 
+  .required();
 const SignUp = () => {
+  const { colors } = useTheme();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isHidden, setIsHidden] = useState<boolean>(true);
 
-  // const handleSignUp = (): void => {
+  // const handleSignUp = (
+  //   email: string,
+  //   password: string,
+  //   name: string,
+  //   phone: string,
+  // ) => {
   //   setIsLoading(true);
 
   //   auth()
@@ -108,8 +121,51 @@ const SignUp = () => {
   //   setIsLoading(false);
   // };
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const createUser = async (email: string, password: string) => {
+    try {
+      return await auth().createUserWithEmailAndPassword(email, password);
+    } catch (err) {
+      throw new Error('createUser Error');
+    }
+  };
+  const createProfile = async (
+    uid: string,
+    firstName: string,
+    lastName: string,
+    birthDate: string,
+    gender: string,
+    email: string,
+    phone: string,
+  ) => {
+    try {
+      return await firestore()
+        .collection('profiles')
+        .doc(uid)
+        .set({ firstName, lastName, birthDate, gender, email, phone });
+    } catch (err) {
+      throw new Error('createProfile Error');
+    }
+  };
+
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
+
+    try {
+      const response = await createUser(data.email, data.password);
+      await createProfile(
+        response.user.uid,
+        data.firstName,
+        data.lastName,
+        data.birthDate,
+        data.gender,
+        data.email,
+        data.phone,
+      );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -225,7 +281,21 @@ const SignUp = () => {
                   placeholder="!1#Class"
                   onChangeText={onChange}
                   value={value}
-                  secureTextEntry
+                  secureTextEntry={isHidden}
+                  InputRightElement={
+                    <IconButton
+                      _icon={{
+                        as: () =>
+                          isHidden ? (
+                            <EyeClosed color={colors.secondary[700]} />
+                          ) : (
+                            <Eye color={colors.secondary[700]} />
+                          ),
+                      }}
+                      mr={4}
+                      onPress={() => setIsHidden(!isHidden)}
+                    />
+                  }
                 />
               )}
               name="password"
@@ -248,7 +318,21 @@ const SignUp = () => {
                   placeholder="!1#Class"
                   onChangeText={onChange}
                   value={value}
-                  secureTextEntry
+                  secureTextEntry={isHidden}
+                  InputRightElement={
+                    <IconButton
+                      _icon={{
+                        as: () =>
+                          isHidden ? (
+                            <EyeClosed color={colors.secondary[700]} />
+                          ) : (
+                            <Eye color={colors.secondary[700]} />
+                          ),
+                      }}
+                      mr={4}
+                      onPress={() => setIsHidden(!isHidden)}
+                    />
+                  }
                 />
               )}
               name="confirmPassword"
@@ -282,6 +366,7 @@ const SignUp = () => {
             title="Enviar"
             onPress={handleSubmit(onSubmit)}
             colorScheme="pink"
+            isLoading={isLoading}
           />
         </ScrollView>
       </VStack>
