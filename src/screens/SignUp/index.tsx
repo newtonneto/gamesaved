@@ -3,6 +3,8 @@ import { FormControl, Select as NativeBaseSelect } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -23,12 +25,67 @@ type FormData = {
   phone: string;
 };
 
+const schema = yup
+  .object()
+  .shape({
+    firstName: yup
+      .string()
+      .required('Prenchimento obrigatorio')
+      .matches(/^[aA-zZ\s]+$/, 'Apenas letras')
+      .min(2, 'Nome deve ter no mínimo 2 caracteres'),
+    lastName: yup
+      .string()
+      .required('Prenchimento obrigatorio')
+      .matches(/^[aA-zZ\s]+$/, 'Apenas letras')
+      .min(2, 'Nome deve ter no mínimo 2 caracteres'),
+    birthDate: yup
+      .string()
+      .required('Prenchimento obrigatorio')
+      .test(
+        'len',
+        'Data de Nascimento deve seguir o formato DD/MM/AAAA',
+        (value: string | undefined): boolean => value?.toString().length === 11,
+      ),
+    gender: yup.string().required('Prenchimento obrigatorio'),
+    email: yup
+      .string()
+      .required('Prenchimento obrigatorio')
+      .email('Email inválido'),
+    password: yup
+      .string()
+      .required('Prenchimento obrigatorio')
+      .min(8, 'Senha deve ter no mínimo 8 dígitos')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        'A senha deve contem ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial',
+      ),
+    confirmPassword: yup
+      .string()
+      .required('Prenchimento obrigatorio')
+      .min(8, 'Confirmação de senha deve ter no mínimo 8 dígitos')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        'A senha deve contem ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial',
+      )
+      .oneOf([yup.ref('password')], 'As senhas informadas são divergentes'),
+    phone: yup
+      .string()
+      .required('Prenchimento obrigatorio')
+      .matches(/^[0-9]+$/, 'Apenas números')
+      .test(
+        'len',
+        'Telefone deve conter 11 dígitos',
+        (value: string | undefined): boolean => value?.toString().length === 11,
+      ),
+  })
+  .required();
+
 const SignUp = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // const handleSignUp = (): void => {
@@ -72,7 +129,6 @@ const SignUp = () => {
                 />
               )}
               name="firstName"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -92,7 +148,6 @@ const SignUp = () => {
                 />
               )}
               name="lastName"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -112,7 +167,6 @@ const SignUp = () => {
                 />
               )}
               name="birthDate"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -136,7 +190,6 @@ const SignUp = () => {
                 </Select>
               )}
               name="gender"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue="other"
             />
             <FormControl.ErrorMessage>
@@ -156,7 +209,6 @@ const SignUp = () => {
                 />
               )}
               name="email"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -177,7 +229,6 @@ const SignUp = () => {
                 />
               )}
               name="password"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -201,7 +252,6 @@ const SignUp = () => {
                 />
               )}
               name="confirmPassword"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
@@ -221,7 +271,6 @@ const SignUp = () => {
                 />
               )}
               name="phone"
-              rules={{ required: 'Field is required', minLength: 3 }}
               defaultValue=""
             />
             <FormControl.ErrorMessage>
