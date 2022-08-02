@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { VStack as NativeBaseVStack, IStackProps } from 'native-base';
 
 type Props = IStackProps & {
-  children: ReactNode[];
+  children: ReactNode[] | ReactNode;
 };
 
 const VStack = ({ children, ...rest }: Props) => {

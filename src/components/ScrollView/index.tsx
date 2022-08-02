@@ -25,6 +25,7 @@ const ScrollView = ({ children, ...rest }: Props) => {
 const styles = StyleSheet.create({
   scrollViewContent: {
     paddingBottom: 16,
+    alignItems: 'center',
   },
 });
 
