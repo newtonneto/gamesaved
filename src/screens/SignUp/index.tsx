@@ -182,6 +182,9 @@ const SignUp = () => {
                   placeholder="Cloud"
                   onChangeText={onChange}
                   value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
                 />
               )}
               name="firstName"
@@ -201,6 +204,9 @@ const SignUp = () => {
                   placeholder="Strife"
                   onChangeText={onChange}
                   value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
                 />
               )}
               name="lastName"
@@ -220,6 +226,10 @@ const SignUp = () => {
                   placeholder="11/08/1986"
                   onChangeText={onChange}
                   value={value}
+                  autoComplete="birthdate-full"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  keyboardType="number-pad"
                 />
               )}
               name="birthDate"
@@ -262,6 +272,11 @@ const SignUp = () => {
                   placeholder="cloud.exsoldier@avalanche.com"
                   onChangeText={onChange}
                   value={value}
+                  autoComplete="email"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
                 />
               )}
               name="email"
@@ -282,6 +297,10 @@ const SignUp = () => {
                   onChangeText={onChange}
                   value={value}
                   secureTextEntry={isHidden}
+                  autoComplete="password"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  autoCapitalize="none"
                   InputRightElement={
                     <IconButton
                       _icon={{
@@ -319,6 +338,10 @@ const SignUp = () => {
                   onChangeText={onChange}
                   value={value}
                   secureTextEntry={isHidden}
+                  autoComplete="password"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  autoCapitalize="none"
                   InputRightElement={
                     <IconButton
                       _icon={{
@@ -352,6 +375,10 @@ const SignUp = () => {
                   placeholder="+55 (84) 9 9621-3383"
                   onChangeText={onChange}
                   value={value}
+                  autoComplete="tel-country-code"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  keyboardType="phone-pad"
                 />
               )}
               name="phone"
