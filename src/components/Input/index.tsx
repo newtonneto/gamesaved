@@ -7,7 +7,8 @@ const Input = ({ ...rest }: IInputProps) => {
       bg="gray.700"
       h={14}
       size="md"
-      borderWidth={0}
+      borderWidth={1}
+      borderColor="secondary.700"
       fontFamily="body"
       color="white"
       placeholderTextColor="gray.300"
