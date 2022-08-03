@@ -9,13 +9,13 @@ import * as yup from 'yup';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import Logo from '../../assets/imgs/savegame.svg';
 import TextButton from '../../components/TextButton';
 import firebaseExceptions from '../../maps/firebaseExceptions';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import VStack from '../../components/VStack';
 import ScrollView from '../../components/ScrollView';
 import AlertDialog from '../../components/AlertDialog';
+import Logo from '../../components/Logo';
 
 type FormData = {
   email: string;
@@ -80,7 +80,7 @@ const SignIn = () => {
           message={alertMessage.current}
         />
         <ScrollView pt={24}>
-          <Logo width={200} height={200} />
+          <Logo />
           <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">
             GAMESAVED
           </Heading>

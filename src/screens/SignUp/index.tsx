@@ -104,7 +104,14 @@ const SignUp = () => {
 
   const createUser = async (email: string, password: string) => {
     try {
-      return auth().createUserWithEmailAndPassword(email, password);
+      const response = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+
+      await auth().currentUser?.sendEmailVerification();
+
+      return response;
     } catch (err: any) {
       throw new Error(err.code);
     }
