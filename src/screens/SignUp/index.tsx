@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   FormControl,
   IconButton,
@@ -19,6 +19,8 @@ import ScrollView from '../../components/ScrollView';
 import Header from '../../components/Header';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import VStack from '../../components/VStack';
+import AlertDialog from '../../components/AlertDialog';
+import firebaseExceptions from '../../maps/firebaseExceptions';
 
 type FormData = {
   firstName: string;
@@ -95,12 +97,16 @@ const SignUp = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isHidden, setIsHidden] = useState<boolean>(true);
+  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
+  const cancelRef = useRef(null);
+  const alertMessage = useRef<string>('alertMessage');
+  const alertTitle = useRef<string>('alertTitle');
 
   const createUser = async (email: string, password: string) => {
     try {
-      return await auth().createUserWithEmailAndPassword(email, password);
-    } catch (err) {
-      throw new Error('createUser Error');
+      return auth().createUserWithEmailAndPassword(email, password);
+    } catch (err: any) {
+      throw new Error(err.code);
     }
   };
 
@@ -114,12 +120,12 @@ const SignUp = () => {
     phone: string,
   ) => {
     try {
-      return await firestore()
+      return firestore()
         .collection('profiles')
         .doc(uid)
         .set({ firstName, lastName, birthDate, gender, email, phone });
-    } catch (err) {
-      throw new Error('createProfile Error');
+    } catch (err: any) {
+      throw new Error(err.code);
     }
   };
 
@@ -137,16 +143,30 @@ const SignUp = () => {
         data.email,
         data.phone,
       );
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      alertTitle.current = ':(';
+      alertMessage.current =
+        firebaseExceptions[err.code] || 'Não foi possível acessar';
+      setIsAlertOpen(true);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleCloseAlertDialog = () => {
+    setIsAlertOpen(!isAlertOpen);
+  };
+
   return (
     <ScreenWrapper>
       <VStack>
+        <AlertDialog
+          isOpen={isAlertOpen}
+          onClose={handleCloseAlertDialog}
+          cancelRef={cancelRef}
+          title={alertTitle.current}
+          message={alertMessage.current}
+        />
         <Header title="Cadastro" />
         <ScrollView>
           <FormControl isRequired isInvalid={'firstName' in errors} mb={3}>
@@ -370,6 +390,7 @@ const SignUp = () => {
             onPress={handleSubmit(onSubmit)}
             colorScheme="pink"
             isLoading={isLoading}
+            w="full"
           />
         </ScrollView>
       </VStack>
