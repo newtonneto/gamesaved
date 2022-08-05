@@ -22,6 +22,7 @@ import Header from '../../components/Header';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import VStack from '../../components/VStack';
 import firebaseExceptions from '../../maps/firebaseExceptions';
+import { handleDateMask } from '../../utils/inputMasks';
 
 type FormData = {
   firstName: string;
@@ -231,12 +232,15 @@ const SignUp = () => {
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="11/08/1986"
-                  onChangeText={onChange}
+                  onChangeText={changedValue =>
+                    onChange(handleDateMask(changedValue))
+                  }
                   value={value}
                   autoComplete="birthdate-full"
                   autoCorrect={false}
                   selectionColor="secondary.700"
                   keyboardType="number-pad"
+                  maxLength={10}
                 />
               )}
               name="birthDate"
