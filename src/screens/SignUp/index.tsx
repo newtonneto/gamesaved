@@ -22,7 +22,7 @@ import Header from '../../components/Header';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import VStack from '../../components/VStack';
 import firebaseExceptions from '../../maps/firebaseExceptions';
-import { handleDateMask } from '../../utils/inputMasks';
+import { handleDateMask, handlePhoneMask } from '../../utils/inputMasks';
 
 type FormData = {
   firstName: string;
@@ -384,12 +384,15 @@ const SignUp = () => {
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="84996128883"
-                  onChangeText={onChange}
+                  onChangeText={changedValue =>
+                    onChange(handlePhoneMask(changedValue))
+                  }
                   value={value}
                   autoComplete="tel-country-code"
                   autoCorrect={false}
                   selectionColor="secondary.700"
                   keyboardType="phone-pad"
+                  maxLength={16}
                 />
               )}
               name="phone"
