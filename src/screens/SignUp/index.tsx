@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import {
   FormControl,
   IconButton,
@@ -11,6 +12,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Eye, EyeClosed } from 'phosphor-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -19,7 +21,6 @@ import ScrollView from '../../components/ScrollView';
 import Header from '../../components/Header';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import VStack from '../../components/VStack';
-import AlertDialog from '../../components/AlertDialog';
 import firebaseExceptions from '../../maps/firebaseExceptions';
 
 type FormData = {
@@ -89,6 +90,7 @@ const schema = yup
 
   .required();
 const SignUp = () => {
+  const navigation = useNavigation();
   const { colors } = useTheme();
   const {
     control,
@@ -97,10 +99,6 @@ const SignUp = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isHidden, setIsHidden] = useState<boolean>(true);
-  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
-  const cancelRef = useRef(null);
-  const alertMessage = useRef<string>('alertMessage');
-  const alertTitle = useRef<string>('alertTitle');
 
   const createUser = async (email: string, password: string) => {
     try {
@@ -150,30 +148,36 @@ const SignUp = () => {
         data.email,
         data.phone,
       );
+
+      Alert.alert(
+        ':D',
+        'Cadastro realizado com sucesso, em poucos segundos você recebera um email de confirmação no endereço de email cadastrado',
+        [
+          {
+            text: 'Voltar para tela de login',
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
     } catch (err: any) {
-      alertTitle.current = ':(';
-      alertMessage.current =
-        firebaseExceptions[err.code] || 'Não foi possível acessar';
-      setIsAlertOpen(true);
+      Alert.alert(
+        '>.<',
+        firebaseExceptions[err.code] || 'Não foi possível criar seu usuário',
+        [
+          {
+            text: 'Voltar para tela de login',
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCloseAlertDialog = () => {
-    setIsAlertOpen(!isAlertOpen);
-  };
-
   return (
     <ScreenWrapper>
       <VStack>
-        <AlertDialog
-          isOpen={isAlertOpen}
-          onClose={handleCloseAlertDialog}
-          cancelRef={cancelRef}
-          title={alertTitle.current}
-          message={alertMessage.current}
-        />
         <Header title="Cadastro" />
         <ScrollView>
           <FormControl isRequired isInvalid={'firstName' in errors} mb={3}>

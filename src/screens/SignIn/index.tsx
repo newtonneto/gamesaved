@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import { FormControl, Heading, Icon, IconButton, useTheme } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import { Envelope, Eye, EyeClosed, Key } from 'phosphor-react-native';
@@ -14,7 +15,6 @@ import firebaseExceptions from '../../maps/firebaseExceptions';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import VStack from '../../components/VStack';
 import ScrollView from '../../components/ScrollView';
-import AlertDialog from '../../components/AlertDialog';
 import Logo from '../../components/Logo';
 
 type FormData = {
@@ -39,11 +39,7 @@ const SignIn = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
   const [isHidden, setIsHidden] = useState<boolean>(true);
-  const cancelRef = useRef(null);
-  const alertMessage = useRef<string>('alertMessage');
-  const alertTitle = useRef<string>('alertTitle');
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
@@ -55,30 +51,34 @@ const SignIn = () => {
           console.log(response);
           setIsLoading(false);
         });
+
+      Alert.alert(
+        ':D',
+        'Cadastro realizado com sucesso, em poucos segundos você recebera um email de confirmação no endereço de email cadastrado',
+        [
+          {
+            text: 'Usuário logado',
+          },
+        ],
+      );
     } catch (err: any) {
-      alertTitle.current = ':(';
-      alertMessage.current =
-        firebaseExceptions[err.code] || 'Não foi possível acessar';
-      setIsAlertOpen(true);
+      Alert.alert(
+        '>.<',
+        firebaseExceptions[err.code] || 'Não foi possível acessar',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCloseAlertDialog = () => {
-    setIsAlertOpen(!isAlertOpen);
-  };
-
   return (
     <ScreenWrapper>
       <VStack>
-        <AlertDialog
-          isOpen={isAlertOpen}
-          onClose={handleCloseAlertDialog}
-          cancelRef={cancelRef}
-          title={alertTitle.current}
-          message={alertMessage.current}
-        />
         <ScrollView pt={24}>
           <Logo />
           <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">
