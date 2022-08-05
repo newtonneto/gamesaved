@@ -85,7 +85,7 @@ const schema = yup
       .test(
         'len',
         'Telefone deve conter 11 dígitos',
-        (value: string | undefined): boolean => value?.toString().length === 11,
+        (value: string | undefined): boolean => value?.toString().length === 16,
       ),
   })
 
