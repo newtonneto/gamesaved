@@ -1,6 +1,10 @@
 export const handleDateMask = (date: string): string => {
   let maskedDate = date;
 
+  if (!date) {
+    return date;
+  }
+
   if (date.length >= 3 && date[2] !== '/') {
     const splitedDate: string[] = [date.slice(0, 2), date.slice(2)];
     maskedDate = `${splitedDate[0]}/${splitedDate[1]}`;
@@ -16,6 +20,10 @@ export const handleDateMask = (date: string): string => {
 
 export const handlePhoneMask = (phone: string): string => {
   let maskedPhone = phone;
+
+  if (!phone) {
+    return phone;
+  }
 
   if (phone.length === 1 && phone[0] !== '(') {
     maskedPhone = `(${phone[0]}`;
