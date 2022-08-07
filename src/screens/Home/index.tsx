@@ -1,11 +1,11 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import axios from 'axios';
 
 import VStack from '../../components/VStack';
 import { Game } from '../../interfaces/game.dto';
 import rawg from '../../services/rawg.api';
 import GameCard from '../../components/GameCard';
+import ScrollView from '../../components/ScrollView';
 
 const Home = () => {
   const [game, setGame] = useState<Game>({} as Game);
@@ -29,10 +29,7 @@ const Home = () => {
 
   return (
     <VStack>
-      <View>
-        <Text>Home</Text>
-        {!isLoading && <GameCard game={game} />}
-      </View>
+      <ScrollView>{!isLoading && <GameCard game={game} />}</ScrollView>
     </VStack>
   );
 };
