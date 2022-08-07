@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { FormControl, Heading, Icon, IconButton, useTheme } from 'native-base';
 import auth from '@react-native-firebase/auth';
@@ -40,27 +40,19 @@ const SignIn = () => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isHidden, setIsHidden] = useState<boolean>(true);
+  const isMounted = useRef<boolean>(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
 
     try {
-      await auth()
-        .signInWithEmailAndPassword(data.email, data.password)
-        .then(response => {
-          console.log(response);
-          setIsLoading(false);
-        });
-
-      Alert.alert(
-        ':D',
-        'Cadastro realizado com sucesso, em poucos segundos você recebera um email de confirmação no endereço de email cadastrado',
-        [
-          {
-            text: 'Usuário logado',
-          },
-        ],
-      );
+      await auth().signInWithEmailAndPassword(data.email, data.password);
     } catch (err: any) {
       Alert.alert(
         '>.<',
@@ -72,7 +64,7 @@ const SignIn = () => {
         ],
       );
     } finally {
-      setIsLoading(false);
+      isMounted.current && setIsLoading(false);
     }
   };
 

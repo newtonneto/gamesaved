@@ -383,7 +383,7 @@ const SignUp = () => {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Input
-                  placeholder="84996128883"
+                  placeholder="(84) 9 9612-8883"
                   onChangeText={changedValue =>
                     onChange(handlePhoneMask(changedValue))
                   }
