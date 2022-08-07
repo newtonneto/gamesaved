@@ -75,7 +75,7 @@ const AppRoutes = () => {
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
             <DrawerItem
-              label="Desconectar"
+              label="Sair"
               onPress={handleLogout}
               labelStyle={{ color: colors.white }}
               style={{ backgroundColor: colors.red[500] }}

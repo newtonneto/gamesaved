@@ -141,13 +141,13 @@ const SignIn = () => {
             </FormControl.ErrorMessage>
           </FormControl>
           <Button
-            title="Entrar"
+            title="Start"
             w="full"
             onPress={handleSubmit(onSubmit)}
             isLoading={isLoading}
           />
           <TextButton
-            title="Registrar-se"
+            title="Novo save"
             w="full"
             onPress={() => navigation.navigate('signup')}
             disabled={isLoading}
