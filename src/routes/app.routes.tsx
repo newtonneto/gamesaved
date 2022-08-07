@@ -15,6 +15,7 @@ import {
   Scroll,
   FinnTheHuman,
   UsersThree,
+  SignOut,
 } from 'phosphor-react-native';
 import auth from '@react-native-firebase/auth';
 
@@ -78,6 +79,7 @@ const AppRoutes = () => {
               onPress={handleLogout}
               labelStyle={{ color: colors.white }}
               style={{ backgroundColor: colors.red[500] }}
+              icon={() => <SignOut color={colors.gray[200]} size={24} />}
             />
           </DrawerContentScrollView>
         );
