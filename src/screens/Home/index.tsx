@@ -8,6 +8,7 @@ import { Game } from '../../interfaces/game.dto';
 import rawg from '../../services/rawg.api';
 import GameCard from '../../components/GameCard';
 import { GamesPage } from '../../interfaces/gamespage.dto';
+import Loading from '../../components/Loading';
 
 const Home = () => {
   const { colors } = useTheme();
@@ -65,7 +66,9 @@ const Home = () => {
 
   const FlatListFooter = () => (
     <HStack alignItems="center" justifyContent="center" py={8}>
-      {isLoadingNext && <ActivityIndicator size="small" color={colors.white} />}
+      {isLoadingNext && (
+        <ActivityIndicator size="small" color={colors.secondary[700]} />
+      )}
     </HStack>
   );
 
@@ -73,15 +76,19 @@ const Home = () => {
 
   return (
     <VStack>
-      <FlatList
-        data={games}
-        renderItem={RenderItem}
-        onEndReached={getNextGames}
-        onEndReachedThreshold={0.1}
-        contentContainerStyle={styles.flatList}
-        ListFooterComponent={FlatListFooter}
-        ItemSeparatorComponent={FlatListSeparator}
-      />
+      {!isLoading ? (
+        <FlatList
+          data={games}
+          renderItem={RenderItem}
+          onEndReached={getNextGames}
+          onEndReachedThreshold={0.1}
+          contentContainerStyle={styles.flatList}
+          ListFooterComponent={FlatListFooter}
+          ItemSeparatorComponent={FlatListSeparator}
+        />
+      ) : (
+        <Loading />
+      )}
     </VStack>
   );
 };
