@@ -5,7 +5,7 @@ interface ApiHandler {
 }
 
 const client = axios.create({
-  baseURL: 'https://api.rawg.io/api/games/',
+  baseURL: 'https://api.rawg.io/api/games',
 });
 
 const rawg: ApiHandler = {

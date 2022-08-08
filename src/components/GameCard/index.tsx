@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   AspectRatio,
@@ -25,7 +25,7 @@ const GameCard = ({ game }: Props) => {
   return (
     <Box alignItems="center">
       <Box
-        maxW="80"
+        w="full"
         rounded="lg"
         overflow="hidden"
         borderColor="secondary.700"
@@ -72,13 +72,6 @@ const GameCard = ({ game }: Props) => {
               Rockstart
             </Text>
           </Stack>
-          <Text
-            fontWeight="400"
-            numberOfLines={3}
-            ellipsizeMode="tail"
-            color="white">
-            {game.description}
-          </Text>
         </Stack>
       </Box>
     </Box>
@@ -91,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GameCard;
+export default memo(GameCard);
