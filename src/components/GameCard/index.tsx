@@ -6,14 +6,15 @@ import {
   Center,
   Heading,
   HStack,
-  Image,
   Stack,
   Text,
   useTheme,
 } from 'native-base';
 import { Star, FloppyDisk } from 'phosphor-react-native';
+import FastImage from 'react-native-fast-image';
 
 import { Game } from '../../interfaces/game.dto';
+import { formatDate } from '../../utils/formatDate';
 
 type Props = {
   game: Game;
@@ -21,6 +22,7 @@ type Props = {
 
 const GameCard = ({ game }: Props) => {
   const { colors } = useTheme();
+  const released = formatDate(game.released);
 
   return (
     <Box alignItems="center">
@@ -32,11 +34,10 @@ const GameCard = ({ game }: Props) => {
         borderWidth="1">
         <Box>
           <AspectRatio w="100%" ratio={16 / 9}>
-            <Image
+            <FastImage
               source={{
                 uri: game.background_image,
               }}
-              alt="image"
             />
           </AspectRatio>
           <Center
@@ -69,7 +70,7 @@ const GameCard = ({ game }: Props) => {
               ml="-0.5"
               mt="-1"
               color={colors.white}>
-              Rockstart
+              {released}
             </Text>
           </Stack>
         </Stack>

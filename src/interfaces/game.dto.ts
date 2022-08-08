@@ -5,6 +5,6 @@ export interface Game {
   description?: string;
   metacritic: number;
   metacritic_url?: string;
-  released: Date;
+  released: string;
   background_image: string;
 }
