@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { HStack, useTheme } from 'native-base';
+import { FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 
 import VStack from '../../components/VStack';
@@ -9,9 +8,12 @@ import rawg from '../../services/rawg.api';
 import GameCard from '../../components/GameCard';
 import { GamesPage } from '../../interfaces/gamespage.dto';
 import Loading from '../../components/Loading';
+import {
+  FlatListFooter,
+  FlatListSeparator,
+} from '../../components/FlatListComponents';
 
 const Home = () => {
-  const { colors } = useTheme();
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const hasNext = useRef<boolean>(false);
@@ -64,16 +66,6 @@ const Home = () => {
     <GameCard game={item} key={item.id} />
   );
 
-  const FlatListFooter = () => (
-    <HStack alignItems="center" justifyContent="center" py={8}>
-      {isLoadingNext && (
-        <ActivityIndicator size="small" color={colors.secondary[700]} />
-      )}
-    </HStack>
-  );
-
-  const FlatListSeparator = () => <HStack h={8} />;
-
   return (
     <VStack>
       {!isLoading ? (
@@ -83,7 +75,7 @@ const Home = () => {
           onEndReached={getNextGames}
           onEndReachedThreshold={0.1}
           contentContainerStyle={styles.flatList}
-          ListFooterComponent={FlatListFooter}
+          ListFooterComponent={() => FlatListFooter(isLoadingNext)}
           ItemSeparatorComponent={FlatListSeparator}
         />
       ) : (

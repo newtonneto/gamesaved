@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { VStack } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
@@ -20,7 +21,11 @@ const Routes = () => {
   }, []);
 
   if (isLoading) {
-    <Logo />;
+    return (
+      <VStack flex={1} alignItems="center" justifyContent="center">
+        <Logo />
+      </VStack>
+    );
   }
 
   return (

@@ -51,11 +51,11 @@ const GameCard = ({ game }: Props) => {
             w="full"
             justifyContent="space-between">
             <HStack alignItems="center">
-              <Star color={colors.white} style={styles.icon} />
-              <Text color={colors.white}>{game.metacritic}</Text>
+              <Star color={colors.secondary[700]} style={styles.icon} />
+              <Text color={colors.secondary[700]}>{game.metacritic}</Text>
             </HStack>
             <HStack>
-              <FloppyDisk color={colors.white} style={styles.icon} />
+              <FloppyDisk color={colors.secondary[700]} style={styles.icon} />
             </HStack>
           </Center>
         </Box>
