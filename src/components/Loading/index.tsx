@@ -10,7 +10,7 @@ const Loading = () => {
         size="lg"
       />
       <Heading color="secondary.700" fontSize="lg">
-        Loading...
+        Carregando dados salvos...
       </Heading>
     </HStack>
   );

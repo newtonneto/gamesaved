@@ -22,7 +22,11 @@ const Routes = () => {
 
   if (isLoading) {
     return (
-      <VStack flex={1} alignItems="center" justifyContent="center">
+      <VStack
+        flex={1}
+        alignItems="center"
+        justifyContent="center"
+        bg="gray.600">
         <Logo />
       </VStack>
     );

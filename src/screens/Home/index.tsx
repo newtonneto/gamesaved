@@ -77,6 +77,7 @@ const Home = () => {
           contentContainerStyle={styles.flatList}
           ListFooterComponent={() => FlatListFooter(isLoadingNext)}
           ItemSeparatorComponent={FlatListSeparator}
+          showsVerticalScrollIndicator={false}
         />
       ) : (
         <Loading />
