@@ -61,6 +61,9 @@ const ForgotScreen = () => {
             text: 'Voltar para tela de login',
             onPress: () => navigation.goBack(),
           },
+          {
+            text: 'Ok',
+          },
         ],
       );
     } finally {
@@ -87,6 +90,7 @@ const ForgotScreen = () => {
                   selectionColor="secondary.700"
                   autoCapitalize="none"
                   keyboardType="email-address"
+                  isDisabled={isLoading}
                 />
               )}
               name="email"

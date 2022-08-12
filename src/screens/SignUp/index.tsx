@@ -169,6 +169,9 @@ const SignUp = () => {
             text: 'Voltar para tela de login',
             onPress: () => navigation.goBack(),
           },
+          {
+            text: 'Ok',
+          },
         ],
       );
     } finally {
