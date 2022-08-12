@@ -13,6 +13,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import ScrollView from '../../components/ScrollView';
 import VStack from '../../components/VStack';
 import Button from '../../components/Button';
+import firebaseExceptions from '../../maps/firebaseExceptions';
 
 type FormData = {
   email: string;
@@ -51,6 +52,17 @@ const ForgotScreen = () => {
         ],
       );
     } catch (err: any) {
+      Alert.alert(
+        '>.<',
+        firebaseExceptions[err.code] ||
+          'Não foi possível solicitar a redifinição de senha',
+        [
+          {
+            text: 'Voltar para tela de login',
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
     } finally {
       setIsLoading(false);
     }
