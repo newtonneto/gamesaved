@@ -96,7 +96,7 @@ export const THEME = extendTheme({
     body: 'Roboto',
     mono: 'Roboto',
   },
-  ontSizes: {
+  fontSizes: {
     xs: 12,
     sm: 14,
     md: 16,

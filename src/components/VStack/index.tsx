@@ -7,12 +7,7 @@ type Props = IStackProps & {
 
 const VStack = ({ children, ...rest }: Props) => {
   return (
-    <NativeBaseVStack
-      flex={1}
-      alignItems="center"
-      bg="gray.600"
-      px={8}
-      {...rest}>
+    <NativeBaseVStack flex={1} alignItems="center" bg="gray.600" {...rest}>
       {children}
     </NativeBaseVStack>
   );

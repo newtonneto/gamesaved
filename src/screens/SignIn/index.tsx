@@ -70,7 +70,7 @@ const SignIn = () => {
 
   return (
     <ScreenWrapper>
-      <VStack>
+      <VStack px={8}>
         <ScrollView pt={8}>
           <Logo />
           <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">

@@ -39,7 +39,9 @@ const Header = ({ title, ...rest }: Props) => {
         textAlign="center"
         fontSize="lg"
         flex={1}
-        ml={-6}>
+        mr={12}
+        ellipsizeMode="tail"
+        numberOfLines={1}>
         {title}
       </Heading>
     </HStack>

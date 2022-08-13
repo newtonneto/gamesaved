@@ -181,7 +181,7 @@ const SignUp = () => {
 
   return (
     <ScreenWrapper>
-      <VStack>
+      <VStack px={8}>
         <Header title="Cadastro" />
         <ScrollView>
           <FormControl isRequired isInvalid={'firstName' in errors} mb={3}>

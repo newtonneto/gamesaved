@@ -73,7 +73,7 @@ const ForgotScreen = () => {
 
   return (
     <ScreenWrapper>
-      <VStack>
+      <VStack px={8}>
         <Header title="Restaurar Save" />
         <ScrollView>
           <FormControl isRequired isInvalid={'email' in errors} mb={3}>

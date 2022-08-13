@@ -67,7 +67,7 @@ const Home = () => {
   );
 
   return (
-    <VStack>
+    <VStack px={8}>
       {!isLoading ? (
         <FlatList
           data={games}
