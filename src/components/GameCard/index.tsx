@@ -9,23 +9,38 @@ import {
   Stack,
   Text,
   useTheme,
+  Pressable,
 } from 'native-base';
 import { Star, FloppyDisk } from 'phosphor-react-native';
 import FastImage from 'react-native-fast-image';
+import { useNavigation } from '@react-navigation/native';
 
 import { Game } from '../../interfaces/game.dto';
 import { formatDate } from '../../utils/formatDate';
+import { useAppDispatch } from '../../store';
+import { setDrawerHeader } from '../../store/slices/navigation-slice';
 
 type Props = {
   game: Game;
 };
 
 const GameCard = ({ game }: Props) => {
+  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
   const { colors } = useTheme();
   const released = formatDate(game.released);
 
+  const handleNavigation = () => {
+    dispatch(setDrawerHeader(false));
+    navigation.navigate('game', {
+      id: game.id,
+      slug: game.slug,
+      name: game.name,
+    });
+  };
+
   return (
-    <Box alignItems="center">
+    <Pressable alignItems="center" onPress={handleNavigation}>
       <Box
         w="full"
         rounded="lg"
@@ -75,7 +90,7 @@ const GameCard = ({ game }: Props) => {
           </Stack>
         </Stack>
       </Box>
-    </Box>
+    </Pressable>
   );
 };
 

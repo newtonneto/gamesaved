@@ -26,7 +26,7 @@ const ScreenWrapper = ({ children }: Props) => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#121214',
+    backgroundColor: '#202024',
   },
   KeyboardAvoidingView: {
     flex: 1,

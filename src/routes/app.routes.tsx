@@ -20,16 +20,19 @@ import {
 import auth from '@react-native-firebase/auth';
 
 import AppHeader from '../components/AppHeader';
-import Home from '../screens/Home';
+import HomeStack from '../modules/HomeStack';
 import Profile from '../screens/Profile';
 import Inventory from '../screens/Inventory';
 import Friends from '../screens/Friends';
+import { useAppSelector } from '../store';
+import { stateDrawerHeader } from '../store/slices/navigation-slice';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
 const AppRoutes = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+  const showDrawerHeader = useAppSelector(state => stateDrawerHeader(state));
 
   const handleLogout = () => {
     Alert.alert(
@@ -58,7 +61,7 @@ const AppRoutes = () => {
 
   return (
     <Navigator
-      initialRouteName="home"
+      initialRouteName="homestack"
       screenOptions={{
         drawerPosition: 'right',
         drawerType: 'front',
@@ -69,6 +72,7 @@ const AppRoutes = () => {
         drawerStyle: {
           backgroundColor: colors.gray[600],
         },
+        headerShown: showDrawerHeader,
       }}
       drawerContent={props => {
         return (
@@ -85,8 +89,8 @@ const AppRoutes = () => {
         );
       }}>
       <Screen
-        name="home"
-        component={Home}
+        name="homestack"
+        component={HomeStack}
         options={{
           headerTitle: () => <AppHeader title="Home" />,
           headerLeft: () => <></>,
