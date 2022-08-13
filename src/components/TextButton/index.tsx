@@ -9,7 +9,7 @@ const TextButton = ({ title, ...rest }: Props) => {
   return (
     <NativeBaseButton
       bg="gray.600"
-      h={14}
+      h={10}
       fontSize="sm"
       rounded="sm"
       _pressed={{ bg: 'gray.500' }}

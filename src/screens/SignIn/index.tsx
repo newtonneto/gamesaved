@@ -71,7 +71,7 @@ const SignIn = () => {
   return (
     <ScreenWrapper>
       <VStack>
-        <ScrollView pt={24}>
+        <ScrollView pt={8}>
           <Logo />
           <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">
             GAMESAVED
@@ -150,6 +150,12 @@ const SignIn = () => {
             title="Novo save"
             w="full"
             onPress={() => navigation.navigate('signup')}
+            disabled={isLoading}
+          />
+          <TextButton
+            title="Restaurar save"
+            w="full"
+            onPress={() => navigation.navigate('forgotpassword')}
             disabled={isLoading}
           />
         </ScrollView>
