@@ -7,6 +7,7 @@ import {
   HStack,
   Fab,
   useToast,
+  useTheme,
 } from 'native-base';
 import { useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -31,6 +32,7 @@ type RouteParams = {
 
 const GameDetails = () => {
   const toast = useToast();
+  const { colors } = useTheme();
   const dispatch = useAppDispatch();
   const route = useRoute();
   const { id, name } = route.params as RouteParams;
@@ -69,7 +71,9 @@ const GameDetails = () => {
           shadow={2}
           size="sm"
           bg="secondary.700"
-          icon={<FloppyDisk color="white" style={styles.icon} size={18} />}
+          icon={
+            <FloppyDisk color={colors.white} style={styles.icon} size={18} />
+          }
           label="Save Game"
           onPress={() =>
             toast.show({
