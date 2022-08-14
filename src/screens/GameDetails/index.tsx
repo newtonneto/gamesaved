@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import {
   AspectRatio,
   VStack as NativeBaseVStack,
   Text,
   HStack,
+  Fab,
+  useToast,
 } from 'native-base';
 import { useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import RenderHtml from 'react-native-render-html';
+import { FloppyDisk } from 'phosphor-react-native';
 
 import ScrollView from '../../components/ScrollView';
 import Header from '../../components/Header';
@@ -27,6 +30,7 @@ type RouteParams = {
 };
 
 const GameDetails = () => {
+  const toast = useToast();
   const dispatch = useAppDispatch();
   const route = useRoute();
   const { id, name } = route.params as RouteParams;
@@ -59,6 +63,21 @@ const GameDetails = () => {
     <ScreenWrapper>
       <VStack>
         <Header title={name} />
+        <Fab
+          placement="bottom-right"
+          renderInPortal={false}
+          shadow={2}
+          size="sm"
+          bg="secondary.700"
+          icon={<FloppyDisk color="white" style={styles.icon} size={18} />}
+          label="Save Game"
+          onPress={() =>
+            toast.show({
+              description: 'Isn`t available right now',
+            })
+          }
+          _pressed={{ bg: 'gray.500' }}
+        />
         {!isLoading ? (
           <ScrollView>
             <AspectRatio w="100%" ratio={16 / 9}>
@@ -106,5 +125,11 @@ const GameDetails = () => {
     </ScreenWrapper>
   );
 };
+
+const styles = StyleSheet.create({
+  icon: {
+    marginRight: 4,
+  },
+});
 
 export default GameDetails;

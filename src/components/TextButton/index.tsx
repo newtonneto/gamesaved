@@ -8,7 +8,7 @@ type Props = IButtonProps & {
 const TextButton = ({ title, ...rest }: Props) => {
   return (
     <NativeBaseButton
-      bg="gray.600"
+      variant="ghost"
       h={10}
       fontSize="sm"
       rounded="sm"
