@@ -34,7 +34,7 @@ const Home = () => {
     const getGames = async () => {
       try {
         const response = await rawg.get<GamesPage>(
-          'https://api.rawg.io/api/games?key=e30c4b13ba264b8680f0fcab95f1b69a',
+          'games?key=e30c4b13ba264b8680f0fcab95f1b69a',
         );
 
         setGames(response.data.results);
