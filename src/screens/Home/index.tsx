@@ -12,6 +12,7 @@ import {
   FlatListFooter,
   FlatListSeparator,
 } from '../../components/FlatListComponents';
+import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 const Home = () => {
   const [games, setGames] = useState<Game[]>([]);
@@ -33,9 +34,7 @@ const Home = () => {
   useEffect(() => {
     const getGames = async () => {
       try {
-        const response = await rawg.get<GamesPage>(
-          'games?key=e30c4b13ba264b8680f0fcab95f1b69a',
-        );
+        const response = await rawg.get<GamesPage>(`games?key=${GAMEAPI_KEY}`);
 
         setGames(response.data.results);
         handleNextPage(response.data);

@@ -23,6 +23,7 @@ import { setDrawerHeader } from '../../store/slices/navigation-slice';
 import rawg from '../../services/rawg.api';
 import { Game } from '../../interfaces/game.dto';
 import Loading from '../../components/Loading';
+import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type RouteParams = {
   id: number;
@@ -43,9 +44,7 @@ const GameDetails = () => {
   useEffect(() => {
     const getGame = async () => {
       try {
-        const response = await rawg.get<Game>(
-          `games/${id}?key=e30c4b13ba264b8680f0fcab95f1b69a`,
-        );
+        const response = await rawg.get<Game>(`games/${id}?key=${GAMEAPI_KEY}`);
 
         setGame(response.data);
       } catch (err) {
