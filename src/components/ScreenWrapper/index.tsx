@@ -7,6 +7,8 @@ type Props = IScrollViewProps & {
   children: ReactElement;
 };
 
+const GRAY_600 = '#202024';
+
 const ScreenWrapper = ({ children }: Props) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -26,7 +28,7 @@ const ScreenWrapper = ({ children }: Props) => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#202024',
+    backgroundColor: GRAY_600,
   },
   KeyboardAvoidingView: {
     flex: 1,
