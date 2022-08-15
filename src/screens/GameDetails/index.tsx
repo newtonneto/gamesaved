@@ -14,15 +14,15 @@ import FastImage from 'react-native-fast-image';
 import RenderHtml from 'react-native-render-html';
 import { FloppyDisk } from 'phosphor-react-native';
 
-import ScrollView from '../../components/ScrollView';
-import Header from '../../components/Header';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import VStack from '../../components/VStack';
-import { useAppDispatch } from '../../store';
-import { setDrawerHeader } from '../../store/slices/navigation-slice';
-import rawg from '../../services/rawg.api';
-import { Game } from '../../interfaces/game.dto';
-import Loading from '../../components/Loading';
+import ScrollView from '@components/ScrollView';
+import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
+import VStack from '@components/VStack';
+import Loading from '@components/Loading';
+import { Game } from '@interfaces/game.dto';
+import rawg from '@services/rawg.api';
+import { useAppDispatch } from '@src/store';
+import { setDrawerHeader } from '@store/slices/navigation-slice';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type RouteParams = {
@@ -76,7 +76,7 @@ const GameDetails = () => {
           label="Save Game"
           onPress={() =>
             toast.show({
-              description: 'Isn`t available right now',
+              description: "Isn't available right now",
             })
           }
           _pressed={{ bg: 'gray.500' }}

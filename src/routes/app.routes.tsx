@@ -19,13 +19,13 @@ import {
 } from 'phosphor-react-native';
 import auth from '@react-native-firebase/auth';
 
-import AppHeader from '../components/AppHeader';
-import HomeStack from '../modules/HomeStack';
-import Profile from '../screens/Profile';
-import Inventory from '../screens/Inventory';
-import Friends from '../screens/Friends';
-import { useAppSelector } from '../store';
-import { stateDrawerHeader } from '../store/slices/navigation-slice';
+import AppHeader from '@components/AppHeader';
+import HomeStack from '@modules/HomeStack';
+import Profile from '@screens/Profile';
+import Inventory from '@screens/Inventory';
+import Friends from '@screens/Friends';
+import { useAppSelector } from '@src/store';
+import { stateDrawerHeader } from '@store/slices/navigation-slice';
 
 const { Navigator, Screen } = createDrawerNavigator();
 

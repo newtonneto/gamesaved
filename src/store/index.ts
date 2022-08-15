@@ -1,7 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
-import navigationReducer from './slices/navigation-slice';
+import navigationReducer from '@store/slices/navigation-slice';
 
 const store = configureStore({
   reducer: {

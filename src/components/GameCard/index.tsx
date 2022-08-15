@@ -15,10 +15,10 @@ import { Star, FloppyDisk } from 'phosphor-react-native';
 import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native';
 
-import { Game } from '../../interfaces/game.dto';
-import { formatDate } from '../../utils/formatDate';
-import { useAppDispatch } from '../../store';
-import { setDrawerHeader } from '../../store/slices/navigation-slice';
+import { Game } from '@interfaces/game.dto';
+import { useAppDispatch } from '@src/store';
+import { setDrawerHeader } from '@store/slices/navigation-slice';
+import { formatDate } from '@utils/formatDate';
 
 type Props = {
   game: Game;

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Animated } from 'react-native';
 import { VStack } from 'native-base';
 
-import CircleSvg from '../../assets/imgs/loadingcircle.svg';
-import LogoSvg from '../../assets/imgs/savegame.svg';
+import CircleSvg from '@assets/imgs/loadingcircle.svg';
+import LogoSvg from '@assets/imgs/savegame.svg';
 
 const Logo = () => {
   const [rotateAnimationCircle] = useState(new Animated.Value(0));

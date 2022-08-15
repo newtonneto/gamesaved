@@ -2,16 +2,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-import VStack from '../../components/VStack';
-import { Game } from '../../interfaces/game.dto';
-import rawg from '../../services/rawg.api';
-import GameCard from '../../components/GameCard';
-import { GamesPage } from '../../interfaces/gamespage.dto';
-import Loading from '../../components/Loading';
+import VStack from '@components/VStack';
+import Loading from '@components/Loading';
+import GameCard from '@components/GameCard';
 import {
   FlatListFooter,
   FlatListSeparator,
-} from '../../components/FlatListComponents';
+} from '@components/FlatListComponents';
+import { Game } from '@interfaces/game.dto';
+import { GamesPage } from '@interfaces/gamespage.dto';
+import rawg from '@services/rawg.api';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 const Home = () => {

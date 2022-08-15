@@ -1,4 +1,4 @@
-import { Game } from './game.dto';
+import { Game } from '@interfaces/game.dto';
 
 export interface GamesPage {
   count: number;

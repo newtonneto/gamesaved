@@ -7,13 +7,13 @@ import * as yup from 'yup';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
-import Header from '../../components/Header';
-import Input from '../../components/Input';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import ScrollView from '../../components/ScrollView';
-import VStack from '../../components/VStack';
-import Button from '../../components/Button';
-import firebaseExceptions from '../../maps/firebaseExceptions';
+import Header from '@components/Header';
+import Input from '@components/Input';
+import ScreenWrapper from '@components/ScreenWrapper';
+import ScrollView from '@components/ScrollView';
+import VStack from '@components/VStack';
+import Button from '@components/Button';
+import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   email: string;

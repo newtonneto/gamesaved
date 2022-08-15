@@ -14,15 +14,15 @@ import * as yup from 'yup';
 import { Eye, EyeClosed } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import Select from '../../components/Select';
-import ScrollView from '../../components/ScrollView';
-import Header from '../../components/Header';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import VStack from '../../components/VStack';
-import firebaseExceptions from '../../maps/firebaseExceptions';
-import { handleDateMask, handlePhoneMask } from '../../utils/inputMasks';
+import Input from '@components/Input';
+import Button from '@components/Button';
+import Select from '@components/Select';
+import ScrollView from '@components/ScrollView';
+import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
+import VStack from '@components/VStack';
+import firebaseExceptions from '@utils/firebaseExceptions';
+import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 
 type FormData = {
   firstName: string;
