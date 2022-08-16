@@ -12,6 +12,7 @@ import {
 import { Game } from '@interfaces/game.dto';
 import { GamesPage } from '@interfaces/gamespage.dto';
 import rawg from '@services/rawg.api';
+import { AXIS_X_PADDING_CONTENT, VERTICAL_PADDING_LISTS } from '@styles/sizes';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 const Home = () => {
@@ -66,7 +67,7 @@ const Home = () => {
   );
 
   return (
-    <VStack px={8}>
+    <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
         <FlatList
           data={games}
@@ -87,7 +88,7 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   flatList: {
-    paddingVertical: 24,
+    paddingVertical: VERTICAL_PADDING_LISTS,
   },
 });
 

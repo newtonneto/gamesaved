@@ -13,6 +13,10 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import ScrollView from '@components/ScrollView';
 import VStack from '@components/VStack';
 import Button from '@components/Button';
+import {
+  AXIS_X_PADDING_CONTENT,
+  FORM_INPUT_MARGIN_BOTTOM,
+} from '@styles/sizes';
 import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
@@ -73,10 +77,13 @@ const ForgotScreen = () => {
 
   return (
     <ScreenWrapper>
-      <VStack px={8}>
+      <VStack px={AXIS_X_PADDING_CONTENT}>
         <Header title="Restaurar Save" />
         <ScrollView>
-          <FormControl isRequired isInvalid={'email' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'email' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>E-mail</FormControl.Label>
             <Controller
               control={control}

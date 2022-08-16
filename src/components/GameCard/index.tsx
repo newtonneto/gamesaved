@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Game } from '@interfaces/game.dto';
 import { useAppDispatch } from '@src/store';
 import { setDrawerHeader } from '@store/slices/navigation-slice';
+import { RATIO } from '@styles/sizes';
 import { formatDate } from '@utils/formatDate';
 
 type Props = {
@@ -48,7 +49,7 @@ const GameCard = ({ game }: Props) => {
         borderColor="secondary.700"
         borderWidth="1">
         <Box>
-          <AspectRatio w="100%" ratio={16 / 9}>
+          <AspectRatio w="100%" ratio={RATIO}>
             <FastImage
               source={{
                 uri: game.background_image,

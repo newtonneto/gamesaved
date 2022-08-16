@@ -26,6 +26,7 @@ import Inventory from '@screens/Inventory';
 import Friends from '@screens/Friends';
 import { useAppSelector } from '@src/store';
 import { stateDrawerHeader } from '@store/slices/navigation-slice';
+import { ICON_NORMAL } from '@styles/sizes';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
@@ -83,7 +84,9 @@ const AppRoutes = () => {
               onPress={handleLogout}
               labelStyle={{ color: colors.white }}
               style={{ backgroundColor: colors.red[500] }}
-              icon={() => <SignOut color={colors.gray[200]} size={24} />}
+              icon={() => (
+                <SignOut color={colors.gray[200]} size={ICON_NORMAL} />
+              )}
             />
           </DrawerContentScrollView>
         );
@@ -102,14 +105,16 @@ const AppRoutes = () => {
               justifyContent="center"
               h="full">
               <IconButton
-                icon={<Pause color={colors.gray[200]} size={24} />}
+                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
                 onPress={() =>
                   navigation.dispatch(DrawerActions.toggleDrawer())
                 }
               />
             </HStack>
           ),
-          drawerIcon: () => <Scroll color={colors.gray[200]} size={24} />,
+          drawerIcon: () => (
+            <Scroll color={colors.gray[200]} size={ICON_NORMAL} />
+          ),
           drawerActiveTintColor: colors.secondary[700],
           drawerInactiveTintColor: colors.gray[100],
         }}
@@ -127,7 +132,7 @@ const AppRoutes = () => {
               justifyContent="center"
               h="full">
               <IconButton
-                icon={<SkipBack color={colors.gray[200]} size={24} />}
+                icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
                 onPress={() => navigation.goBack()}
               />
             </HStack>
@@ -140,7 +145,7 @@ const AppRoutes = () => {
               justifyContent="center"
               h="full">
               <IconButton
-                icon={<Pause color={colors.gray[200]} size={24} />}
+                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
                 onPress={() =>
                   navigation.dispatch(DrawerActions.toggleDrawer())
                 }
@@ -148,7 +153,7 @@ const AppRoutes = () => {
             </HStack>
           ),
           drawerIcon: () => (
-            <GameController color={colors.gray[200]} size={24} />
+            <GameController color={colors.gray[200]} size={ICON_NORMAL} />
           ),
           drawerActiveTintColor: colors.secondary[700],
           drawerInactiveTintColor: colors.gray[100],
@@ -167,7 +172,7 @@ const AppRoutes = () => {
               justifyContent="center"
               h="full">
               <IconButton
-                icon={<SkipBack color={colors.gray[200]} size={24} />}
+                icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
                 onPress={() => navigation.goBack()}
               />
             </HStack>
@@ -180,14 +185,16 @@ const AppRoutes = () => {
               justifyContent="center"
               h="full">
               <IconButton
-                icon={<Pause color={colors.gray[200]} size={24} />}
+                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
                 onPress={() =>
                   navigation.dispatch(DrawerActions.toggleDrawer())
                 }
               />
             </HStack>
           ),
-          drawerIcon: () => <FinnTheHuman color={colors.gray[200]} size={24} />,
+          drawerIcon: () => (
+            <FinnTheHuman color={colors.gray[200]} size={ICON_NORMAL} />
+          ),
           drawerActiveTintColor: colors.secondary[700],
           drawerInactiveTintColor: colors.gray[100],
         }}
@@ -205,7 +212,7 @@ const AppRoutes = () => {
               justifyContent="center"
               h="full">
               <IconButton
-                icon={<SkipBack color={colors.gray[200]} size={24} />}
+                icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
                 onPress={() => navigation.goBack()}
               />
             </HStack>
@@ -218,14 +225,16 @@ const AppRoutes = () => {
               justifyContent="center"
               h="full">
               <IconButton
-                icon={<Pause color={colors.gray[200]} size={24} />}
+                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
                 onPress={() =>
                   navigation.dispatch(DrawerActions.toggleDrawer())
                 }
               />
             </HStack>
           ),
-          drawerIcon: () => <UsersThree color={colors.gray[200]} size={24} />,
+          drawerIcon: () => (
+            <UsersThree color={colors.gray[200]} size={ICON_NORMAL} />
+          ),
           drawerActiveTintColor: colors.secondary[700],
           drawerInactiveTintColor: colors.gray[100],
         }}

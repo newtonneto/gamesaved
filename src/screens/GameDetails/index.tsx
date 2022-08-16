@@ -8,6 +8,7 @@ import {
   Fab,
   useToast,
   useTheme,
+  Heading,
 } from 'native-base';
 import { useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -23,6 +24,12 @@ import { Game } from '@interfaces/game.dto';
 import rawg from '@services/rawg.api';
 import { useAppDispatch } from '@src/store';
 import { setDrawerHeader } from '@store/slices/navigation-slice';
+import {
+  AXIS_X_PADDING_CONTENT,
+  GENERIC_TITTLE,
+  AXIS_Y_PADDING_CONTENT,
+  RATIO,
+} from '@styles/sizes';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type RouteParams = {
@@ -83,29 +90,32 @@ const GameDetails = () => {
         />
         {!isLoading ? (
           <ScrollView>
-            <AspectRatio w="100%" ratio={16 / 9}>
+            <AspectRatio w="100%" ratio={RATIO}>
               <FastImage
                 source={{
                   uri: game.background_image,
                 }}
               />
             </AspectRatio>
-            <VStack px={8} mt={8}>
+            <VStack px={AXIS_X_PADDING_CONTENT} mt={AXIS_Y_PADDING_CONTENT}>
               <NativeBaseVStack w={width - 64}>
-                <Text color="white" fontSize={24}>
-                  {game.name}
-                </Text>
+                <Heading
+                  fontFamily="heading"
+                  color={colors.white}
+                  fontSize={GENERIC_TITTLE}>
+                  {game.name.toUpperCase()}
+                </Heading>
                 <HStack>
-                  <Text color="white" fontWeight="700">
+                  <Text color={colors.white} fontWeight="700">
                     Lançamento:{' '}
                   </Text>
-                  <Text color="white">{game.released}</Text>
+                  <Text color={colors.white}>{game.released}</Text>
                 </HStack>
                 <HStack>
-                  <Text color="white" fontWeight="700">
+                  <Text color={colors.white} fontWeight="700">
                     Metacritic:{' '}
                   </Text>
-                  <Text color="white">{game.metacritic}</Text>
+                  <Text color={colors.white}>{game.metacritic}</Text>
                 </HStack>
               </NativeBaseVStack>
               <RenderHtml

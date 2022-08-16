@@ -4,6 +4,7 @@ import { VStack } from 'native-base';
 
 import CircleSvg from '@assets/imgs/loadingcircle.svg';
 import LogoSvg from '@assets/imgs/savegame.svg';
+import { SECONDARY_700 } from '@styles/colors';
 
 const Logo = () => {
   const [rotateAnimationCircle] = useState(new Animated.Value(0));
@@ -50,7 +51,7 @@ const Logo = () => {
 
 const styles = StyleSheet.create({
   animatedView: {
-    shadowColor: '#FBA94C',
+    shadowColor: SECONDARY_700,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,
     shadowRadius: 10,
