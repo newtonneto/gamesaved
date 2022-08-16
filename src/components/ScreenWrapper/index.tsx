@@ -3,11 +3,11 @@ import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IScrollViewProps } from 'native-base';
 
+import { GRAY_600 } from '@styles/colors';
+
 type Props = IScrollViewProps & {
   children: ReactElement;
 };
-
-const GRAY_600 = '#202024';
 
 const ScreenWrapper = ({ children }: Props) => {
   return (

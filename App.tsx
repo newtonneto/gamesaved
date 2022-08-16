@@ -5,8 +5,7 @@ import { Provider } from 'react-redux';
 import { THEME } from '@src/styles/theme';
 import Routes from '@src/routes';
 import store from '@src/store';
-
-const GRAY_600 = '#202024';
+import { GRAY_600 } from '@styles/colors';
 
 const App = () => {
   return (
