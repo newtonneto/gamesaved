@@ -3,6 +3,8 @@ import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IScrollViewProps } from 'native-base';
 
+import { GRAY_600 } from '@styles/colors';
+
 type Props = IScrollViewProps & {
   children: ReactElement;
 };
@@ -26,7 +28,7 @@ const ScreenWrapper = ({ children }: Props) => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#121214',
+    backgroundColor: GRAY_600,
   },
   KeyboardAvoidingView: {
     flex: 1,

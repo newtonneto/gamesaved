@@ -7,13 +7,17 @@ import * as yup from 'yup';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
-import Header from '../../components/Header';
-import Input from '../../components/Input';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import ScrollView from '../../components/ScrollView';
-import VStack from '../../components/VStack';
-import Button from '../../components/Button';
-import firebaseExceptions from '../../maps/firebaseExceptions';
+import Header from '@components/Header';
+import Input from '@components/Input';
+import ScreenWrapper from '@components/ScreenWrapper';
+import ScrollView from '@components/ScrollView';
+import VStack from '@components/VStack';
+import Button from '@components/Button';
+import {
+  AXIS_X_PADDING_CONTENT,
+  FORM_INPUT_MARGIN_BOTTOM,
+} from '@styles/sizes';
+import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   email: string;
@@ -73,10 +77,13 @@ const ForgotScreen = () => {
 
   return (
     <ScreenWrapper>
-      <VStack>
+      <VStack px={AXIS_X_PADDING_CONTENT}>
         <Header title="Restaurar Save" />
         <ScrollView>
-          <FormControl isRequired isInvalid={'email' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'email' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>E-mail</FormControl.Label>
             <Controller
               control={control}

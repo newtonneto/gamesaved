@@ -8,14 +8,19 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import TextButton from '../../components/TextButton';
-import firebaseExceptions from '../../maps/firebaseExceptions';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import VStack from '../../components/VStack';
-import ScrollView from '../../components/ScrollView';
-import Logo from '../../components/Logo';
+import Input from '@components/Input';
+import Button from '@components/Button';
+import TextButton from '@components/TextButton';
+import Logo from '@components/Logo';
+import ScrollView from '@components/ScrollView';
+import ScreenWrapper from '@components/ScreenWrapper';
+import VStack from '@components/VStack';
+import {
+  AXIS_X_PADDING_CONTENT,
+  NO_LABEL_INPUT_MARGIN_BOTTOM,
+  INPUT_ICON_LEFT_MARGIN,
+} from '@styles/sizes';
+import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   email: string;
@@ -70,21 +75,27 @@ const SignIn = () => {
 
   return (
     <ScreenWrapper>
-      <VStack>
+      <VStack px={AXIS_X_PADDING_CONTENT}>
         <ScrollView pt={8}>
           <Logo />
           <Heading fontFamily="heading" fontSize="6xl" color="secondary.700">
             GAMESAVED
           </Heading>
 
-          <FormControl isRequired isInvalid={'email' in errors} mb={4}>
+          <FormControl
+            isRequired
+            isInvalid={'email' in errors}
+            mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
             <Controller
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="E-mail"
                   InputLeftElement={
-                    <Icon as={<Envelope color={colors.gray[300]} />} ml={4} />
+                    <Icon
+                      as={<Envelope color={colors.gray[300]} />}
+                      ml={INPUT_ICON_LEFT_MARGIN}
+                    />
                   }
                   onChangeText={onChange}
                   value={value}
@@ -103,14 +114,20 @@ const SignIn = () => {
               {errors.email?.message}
             </FormControl.ErrorMessage>
           </FormControl>
-          <FormControl isRequired isInvalid={'password' in errors} mb={4}>
+          <FormControl
+            isRequired
+            isInvalid={'password' in errors}
+            mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
             <Controller
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Senha"
                   InputLeftElement={
-                    <Icon as={<Key color={colors.gray[300]} />} ml={4} />
+                    <Icon
+                      as={<Key color={colors.gray[300]} />}
+                      ml={INPUT_ICON_LEFT_MARGIN}
+                    />
                   }
                   InputRightElement={
                     <IconButton

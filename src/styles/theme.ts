@@ -1,28 +1,44 @@
 import { extendTheme } from 'native-base';
 
+import {
+  PRIMARY_700,
+  SECONDARY_700,
+  GREEN_700,
+  GREEN_500,
+  GREEN_300,
+  GRAY_700,
+  GRAY_600,
+  GRAY_500,
+  GRAY_400,
+  GRAY_300,
+  GRAY_200,
+  GRAY_100,
+  WHITE,
+} from '@styles/colors';
+
 export const THEME = extendTheme({
   colors: {
     primary: {
-      700: '#996DFF',
+      700: PRIMARY_700,
     },
     secondary: {
-      700: '#FBA94C',
+      700: SECONDARY_700,
     },
     green: {
-      700: '#00875F',
-      500: '#00B37E',
-      300: '#04D361',
+      700: GREEN_700,
+      500: GREEN_500,
+      300: GREEN_300,
     },
     gray: {
-      700: '#121214',
-      600: '#202024',
-      500: '#29292E',
-      400: '#323238',
-      300: '#7C7C8A',
-      200: '#C4C4CC',
-      100: '#E1E1E6',
+      700: GRAY_700,
+      600: GRAY_600,
+      500: GRAY_500,
+      400: GRAY_400,
+      300: GRAY_300,
+      200: GRAY_200,
+      100: GRAY_100,
     },
-    white: '#FFFFFF',
+    white: WHITE,
   },
   fontConfig: {
     Gamer: {
@@ -96,13 +112,19 @@ export const THEME = extendTheme({
     body: 'Roboto',
     mono: 'Roboto',
   },
-  ontSizes: {
+  fontSizes: {
     xs: 12,
     sm: 14,
     md: 16,
     lg: 20,
   },
   sizes: {
+    12: 48,
     14: 56,
+    16: 64,
+    18: 72,
+    20: 80,
+    22: 88,
+    24: 96,
   },
 });

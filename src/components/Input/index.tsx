@@ -1,19 +1,21 @@
 import React from 'react';
 import { Input as NativeBaseInput, IInputProps } from 'native-base';
 
+import { INPUT_HEIGHT, INPUT_BORDER_WIDTH } from '@styles/sizes';
+
 const Input = ({ ...rest }: IInputProps) => {
   return (
     <NativeBaseInput
       bg="gray.700"
-      h={14}
+      h={INPUT_HEIGHT}
       size="md"
-      borderWidth={1}
+      borderWidth={INPUT_BORDER_WIDTH}
       borderColor="secondary.700"
       fontFamily="body"
       color="white"
       placeholderTextColor="gray.300"
       _focus={{
-        borderWidth: 1,
+        borderWidth: INPUT_BORDER_WIDTH,
         borderColor: 'green.500',
         bg: 'gray.700',
       }}

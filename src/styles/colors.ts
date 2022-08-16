@@ -1,0 +1,13 @@
+export const PRIMARY_700 = '#996DFF';
+export const SECONDARY_700 = '#FBA94C';
+export const GREEN_700 = '#00875F';
+export const GREEN_500 = '#00B37E';
+export const GREEN_300 = '#04D361';
+export const GRAY_700 = '#121214';
+export const GRAY_600 = '#202024';
+export const GRAY_500 = '#29292E';
+export const GRAY_400 = '#323238';
+export const GRAY_300 = '#7C7C8A';
+export const GRAY_200 = '#C4C4CC';
+export const GRAY_100 = '#E1E1E6';
+export const WHITE = '#FFFFFF';
