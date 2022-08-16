@@ -9,6 +9,8 @@ import {
 import { CaretLeft } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 
+import { ICON_NORMAL } from '@styles/sizes';
+
 type Props = StyledProps & {
   title: string;
 };
@@ -31,7 +33,7 @@ const Header = ({ title, ...rest }: Props) => {
       pt={4}
       {...rest}>
       <IconButton
-        icon={<CaretLeft color={colors.gray[200]} size={24} />}
+        icon={<CaretLeft color={colors.gray[200]} size={ICON_NORMAL} />}
         onPress={handleGoBack}
       />
       <Heading
@@ -39,7 +41,9 @@ const Header = ({ title, ...rest }: Props) => {
         textAlign="center"
         fontSize="lg"
         flex={1}
-        ml={-6}>
+        mr={12}
+        ellipsizeMode="tail"
+        numberOfLines={1}>
         {title}
       </Heading>
     </HStack>

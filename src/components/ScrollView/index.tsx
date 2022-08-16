@@ -5,6 +5,8 @@ import {
   IScrollViewProps,
 } from 'native-base';
 
+import { CONTENT_PADDING_BOTTOM } from '@styles/sizes';
+
 type Props = IScrollViewProps & {
   children: ReactNode;
 };
@@ -24,7 +26,7 @@ const ScrollView = ({ children, ...rest }: Props) => {
 
 const styles = StyleSheet.create({
   scrollViewContent: {
-    paddingBottom: 16,
+    paddingBottom: CONTENT_PADDING_BOTTOM,
     alignItems: 'center',
   },
 });

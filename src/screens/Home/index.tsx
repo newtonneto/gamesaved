@@ -2,16 +2,18 @@ import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-import VStack from '../../components/VStack';
-import { Game } from '../../interfaces/game.dto';
-import rawg from '../../services/rawg.api';
-import GameCard from '../../components/GameCard';
-import { GamesPage } from '../../interfaces/gamespage.dto';
-import Loading from '../../components/Loading';
+import VStack from '@components/VStack';
+import Loading from '@components/Loading';
+import GameCard from '@components/GameCard';
 import {
   FlatListFooter,
   FlatListSeparator,
-} from '../../components/FlatListComponents';
+} from '@components/FlatListComponents';
+import { Game } from '@interfaces/game.dto';
+import { GamesPage } from '@interfaces/gamespage.dto';
+import rawg from '@services/rawg.api';
+import { AXIS_X_PADDING_CONTENT, VERTICAL_PADDING_LISTS } from '@styles/sizes';
+import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 const Home = () => {
   const [games, setGames] = useState<Game[]>([]);
@@ -33,9 +35,7 @@ const Home = () => {
   useEffect(() => {
     const getGames = async () => {
       try {
-        const response = await rawg.get<GamesPage>(
-          'https://api.rawg.io/api/games?key=e30c4b13ba264b8680f0fcab95f1b69a',
-        );
+        const response = await rawg.get<GamesPage>(`games?key=${GAMEAPI_KEY}`);
 
         setGames(response.data.results);
         handleNextPage(response.data);
@@ -67,7 +67,7 @@ const Home = () => {
   );
 
   return (
-    <VStack>
+    <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
         <FlatList
           data={games}
@@ -88,7 +88,7 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   flatList: {
-    paddingVertical: 24,
+    paddingVertical: VERTICAL_PADDING_LISTS,
   },
 });
 

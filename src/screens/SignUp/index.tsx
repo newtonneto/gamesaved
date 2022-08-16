@@ -14,15 +14,16 @@ import * as yup from 'yup';
 import { Eye, EyeClosed } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import Select from '../../components/Select';
-import ScrollView from '../../components/ScrollView';
-import Header from '../../components/Header';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import VStack from '../../components/VStack';
-import firebaseExceptions from '../../maps/firebaseExceptions';
-import { handleDateMask, handlePhoneMask } from '../../utils/inputMasks';
+import Input from '@components/Input';
+import Button from '@components/Button';
+import Select from '@components/Select';
+import ScrollView from '@components/ScrollView';
+import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
+import VStack from '@components/VStack';
+import { FORM_INPUT_MARGIN_BOTTOM } from '@styles/sizes';
+import firebaseExceptions from '@utils/firebaseExceptions';
+import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 
 type FormData = {
   firstName: string;
@@ -181,10 +182,13 @@ const SignUp = () => {
 
   return (
     <ScreenWrapper>
-      <VStack>
+      <VStack px={8}>
         <Header title="Cadastro" />
         <ScrollView>
-          <FormControl isRequired isInvalid={'firstName' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'firstName' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Nome</FormControl.Label>
             <Controller
               control={control}
@@ -206,7 +210,10 @@ const SignUp = () => {
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={'lastName' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'lastName' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Sobrenome</FormControl.Label>
             <Controller
               control={control}
@@ -228,7 +235,10 @@ const SignUp = () => {
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={'birthDate' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'birthDate' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Data de nascimento</FormControl.Label>
             <Controller
               control={control}
@@ -254,7 +264,10 @@ const SignUp = () => {
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={'gender' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'gender' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Gênero</FormControl.Label>
             <Controller
               control={control}
@@ -277,7 +290,10 @@ const SignUp = () => {
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={'email' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'email' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>E-mail</FormControl.Label>
             <Controller
               control={control}
@@ -301,7 +317,10 @@ const SignUp = () => {
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={'password' in errors} mb={3}>
+          <FormControl
+            isRequired
+            isInvalid={'password' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Senha</FormControl.Label>
             <Controller
               control={control}
@@ -342,7 +361,7 @@ const SignUp = () => {
           <FormControl
             isRequired
             isInvalid={'confirmPassword' in errors}
-            mb={3}>
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Confirmação de senha</FormControl.Label>
             <Controller
               control={control}
@@ -380,7 +399,10 @@ const SignUp = () => {
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isRequired isInvalid={'phone' in errors} mb={8}>
+          <FormControl
+            isRequired
+            isInvalid={'phone' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Telefone</FormControl.Label>
             <Controller
               control={control}

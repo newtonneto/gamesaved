@@ -1,5 +1,5 @@
-import { Heading, HStack, Spinner } from 'native-base';
 import React from 'react';
+import { Heading, HStack, Spinner } from 'native-base';
 
 const Loading = () => {
   return (

@@ -34,6 +34,8 @@
 				<true/>
 			</dict>
 		</dict>
+		<key>UIUserInterfaceStyle</key>
+		<string>Light</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
