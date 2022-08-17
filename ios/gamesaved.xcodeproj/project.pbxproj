@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		172AA6B12890330E00BB5974 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 172AA6B02890330E00BB5974 /* GoogleService-Info.plist */; };
+		17B0409628AD141900C14861 /* gamesaved.png in Resources */ = {isa = PBXBuildFile; fileRef = 17B0409528AD141900C14861 /* gamesaved.png */; };
 		190FA6D4C8EF6A51947CBB34 /* Pods_gamesaved_gamesavedTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4C39F2B6B4FD793F2CC28A4 /* Pods_gamesaved_gamesavedTests.framework */; };
 		24CE5A35DD25401DB4A7BDD8 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEE0954582384838804B37C9 /* Roboto-Light.ttf */; };
 		594513ABAC8247578ACCA94C /* Gamer.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F3EF5028A034765AADCB9C9 /* Gamer.ttf */; };
@@ -47,6 +48,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = gamesaved/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = gamesaved/main.m; sourceTree = "<group>"; };
 		172AA6B02890330E00BB5974 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		17B0409528AD141900C14861 /* gamesaved.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gamesaved.png; sourceTree = "<group>"; };
 		2E9CC77DBCBD4D87AB509101 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../src/assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-gamesaved.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gamesaved.debug.xcconfig"; path = "Target Support Files/Pods-gamesaved/Pods-gamesaved.debug.xcconfig"; sourceTree = "<group>"; };
 		40B9DAE395574EECB495DF54 /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-MediumItalic.ttf"; path = "../src/assets/fonts/Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				17B0409528AD141900C14861 /* gamesaved.png */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = gamesaved;
@@ -290,6 +293,7 @@
 				B9BD24AA2B944A4FB1D7BEC6 /* Roboto-LightItalic.ttf in Resources */,
 				8D3773E538054B47A87693A7 /* Roboto-Medium.ttf in Resources */,
 				9928D925F6EF4DCF82D98E05 /* Roboto-MediumItalic.ttf in Resources */,
+				17B0409628AD141900C14861 /* gamesaved.png in Resources */,
 				64D26245C8AB4A1B929165D7 /* Roboto-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
