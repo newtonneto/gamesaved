@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, StyleSheet, Alert } from 'react-native';
-import axios from 'axios';
+import { FormControl, useTheme, IconButton } from 'native-base';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { MagnifyingGlass } from 'phosphor-react-native';
 
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
@@ -9,13 +13,33 @@ import {
   FlatListFooter,
   FlatListSeparator,
 } from '@components/FlatListComponents';
+import Input from '@components/Input';
 import { Game } from '@interfaces/game.dto';
 import { GamesPage } from '@interfaces/gamespage.dto';
 import rawg from '@services/rawg.api';
-import { AXIS_X_PADDING_CONTENT, VERTICAL_PADDING_LISTS } from '@styles/sizes';
+import {
+  AXIS_X_PADDING_CONTENT,
+  INPUT_ICON_RIGHT_MARGIN,
+  NO_LABEL_INPUT_MARGIN_BOTTOM,
+  VERTICAL_PADDING_LISTS,
+} from '@styles/sizes';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
+type FormData = {
+  searchValue: string;
+};
+
+const schema = yup.object().shape({
+  searchValue: yup.string(),
+});
+
 const Home = () => {
+  const { colors } = useTheme();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const hasNext = useRef<boolean>(false);
@@ -61,7 +85,7 @@ const Home = () => {
     setIsLoadingNext(true);
 
     try {
-      const response = await axios.get<GamesPage>(nextUrl.current);
+      const response = await rawg.get<GamesPage>(nextUrl.current);
 
       setGames([...games, ...response.data.results]);
       handleNextPage(response.data);
@@ -75,6 +99,46 @@ const Home = () => {
     <GameCard game={item} key={item.id} />
   );
 
+  const onSubmit = async (data: FormData) => {
+    if (data.searchValue) {
+      console.log('form: ', data.searchValue);
+    }
+  };
+
+  const FlatListHeader = () => (
+    <FormControl
+      isRequired
+      isInvalid={'searchValue' in errors}
+      mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
+      <Controller
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <Input
+            placeholder="Look for a game"
+            InputRightElement={
+              <IconButton
+                _icon={{
+                  as: <MagnifyingGlass color={colors.gray[300]} />,
+                }}
+                mr={INPUT_ICON_RIGHT_MARGIN}
+                onPress={handleSubmit(onSubmit)}
+              />
+            }
+            onChangeText={onChange}
+            value={value}
+            isDisabled={isLoading}
+            autoCorrect={false}
+            selectionColor="secondary.700"
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+        )}
+        name="searchValue"
+        defaultValue=""
+      />
+    </FormControl>
+  );
+
   return (
     <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
@@ -84,6 +148,7 @@ const Home = () => {
           onEndReached={getNextGames}
           onEndReachedThreshold={0.1}
           contentContainerStyle={styles.flatList}
+          ListHeaderComponent={FlatListHeader}
           ListFooterComponent={() => FlatListFooter(isLoadingNext)}
           ItemSeparatorComponent={FlatListSeparator}
           showsVerticalScrollIndicator={false}

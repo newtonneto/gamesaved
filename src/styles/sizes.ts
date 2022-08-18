@@ -5,6 +5,7 @@ export const GENERIC_TITTLE = 32;
 export const VERTICAL_PADDING_LISTS = 24;
 export const NO_LABEL_INPUT_MARGIN_BOTTOM = 4;
 export const INPUT_ICON_LEFT_MARGIN = 4;
+export const INPUT_ICON_RIGHT_MARGIN = 4;
 export const BUTTON_HEIGHT = 14;
 export const INPUT_HEIGHT = 14;
 export const INPUT_BORDER_WIDTH = 1;
