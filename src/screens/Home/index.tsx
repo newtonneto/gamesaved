@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FlatList, StyleSheet, Alert } from 'react-native';
 import { FormControl, useTheme, IconButton } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { MagnifyingGlass } from 'phosphor-react-native';
+import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
 
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
@@ -19,7 +19,6 @@ import { GamesPage } from '@interfaces/gamespage.dto';
 import rawg from '@services/rawg.api';
 import {
   AXIS_X_PADDING_CONTENT,
-  INPUT_ICON_RIGHT_MARGIN,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   VERTICAL_PADDING_LISTS,
 } from '@styles/sizes';
@@ -39,6 +38,7 @@ const Home = () => {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -56,30 +56,28 @@ const Home = () => {
     }
   };
 
+  const getGames = useCallback(async () => {
+    setValue('searchValue', '');
+
+    try {
+      const response = await rawg.get<GamesPage>(`games?key=${GAMEAPI_KEY}`);
+
+      setGames(response.data.results);
+      handleNextPage(response.data);
+    } catch (err) {
+      Alert.alert('>.<', 'Conteúdo indisponível, tente novamente mais tarde.', [
+        {
+          text: 'Ok',
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [setValue]);
+
   useEffect(() => {
-    const getGames = async () => {
-      try {
-        const response = await rawg.get<GamesPage>(`games?key=${GAMEAPI_KEY}`);
-
-        setGames(response.data.results);
-        handleNextPage(response.data);
-      } catch (err) {
-        Alert.alert(
-          '>.<',
-          'Conteúdo indisponível, tente novamente mais tarde.',
-          [
-            {
-              text: 'Ok',
-            },
-          ],
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     getGames();
-  }, []);
+  }, [getGames]);
 
   const getNextGames = async () => {
     setIsLoadingNext(true);
@@ -90,6 +88,11 @@ const Home = () => {
       setGames([...games, ...response.data.results]);
       handleNextPage(response.data);
     } catch (err) {
+      Alert.alert('>.<', 'Conteúdo indisponível, tente novamente mais tarde.', [
+        {
+          text: 'Ok',
+        },
+      ]);
     } finally {
       setIsLoadingNext(false);
     }
@@ -101,7 +104,19 @@ const Home = () => {
 
   const onSubmit = async (data: FormData) => {
     if (data.searchValue) {
-      console.log('form: ', data.searchValue);
+      setIsLoading(true);
+
+      try {
+        const response = await rawg.get<GamesPage>(
+          `games?search=${data.searchValue}&key=${GAMEAPI_KEY}`,
+        );
+
+        setGames(response.data.results);
+        handleNextPage(response.data);
+      } catch (err) {
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -115,12 +130,21 @@ const Home = () => {
         render={({ field: { onChange, value } }) => (
           <Input
             placeholder="Look for a game"
+            InputLeftElement={
+              value ? (
+                <IconButton
+                  _icon={{
+                    as: <XCircle color={colors.gray[300]} />,
+                  }}
+                  onPress={getGames}
+                />
+              ) : undefined
+            }
             InputRightElement={
               <IconButton
                 _icon={{
                   as: <MagnifyingGlass color={colors.gray[300]} />,
                 }}
-                mr={INPUT_ICON_RIGHT_MARGIN}
                 onPress={handleSubmit(onSubmit)}
               />
             }
@@ -130,7 +154,8 @@ const Home = () => {
             autoCorrect={false}
             selectionColor="secondary.700"
             autoCapitalize="none"
-            keyboardType="email-address"
+            keyboardType="web-search"
+            onSubmitEditing={handleSubmit(onSubmit)}
           />
         )}
         name="searchValue"
