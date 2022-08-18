@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 
 import VStack from '@components/VStack';
@@ -40,6 +40,15 @@ const Home = () => {
         setGames(response.data.results);
         handleNextPage(response.data);
       } catch (err) {
+        Alert.alert(
+          '>.<',
+          'Conteúdo indisponível, tente novamente mais tarde.',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
       } finally {
         setIsLoading(false);
       }

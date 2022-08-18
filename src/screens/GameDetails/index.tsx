@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions, Alert } from 'react-native';
 import {
   AspectRatio,
   VStack as NativeBaseVStack,
@@ -55,6 +55,15 @@ const GameDetails = () => {
 
         setGame(response.data);
       } catch (err) {
+        Alert.alert(
+          '>.<',
+          'Conteúdo indisponível, tente novamente mais tarde.',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
       } finally {
         setIsLoading(false);
       }
