@@ -58,6 +58,7 @@ const Home = () => {
 
   const getGames = useCallback(async () => {
     setValue('searchValue', '');
+    setIsLoading(true);
 
     try {
       const response = await rawg.get<GamesPage>(`games?key=${GAMEAPI_KEY}`);
