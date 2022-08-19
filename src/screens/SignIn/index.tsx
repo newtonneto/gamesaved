@@ -139,7 +139,6 @@ const SignIn = () => {
                             <Eye color={colors.secondary[700]} />
                           ),
                       }}
-                      mr={4}
                       onPress={() => setIsHidden(!isHidden)}
                     />
                   }
