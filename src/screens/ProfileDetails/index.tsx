@@ -9,7 +9,6 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
-import Header from '@components/Header';
 import ScrollView from '@components/ScrollView';
 import Button from '@components/Button';
 import Select from '@components/Select';
@@ -127,7 +126,6 @@ const ProfileDetails = () => {
   return (
     <ScreenWrapper>
       <VStack px={8}>
-        <Header title="Cadastro" />
         {!isLoading ? (
           <ScrollView>
             <FormControl

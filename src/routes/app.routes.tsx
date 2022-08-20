@@ -62,7 +62,7 @@ const AppRoutes = () => {
 
   return (
     <Navigator
-      initialRouteName="homestack"
+      initialRouteName="Home"
       screenOptions={{
         drawerPosition: 'right',
         drawerType: 'front',
@@ -92,7 +92,7 @@ const AppRoutes = () => {
         );
       }}>
       <Screen
-        name="homestack"
+        name="Home"
         component={HomeStack}
         options={{
           headerTitle: () => <AppHeader title="Home" />,
@@ -120,7 +120,7 @@ const AppRoutes = () => {
         }}
       />
       <Screen
-        name="inventory"
+        name="Inventory"
         component={Inventory}
         options={{
           headerTitle: () => <AppHeader title="Inventory" />,
@@ -160,7 +160,7 @@ const AppRoutes = () => {
         }}
       />
       <Screen
-        name="profiledetails"
+        name="Stats"
         component={ProfileDetails}
         options={{
           headerTitle: () => <AppHeader title="Stats" />,
@@ -200,7 +200,7 @@ const AppRoutes = () => {
         }}
       />
       <Screen
-        name="party"
+        name="Party"
         component={Friends}
         options={{
           headerTitle: () => <AppHeader title="Party" />,

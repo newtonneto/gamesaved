@@ -33,7 +33,7 @@ const GameCard = ({ game }: Props) => {
 
   const handleNavigation = () => {
     dispatch(setDrawerHeader(false));
-    navigation.navigate('game', {
+    navigation.navigate('GameScreen', {
       id: game.id,
       slug: game.slug,
       name: game.name,
