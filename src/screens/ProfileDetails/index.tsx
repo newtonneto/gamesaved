@@ -55,7 +55,7 @@ const schema = yup.object().shape({
     .test(
       'len',
       'Telefone deve conter 11 dígitos',
-      (value: string | undefined): boolean => value?.toString().length === 16,
+      (value: string | undefined): boolean => value?.toString().length === 11,
     ),
 });
 
@@ -101,7 +101,7 @@ const ProfileDetails = () => {
     setIsLoadingRequest(true);
 
     try {
-      firestore().collection<Profile>('profiles').doc(user.uid).update({
+      await firestore().collection<Profile>('profiles').doc(user.uid).update({
         birthDate: data.birthDate,
         firstName: data.firstName,
         lastName: data.lastName,
@@ -144,6 +144,7 @@ const ProfileDetails = () => {
                     autoComplete="name"
                     autoCorrect={false}
                     selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
                   />
                 )}
                 name="firstName"
@@ -169,6 +170,7 @@ const ProfileDetails = () => {
                     autoComplete="name"
                     autoCorrect={false}
                     selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
                   />
                 )}
                 name="lastName"
@@ -198,6 +200,7 @@ const ProfileDetails = () => {
                     selectionColor="secondary.700"
                     keyboardType="number-pad"
                     maxLength={10}
+                    isDisabled={isLoadingRequest}
                   />
                 )}
                 name="birthDate"
@@ -220,7 +223,8 @@ const ProfileDetails = () => {
                     selectedValue={value}
                     accessibilityLabel="Choose gender"
                     placeholder="Selecionar..."
-                    onValueChange={onChange}>
+                    onValueChange={onChange}
+                    isDisabled={isLoadingRequest}>
                     <NativeBaseSelect.Item label="Masculino" value="male" />
                     <NativeBaseSelect.Item label="Feminino" value="female" />
                     <NativeBaseSelect.Item label="Outro" value="other" />
@@ -266,7 +270,8 @@ const ProfileDetails = () => {
                     autoCorrect={false}
                     selectionColor="secondary.700"
                     keyboardType="phone-pad"
-                    maxLength={16}
+                    maxLength={11}
+                    isDisabled={isLoadingRequest}
                   />
                 )}
                 name="phone"
