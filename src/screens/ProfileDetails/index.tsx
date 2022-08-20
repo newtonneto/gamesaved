@@ -66,8 +66,9 @@ const ProfileDetails = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const user = useAppSelector(state => stateUser(state));
+  const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile>({} as Profile);
+  const user = useAppSelector(state => stateUser(state));
 
   useEffect(() => {
     const getProfile = async () => {
@@ -97,7 +98,29 @@ const ProfileDetails = () => {
   }, [user.uid]);
 
   const onSubmit = async (data: FormData) => {
-    console.log('formdata: ', data);
+    setIsLoadingRequest(true);
+
+    try {
+      firestore().collection<Profile>('profiles').doc(user.uid).update({
+        birthDate: data.birthDate,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        gender: data.gender,
+        phone: data.phone,
+      });
+    } catch (err) {
+      Alert.alert(
+        '>.<',
+        'Não foi possível concluir a solicitação, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    } finally {
+      setIsLoadingRequest(false);
+    }
   };
 
   return (
@@ -258,7 +281,7 @@ const ProfileDetails = () => {
               title="Enviar"
               onPress={handleSubmit(onSubmit)}
               colorScheme="pink"
-              isLoading={isLoading}
+              isLoading={isLoadingRequest}
               w="full"
             />
           </ScrollView>
