@@ -21,7 +21,7 @@ import auth from '@react-native-firebase/auth';
 
 import AppHeader from '@components/AppHeader';
 import HomeStack from '@modules/HomeStack';
-import Profile from '@screens/Profile';
+import ProfileDetails from '@src/screens/ProfileDetails';
 import Inventory from '@screens/Inventory';
 import Friends from '@screens/Friends';
 import { useAppSelector } from '@src/store';
@@ -160,8 +160,8 @@ const AppRoutes = () => {
         }}
       />
       <Screen
-        name="profile"
-        component={Profile}
+        name="profiledetails"
+        component={ProfileDetails}
         options={{
           headerTitle: () => <AppHeader title="Stats" />,
           headerLeft: () => (

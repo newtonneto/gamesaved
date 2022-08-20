@@ -36,61 +36,58 @@ type FormData = {
   phone: string;
 };
 
-const schema = yup
-  .object()
-  .shape({
-    firstName: yup
-      .string()
-      .required('Prenchimento obrigatorio')
-      .matches(/^[aA-zZ\s]+$/, 'Apenas letras')
-      .min(2, 'Nome deve ter no mínimo 2 caracteres'),
-    lastName: yup
-      .string()
-      .required('Prenchimento obrigatorio')
-      .matches(/^[aA-zZ\s]+$/, 'Apenas letras')
-      .min(2, 'Nome deve ter no mínimo 2 caracteres'),
-    birthDate: yup
-      .string()
-      .required('Prenchimento obrigatorio')
-      .test(
-        'len',
-        'Data de Nascimento deve seguir o formato DD/MM/AAAA',
-        (value: string | undefined): boolean => value?.toString().length === 10,
-      ),
-    gender: yup.string().required('Prenchimento obrigatorio'),
-    email: yup
-      .string()
-      .required('Prenchimento obrigatorio')
-      .email('Email inválido'),
-    password: yup
-      .string()
-      .required('Prenchimento obrigatorio')
-      .min(8, 'Senha deve ter no mínimo 8 dígitos')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'A senha deve contem ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial',
-      ),
-    confirmPassword: yup
-      .string()
-      .required('Prenchimento obrigatorio')
-      .min(8, 'Confirmação de senha deve ter no mínimo 8 dígitos')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'A senha deve contem ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial',
-      )
-      .oneOf([yup.ref('password')], 'As senhas informadas são divergentes'),
-    phone: yup
-      .string()
-      .required('Prenchimento obrigatorio')
-      .matches(/^[0-9]+$/, 'Apenas números')
-      .test(
-        'len',
-        'Telefone deve conter 11 dígitos',
-        (value: string | undefined): boolean => value?.toString().length === 16,
-      ),
-  })
+const schema = yup.object().shape({
+  firstName: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .matches(/^[aA-zZ\s]+$/, 'Apenas letras')
+    .min(2, 'Nome deve ter no mínimo 2 caracteres'),
+  lastName: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .matches(/^[aA-zZ\s]+$/, 'Apenas letras')
+    .min(2, 'Nome deve ter no mínimo 2 caracteres'),
+  birthDate: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .test(
+      'len',
+      'Data de Nascimento deve seguir o formato DD/MM/AAAA',
+      (value: string | undefined): boolean => value?.toString().length === 10,
+    ),
+  gender: yup.string().required('Prenchimento obrigatorio'),
+  email: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .email('Email inválido'),
+  password: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .min(8, 'Senha deve ter no mínimo 8 dígitos')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      'A senha deve contem ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial',
+    ),
+  confirmPassword: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .min(8, 'Confirmação de senha deve ter no mínimo 8 dígitos')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      'A senha deve contem ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial',
+    )
+    .oneOf([yup.ref('password')], 'As senhas informadas são divergentes'),
+  phone: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .matches(/^[0-9]+$/, 'Apenas números')
+    .test(
+      'len',
+      'Telefone deve conter 11 dígitos',
+      (value: string | undefined): boolean => value?.toString().length === 16,
+    ),
+});
 
-  .required();
 const SignUp = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();

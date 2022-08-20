@@ -115,6 +115,15 @@ const Home = () => {
         setGames(response.data.results);
         handleNextPage(response.data);
       } catch (err) {
+        Alert.alert(
+          '>.<',
+          'Conteúdo indisponível, tente novamente mais tarde.',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
       } finally {
         setIsLoading(false);
       }

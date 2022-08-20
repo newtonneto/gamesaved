@@ -11,7 +11,7 @@ const HomeStack = () => {
     <Navigator screenOptions={{ headerShown: false }}>
       <Screen name="home" component={Home} />
       <Screen
-        name="game"
+        name="gamedetails"
         component={GameDetails}
         options={{ headerShown: false }}
       />

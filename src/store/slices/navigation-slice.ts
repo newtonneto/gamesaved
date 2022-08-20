@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 import { RootState } from '@src/store';
 
 const navigationSlice = createSlice({
