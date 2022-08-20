@@ -55,7 +55,7 @@ const schema = yup.object().shape({
     .test(
       'len',
       'Telefone deve conter 11 dígitos',
-      (value: string | undefined): boolean => value?.toString().length === 11,
+      (value: string | undefined): boolean => value?.toString().length === 15,
     ),
 });
 
@@ -270,7 +270,7 @@ const ProfileDetails = () => {
                     autoCorrect={false}
                     selectionColor="secondary.700"
                     keyboardType="phone-pad"
-                    maxLength={11}
+                    maxLength={15}
                     isDisabled={isLoadingRequest}
                   />
                 )}

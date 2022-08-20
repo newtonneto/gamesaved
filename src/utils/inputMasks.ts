@@ -19,37 +19,13 @@ export const handleDateMask = (date: string): string => {
 };
 
 export const handlePhoneMask = (phone: string): string => {
-  let maskedPhone = phone;
-
   if (!phone) {
     return phone;
   }
 
-  if (phone.length === 1 && phone[0] !== '(') {
-    maskedPhone = `(${phone[0]}`;
-  }
+  phone = phone.replace(/\D/g, '');
+  phone = phone.replace(/^(\d\d)(\d)/g, '($1) $2');
+  phone = phone.replace(/(\d{5})(\d)/, '$1-$2');
 
-  if (phone.length === 4 && phone[3] !== ')') {
-    const splitedPhone: string[] = [phone.slice(0, 3), phone.slice(3)];
-    maskedPhone = `${splitedPhone[0]}) ${splitedPhone[1]}`;
-  } else if (phone.length === 5 && phone[4] !== ' ') {
-    const splitedPhone: string[] = [phone.slice(0, 4), phone.slice(4)];
-    maskedPhone = `${splitedPhone[0]} ${splitedPhone[1]}`;
-  }
-
-  if (phone.length === 7 && phone[6] !== ' ') {
-    const splitedPhone: string[] = [phone.slice(0, 6), phone.slice(6)];
-    maskedPhone = `${splitedPhone[0]} ${splitedPhone[1]}`;
-  }
-
-  if (phone.length === 12 && phone[11] !== '-') {
-    const splitedPhone: string[] = [phone.slice(0, 11), phone.slice(11)];
-    maskedPhone = `${splitedPhone[0]}-${splitedPhone[1]}`;
-  }
-
-  // if (phone.length === 11) {
-  //   maskedPhone = `(${phone[0]}${phone[1]}) ${phone[2]} ${phone[3]}${phone[4]}${phone[5]}${phone[6]}-${phone[7]}${phone[8]}${phone[9]}${phone[10]}`;
-  // }
-
-  return maskedPhone;
+  return phone;
 };
