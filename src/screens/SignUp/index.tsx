@@ -80,7 +80,6 @@ const schema = yup.object().shape({
   phone: yup
     .string()
     .required('Prenchimento obrigatorio')
-    .matches(/^[0-9]+$/, 'Apenas números')
     .test(
       'len',
       'Telefone deve conter 11 dígitos',

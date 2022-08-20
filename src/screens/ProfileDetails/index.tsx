@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import firestore from '@react-native-firebase/firestore';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
@@ -14,8 +15,6 @@ import Button from '@components/Button';
 import Select from '@components/Select';
 import Input from '@components/Input';
 import Loading from '@components/Loading';
-import { useAppSelector } from '@src/store';
-import { stateUser } from '@store/slices/user-slice';
 import { FORM_INPUT_MARGIN_BOTTOM } from '@styles/sizes';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
@@ -51,7 +50,6 @@ const schema = yup.object().shape({
   phone: yup
     .string()
     .required('Prenchimento obrigatorio')
-    .matches(/^[0-9]+$/, 'Apenas números')
     .test(
       'len',
       'Telefone deve conter 11 dígitos',
@@ -68,14 +66,14 @@ const ProfileDetails = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile>({} as Profile);
-  const user = useAppSelector(state => stateUser(state));
+  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
   useEffect(() => {
     const getProfile = async () => {
       try {
         const response = await firestore()
           .collection<Profile>('profiles')
-          .doc(user.uid)
+          .doc(userSession.uid)
           .get();
 
         setProfile(response.data()!);
@@ -95,19 +93,22 @@ const ProfileDetails = () => {
     };
 
     getProfile();
-  }, [user.uid]);
+  }, [userSession.uid]);
 
   const onSubmit = async (data: FormData) => {
     setIsLoadingRequest(true);
 
     try {
-      await firestore().collection<Profile>('profiles').doc(user.uid).update({
-        birthDate: data.birthDate,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        gender: data.gender,
-        phone: data.phone,
-      });
+      await firestore()
+        .collection<Profile>('profiles')
+        .doc(userSession.uid)
+        .update({
+          birthDate: data.birthDate,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          gender: data.gender,
+          phone: data.phone,
+        });
     } catch (err) {
       Alert.alert(
         '>.<',
@@ -242,7 +243,7 @@ const ProfileDetails = () => {
               <FormControl.Label>E-mail</FormControl.Label>
               <Input
                 placeholder="cloud.exsoldier@avalanche.com"
-                value={user.email || ''}
+                value={userSession.email || ''}
                 autoComplete="email"
                 autoCorrect={false}
                 selectionColor="secondary.700"
