@@ -57,11 +57,7 @@ const SignIn = () => {
     setIsLoading(true);
 
     try {
-      const res = await auth().signInWithEmailAndPassword(
-        data.email,
-        data.password,
-      );
-      console.log('res: ', res);
+      await auth().signInWithEmailAndPassword(data.email, data.password);
     } catch (err: any) {
       Alert.alert(
         '>.<',
