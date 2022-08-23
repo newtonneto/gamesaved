@@ -91,8 +91,6 @@ const ProfileDetails = () => {
             .ref(userSession.photoURL)
             .getDownloadURL();
 
-          console.log(imageUrl);
-
           setImage({ uri: imageUrl });
         }
       } catch (err) {
@@ -159,8 +157,6 @@ const ProfileDetails = () => {
           phone: data.phone,
         });
 
-      console.log('imageUrl: ', imageUrl);
-
       imageUrl &&
         (await auth().currentUser?.updateProfile({
           displayName: `${data.firstName} ${data.lastName}`,
@@ -189,8 +185,6 @@ const ProfileDetails = () => {
       const filename = selectedImage.assets?.[0].fileName;
       const uri = selectedImage.assets?.[0].uri;
       const type = selectedImage.assets?.[0].type;
-
-      console.log(selectedImage);
 
       if (!filename || !uri || !type) {
         Alert.alert('Selecione uma imagem válida!');
