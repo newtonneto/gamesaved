@@ -1,9 +1,10 @@
 import {
   launchImageLibrary,
   ImageLibraryOptions,
+  ImagePickerResponse,
 } from 'react-native-image-picker';
 
-const getPictureFromStorage = async () => {
+const getPictureFromStorage = async (): Promise<ImagePickerResponse> => {
   const options: ImageLibraryOptions = {
     quality: 1,
     mediaType: 'photo',
@@ -11,7 +12,7 @@ const getPictureFromStorage = async () => {
 
   const result = await launchImageLibrary(options);
 
-  console.log('result: ', result);
+  return result;
 };
 
 export default getPictureFromStorage;

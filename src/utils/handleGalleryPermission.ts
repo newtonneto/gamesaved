@@ -35,7 +35,6 @@ const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
 
   switch (result) {
     case RESULTS.UNAVAILABLE:
-      console.log('UNAVAILABLE');
       await request(
         Platform.OS === 'android'
           ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
@@ -43,7 +42,6 @@ const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
       );
       break;
     case RESULTS.DENIED:
-      console.log('DENIED');
       (await request(
         Platform.OS === 'android'
           ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
@@ -54,18 +52,13 @@ const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
 
       break;
     case RESULTS.LIMITED:
-      console.log('LIMITED');
       await request(
         Platform.OS === 'android'
           ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
           : PERMISSIONS.IOS.PHOTO_LIBRARY,
       );
       break;
-    case RESULTS.GRANTED:
-      console.log('GRANTED');
-      break;
     case RESULTS.BLOCKED:
-      console.log('BLOCKED');
       blockedPermission();
       break;
   }

@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { ImagePickerResponse } from 'react-native-image-picker';
 
 import VStack from '@components/VStack';
 import ScrollView from '@components/ScrollView';
@@ -69,6 +70,9 @@ const ProfileDetails = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile>({} as Profile);
+  const [image, setImage] = useState<ImagePickerResponse>(
+    {} as ImagePickerResponse,
+  );
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
   useEffect(() => {
@@ -130,7 +134,7 @@ const ProfileDetails = () => {
   const handleGallery = async () => {
     const permissionStatus = await handleGalleryPermissions();
 
-    permissionStatus === 'granted' && getPictureFromStorage();
+    permissionStatus === 'granted' && setImage(await getPictureFromStorage());
   };
 
   return (
@@ -143,7 +147,9 @@ const ProfileDetails = () => {
               alignSelf="center"
               size="2xl"
               source={{
-                uri: 'https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80',
+                uri: image.assets?.[0].uri
+                  ? image.assets?.[0].uri
+                  : 'https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80',
               }}>
               RB
             </Avatar>
