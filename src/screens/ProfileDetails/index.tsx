@@ -7,7 +7,6 @@ import * as yup from 'yup';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { ImagePickerResponse } from 'react-native-image-picker';
 
 import VStack from '@components/VStack';
 import ScrollView from '@components/ScrollView';
@@ -21,6 +20,7 @@ import {
 } from '@styles/sizes';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
+import { Image } from '@interfaces/image.model';
 import handleGalleryPermissions from '@utils/handleGalleryPermission';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
 import getImageType from '@utils/getImageType';
@@ -73,9 +73,7 @@ const ProfileDetails = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile>({} as Profile);
-  const [image, setImage] = useState<ImagePickerResponse>(
-    {} as ImagePickerResponse,
-  );
+  const [image, setImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
   useEffect(() => {
@@ -87,6 +85,16 @@ const ProfileDetails = () => {
           .get();
 
         setProfile(response.data()!);
+
+        if (userSession.photoURL) {
+          const imageUrl = await storage()
+            .ref(userSession.photoURL)
+            .getDownloadURL();
+
+          console.log(imageUrl);
+
+          setImage({ uri: imageUrl });
+        }
       } catch (err) {
         Alert.alert(
           '>.<',
@@ -103,42 +111,43 @@ const ProfileDetails = () => {
     };
 
     getProfile();
-  }, [userSession.uid]);
+  }, [userSession.photoURL, userSession.uid]);
 
-  const uploadAvatar = async () => {
-    const fileName = image.assets?.[0].fileName;
-    const uri = image.assets?.[0].uri;
+  const uploadAvatar = async (): Promise<string | void> => {
+    const filename = image.filename;
+    const uri = image.uri;
 
-    if (fileName && uri) {
-      try {
-        const reference = storage().ref(
-          `${userSession.uid}.${getImageType(fileName)}`,
-        );
+    if (!filename && !uri) {
+      throw new Error('Selecione uma imagem válida!');
+    }
 
-        const response = await reference.putFile(uri);
+    try {
+      const imageRef = `${userSession.uid}.${getImageType(filename!)}`;
+      const reference = storage().ref(imageRef);
 
-        console.log({ response });
-      } catch (err: any) {
-        Alert.alert(
-          '>.<',
-          firebaseExceptions[err.code] ||
-            'Não foi possível alterar o seu avatar.',
-          [
-            {
-              text: 'Ok',
-            },
-          ],
-        );
-      }
+      await reference.putFile(uri!);
+
+      return imageRef;
+    } catch (err: any) {
+      Alert.alert(
+        '>.<',
+        firebaseExceptions[err.code] ||
+          'Não foi possível alterar o seu avatar.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
     }
   };
 
   const onSubmit = async (data: FormData) => {
     setIsLoadingRequest(true);
 
-    await uploadAvatar();
-
     try {
+      const imageUrl = await uploadAvatar();
+
       await firestore()
         .collection<Profile>('profiles')
         .doc(userSession.uid)
@@ -149,6 +158,14 @@ const ProfileDetails = () => {
           gender: data.gender,
           phone: data.phone,
         });
+
+      console.log('imageUrl: ', imageUrl);
+
+      imageUrl &&
+        (await auth().currentUser?.updateProfile({
+          displayName: `${data.firstName} ${data.lastName}`,
+          photoURL: imageUrl,
+        }));
     } catch (err) {
       Alert.alert(
         '>.<',
@@ -167,7 +184,24 @@ const ProfileDetails = () => {
   const handleGallery = async () => {
     const permissionStatus = await handleGalleryPermissions();
 
-    permissionStatus === 'granted' && setImage(await getPictureFromStorage());
+    if (permissionStatus === 'granted') {
+      const selectedImage = await getPictureFromStorage();
+      const filename = selectedImage.assets?.[0].fileName;
+      const uri = selectedImage.assets?.[0].uri;
+      const type = selectedImage.assets?.[0].type;
+
+      console.log(selectedImage);
+
+      if (!filename || !uri || !type) {
+        Alert.alert('Selecione uma imagem válida!');
+      } else {
+        setImage({
+          filename,
+          uri,
+          type,
+        });
+      }
+    }
   };
 
   return (
@@ -180,11 +214,9 @@ const ProfileDetails = () => {
               alignSelf="center"
               size="2xl"
               source={{
-                uri: image.assets?.[0].uri
-                  ? image.assets?.[0].uri
-                  : 'https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80',
+                uri: image.uri,
               }}>
-              RB
+              {`${profile.firstName[0]}${profile.lastName[0]}`}
             </Avatar>
           </Pressable>
           <FormControl
