@@ -4,6 +4,7 @@ import { Avatar, FormControl, Select as NativeBaseSelect } from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { ImagePickerResponse } from 'react-native-image-picker';
@@ -22,6 +23,8 @@ import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
 import handleGalleryPermissions from '@utils/handleGalleryPermission';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
+import getImageType from '@utils/getImageType';
+import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   firstName: string;
@@ -102,8 +105,38 @@ const ProfileDetails = () => {
     getProfile();
   }, [userSession.uid]);
 
+  const uploadAvatar = async () => {
+    const fileName = image.assets?.[0].fileName;
+    const uri = image.assets?.[0].uri;
+
+    if (fileName && uri) {
+      try {
+        const reference = storage().ref(
+          `${userSession.uid}.${getImageType(fileName)}`,
+        );
+
+        const response = await reference.putFile(uri);
+
+        console.log({ response });
+      } catch (err: any) {
+        Alert.alert(
+          '>.<',
+          firebaseExceptions[err.code] ||
+            'Não foi possível alterar o seu avatar.',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
+      }
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     setIsLoadingRequest(true);
+
+    await uploadAvatar();
 
     try {
       await firestore()
