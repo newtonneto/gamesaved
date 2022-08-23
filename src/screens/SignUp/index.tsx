@@ -425,7 +425,6 @@ const SignUp = () => {
           <Button
             title="Enviar"
             onPress={handleSubmit(onSubmit)}
-            colorScheme="pink"
             isLoading={isLoading}
             w="full"
           />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Pressable } from 'react-native';
 import { Avatar, FormControl, Select as NativeBaseSelect } from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,6 +19,8 @@ import {
 } from '@styles/sizes';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
+import handleGalleryPermissions from '@utils/handleGalleryPermission';
+import getPictureFromStorage from '@utils/getPictureFromStorage';
 
 type FormData = {
   firstName: string;
@@ -125,19 +127,27 @@ const ProfileDetails = () => {
     }
   };
 
+  const handleGallery = async () => {
+    const permissionStatus = await handleGalleryPermissions();
+
+    permissionStatus === 'granted' && getPictureFromStorage();
+  };
+
   return (
     <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
         <ScrollView pt={8}>
-          <Avatar
-            bg="gray.700"
-            alignSelf="center"
-            size="2xl"
-            source={{
-              uri: 'https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80',
-            }}>
-            RB
-          </Avatar>
+          <Pressable onPress={handleGallery}>
+            <Avatar
+              bg="gray.700"
+              alignSelf="center"
+              size="2xl"
+              source={{
+                uri: 'https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80',
+              }}>
+              RB
+            </Avatar>
+          </Pressable>
           <FormControl
             isRequired
             isInvalid={'firstName' in errors}
