@@ -1,7 +1,7 @@
-const getImageType = (item: String): String => {
+const getImageType = (item: String): String | void => {
   const splitedItem = item.split('.');
 
-  return splitedItem[splitedItem.length - 1];
+  return splitedItem.pop();
 };
 
 export default getImageType;

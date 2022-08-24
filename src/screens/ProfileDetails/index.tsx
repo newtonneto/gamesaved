@@ -91,7 +91,7 @@ const ProfileDetails = () => {
             .ref(userSession.photoURL)
             .getDownloadURL();
 
-          setImage({ uri: imageUrl });
+          setImage({ filename: 'firebase image', uri: imageUrl });
         }
       } catch (err) {
         Alert.alert(
@@ -115,15 +115,11 @@ const ProfileDetails = () => {
     const filename = image.filename;
     const uri = image.uri;
 
-    if (!filename && !uri) {
-      throw new Error('Selecione uma imagem válida!');
-    }
-
     try {
-      const imageRef = `${userSession.uid}.${getImageType(filename!)}`;
+      const imageRef = `${userSession.uid}.${getImageType(filename)}`;
       const reference = storage().ref(imageRef);
 
-      await reference.putFile(uri!);
+      await reference.putFile(uri);
 
       return imageRef;
     } catch (err: any) {
@@ -184,15 +180,13 @@ const ProfileDetails = () => {
       const selectedImage = await getPictureFromStorage();
       const filename = selectedImage.assets?.[0].fileName;
       const uri = selectedImage.assets?.[0].uri;
-      const type = selectedImage.assets?.[0].type;
 
-      if (!filename || !uri || !type) {
+      if (!filename || !uri) {
         Alert.alert('Selecione uma imagem válida!');
       } else {
         setImage({
           filename,
           uri,
-          type,
         });
       }
     }

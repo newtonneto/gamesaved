@@ -1,5 +1,4 @@
 export interface Image {
-  filename?: string;
+  filename: string;
   uri: string;
-  type?: string;
 }
