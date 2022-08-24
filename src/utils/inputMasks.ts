@@ -23,9 +23,9 @@ export const handlePhoneMask = (phone: string): string => {
     return phone;
   }
 
-  phone = phone.replace(/\D/g, '');
-  phone = phone.replace(/^(\d\d)(\d)/g, '($1) $2');
-  phone = phone.replace(/(\d{5})(\d)/, '$1-$2');
+  phone = phone.replace(/\D/g, ''); //Remove elements that are not numbers
+  phone = phone.replace(/^(\d\d)(\d)/g, '($1) $2'); //Put parentheses around the two first numbers
+  phone = phone.replace(/(\d{5})(\d)/, '$1-$2'); //Put hyphen between fifth and sixth numbers
 
   return phone;
 };
