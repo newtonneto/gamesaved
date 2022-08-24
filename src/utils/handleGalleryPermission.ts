@@ -27,11 +27,9 @@ const blockedPermission = () => {
 const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
   let result: PermissionStatus;
 
-  if (Platform.OS === 'android') {
-    result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
-  } else {
-    result = await check(PERMISSIONS.IOS.PHOTO_LIBRARY);
-  }
+  Platform.OS === 'android'
+    ? (result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE))
+    : (result = await check(PERMISSIONS.IOS.PHOTO_LIBRARY));
 
   switch (result) {
     case RESULTS.UNAVAILABLE:
