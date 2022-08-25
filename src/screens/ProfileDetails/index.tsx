@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Pressable } from 'react-native';
-import { Avatar, FormControl, Select as NativeBaseSelect } from 'native-base';
+import {
+  Avatar,
+  FormControl,
+  Select as NativeBaseSelect,
+  useToast,
+} from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -65,15 +70,17 @@ const schema = yup.object().shape({
 });
 
 const ProfileDetails = () => {
+  const toast = useToast();
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile>({} as Profile);
-  const [image, setImage] = useState<Image>({} as Image);
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
   useEffect(() => {
@@ -91,7 +98,7 @@ const ProfileDetails = () => {
             .ref(userSession.photoURL)
             .getDownloadURL();
 
-          setImage({ filename: 'firebase image', uri: imageUrl });
+          setImage(imageUrl);
         }
       } catch (err) {
         Alert.alert(
@@ -112,8 +119,8 @@ const ProfileDetails = () => {
   }, [userSession.photoURL, userSession.uid]);
 
   const uploadAvatar = async (): Promise<string | void> => {
-    const filename = image.filename;
-    const uri = image.uri;
+    const filename = selectedImage.filename;
+    const uri = selectedImage.uri;
 
     try {
       const imageRef = `${userSession.uid}.${getImageType(filename)}`;
@@ -140,8 +147,6 @@ const ProfileDetails = () => {
     setIsLoadingRequest(true);
 
     try {
-      const imageUrl = await uploadAvatar();
-
       await firestore()
         .collection<Profile>('profiles')
         .doc(userSession.uid)
@@ -153,11 +158,19 @@ const ProfileDetails = () => {
           phone: data.phone,
         });
 
-      imageUrl &&
-        (await auth().currentUser?.updateProfile({
-          displayName: `${data.firstName} ${data.lastName}`,
-          photoURL: imageUrl,
-        }));
+      if (Object.keys(selectedImage).length !== 0) {
+        const imageUrl = await uploadAvatar();
+
+        imageUrl &&
+          (await auth().currentUser?.updateProfile({
+            displayName: `${data.firstName} ${data.lastName}`,
+            photoURL: imageUrl,
+          }));
+      }
+
+      toast.show({
+        description: 'Ficha atualizada com sucesso.',
+      });
     } catch (err) {
       Alert.alert(
         '>.<',
@@ -177,14 +190,14 @@ const ProfileDetails = () => {
     const permissionStatus = await handleGalleryPermissions();
 
     if (permissionStatus === 'granted') {
-      const selectedImage = await getPictureFromStorage();
-      const filename = selectedImage.assets?.[0].fileName;
-      const uri = selectedImage.assets?.[0].uri;
+      const imageFromStorage = await getPictureFromStorage();
+      const filename = imageFromStorage.assets?.[0].fileName;
+      const uri = imageFromStorage.assets?.[0].uri;
 
       if (!filename || !uri) {
         Alert.alert('Selecione uma imagem válida!');
       } else {
-        setImage({
+        setSelectedImage({
           filename,
           uri,
         });
@@ -202,7 +215,7 @@ const ProfileDetails = () => {
               alignSelf="center"
               size="2xl"
               source={{
-                uri: image.uri,
+                uri: selectedImage.uri ? selectedImage.uri : image,
               }}>
               {`${profile.firstName[0]}${profile.lastName[0]}`}
             </Avatar>
@@ -363,8 +376,11 @@ const ProfileDetails = () => {
           <Button
             title="Enviar"
             onPress={handleSubmit(onSubmit)}
-            colorScheme="pink"
             isLoading={isLoadingRequest}
+            isDisabled={
+              Object.keys(dirtyFields).length === 0 ||
+              Object.keys(errors).length !== 0
+            }
             w="full"
           />
         </ScrollView>
