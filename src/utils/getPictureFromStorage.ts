@@ -10,9 +10,7 @@ const getPictureFromStorage = async (): Promise<ImagePickerResponse> => {
     mediaType: 'photo',
   };
 
-  const result = await launchImageLibrary(options);
-
-  return result;
+  return launchImageLibrary(options);
 };
 
 export default getPictureFromStorage;
