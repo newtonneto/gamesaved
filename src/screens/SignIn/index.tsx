@@ -165,13 +165,13 @@ const SignIn = () => {
           <TextButton
             title="Novo save"
             w="full"
-            onPress={() => navigation.navigate('signup')}
+            onPress={() => navigation.navigate('SignUp')}
             disabled={isLoading}
           />
           <TextButton
             title="Restaurar save"
             w="full"
-            onPress={() => navigation.navigate('forgotpassword')}
+            onPress={() => navigation.navigate('ForgotPassword')}
             disabled={isLoading}
           />
         </ScrollView>

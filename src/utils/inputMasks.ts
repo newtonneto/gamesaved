@@ -19,33 +19,13 @@ export const handleDateMask = (date: string): string => {
 };
 
 export const handlePhoneMask = (phone: string): string => {
-  let maskedPhone = phone;
-
   if (!phone) {
     return phone;
   }
 
-  if (phone.length === 1 && phone[0] !== '(') {
-    maskedPhone = `(${phone[0]}`;
-  }
+  phone = phone.replace(/\D/g, ''); //Remove elements that are not numbers
+  phone = phone.replace(/^(\d\d)(\d)/g, '($1) $2'); //Put parentheses around the two first numbers
+  phone = phone.replace(/(\d{5})(\d)/, '$1-$2'); //Put hyphen between fifth and sixth numbers
 
-  if (phone.length === 4 && phone[3] !== ')') {
-    const splitedPhone: string[] = [phone.slice(0, 3), phone.slice(3)];
-    maskedPhone = `${splitedPhone[0]}) ${splitedPhone[1]}`;
-  } else if (phone.length === 5 && phone[4] !== ' ') {
-    const splitedPhone: string[] = [phone.slice(0, 4), phone.slice(4)];
-    maskedPhone = `${splitedPhone[0]} ${splitedPhone[1]}`;
-  }
-
-  if (phone.length === 7 && phone[6] !== ' ') {
-    const splitedPhone: string[] = [phone.slice(0, 6), phone.slice(6)];
-    maskedPhone = `${splitedPhone[0]} ${splitedPhone[1]}`;
-  }
-
-  if (phone.length === 12 && phone[11] !== '-') {
-    const splitedPhone: string[] = [phone.slice(0, 11), phone.slice(11)];
-    maskedPhone = `${splitedPhone[0]}-${splitedPhone[1]}`;
-  }
-
-  return maskedPhone;
+  return phone;
 };

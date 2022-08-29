@@ -21,7 +21,7 @@ import auth from '@react-native-firebase/auth';
 
 import AppHeader from '@components/AppHeader';
 import HomeStack from '@modules/HomeStack';
-import Profile from '@screens/Profile';
+import ProfileDetails from '@src/screens/ProfileDetails';
 import Inventory from '@screens/Inventory';
 import Friends from '@screens/Friends';
 import { useAppSelector } from '@src/store';
@@ -62,7 +62,7 @@ const AppRoutes = () => {
 
   return (
     <Navigator
-      initialRouteName="homestack"
+      initialRouteName="Home"
       screenOptions={{
         drawerPosition: 'right',
         drawerType: 'front',
@@ -92,7 +92,7 @@ const AppRoutes = () => {
         );
       }}>
       <Screen
-        name="homestack"
+        name="Home"
         component={HomeStack}
         options={{
           headerTitle: () => <AppHeader title="Home" />,
@@ -120,7 +120,7 @@ const AppRoutes = () => {
         }}
       />
       <Screen
-        name="inventory"
+        name="Inventory"
         component={Inventory}
         options={{
           headerTitle: () => <AppHeader title="Inventory" />,
@@ -160,8 +160,8 @@ const AppRoutes = () => {
         }}
       />
       <Screen
-        name="profile"
-        component={Profile}
+        name="Stats"
+        component={ProfileDetails}
         options={{
           headerTitle: () => <AppHeader title="Stats" />,
           headerLeft: () => (
@@ -200,7 +200,7 @@ const AppRoutes = () => {
         }}
       />
       <Screen
-        name="party"
+        name="Party"
         component={Friends}
         options={{
           headerTitle: () => <AppHeader title="Party" />,

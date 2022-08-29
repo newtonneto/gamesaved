@@ -3,17 +3,18 @@ import { VStack } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
+import Logo from '@components/Logo';
 import AuthRoutes from '@routes/auth.routes';
 import AppRoutes from '@routes/app.routes';
-import Logo from '@components/Logo';
 
 const Routes = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
+  const [userSession, setUserSession] =
+    useState<FirebaseAuthTypes.User | null>();
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(response => {
-      setUser(response);
+      setUserSession(response);
       setIsLoading(false);
     });
 
@@ -34,7 +35,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer>
-      {user?.emailVerified ? <AppRoutes /> : <AuthRoutes />}
+      {userSession?.emailVerified ? <AppRoutes /> : <AuthRoutes />}
     </NavigationContainer>
   );
 };

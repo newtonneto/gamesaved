@@ -1,10 +1,11 @@
 export declare global {
   namespace ReactNavigation {
     interface RootParamList {
-      signin: undefined;
-      signup: undefined;
-      forgotpassword: undefined;
-      game: { id: number; slug: string; name: string };
+      SignIn: undefined;
+      SignUp: undefined;
+      ForgotPassword: undefined;
+      GameScreen: { id: number; slug: string; name: string };
+      Stats: undefined;
     }
   }
 }
