@@ -182,11 +182,12 @@ const Home = () => {
           renderItem={RenderItem}
           onEndReached={getNextGames}
           onEndReachedThreshold={0.1}
-          contentContainerStyle={styles.flatList}
+          contentContainerStyle={styles.flatListContent}
           ListHeaderComponent={FlatListHeader}
           ListFooterComponent={() => FlatListFooter(isLoadingNext)}
           ItemSeparatorComponent={FlatListSeparator}
           showsVerticalScrollIndicator={false}
+          style={styles.flatList}
         />
       ) : (
         <Loading />
@@ -196,8 +197,11 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-  flatList: {
+  flatListContent: {
     paddingVertical: VERTICAL_PADDING_LISTS,
+  },
+  flatList: {
+    width: '100%',
   },
 });
 
