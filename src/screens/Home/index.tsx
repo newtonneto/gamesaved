@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FlatList, StyleSheet, Alert } from 'react-native';
-import { FormControl, useTheme, IconButton } from 'native-base';
+import { FormControl, useTheme, IconButton, Heading } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -23,6 +23,7 @@ import {
   VERTICAL_PADDING_LISTS,
 } from '@styles/sizes';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
+import NoData from '@assets/imgs/undraw_no_data.svg';
 
 type FormData = {
   searchValue: string;
@@ -101,6 +102,15 @@ const Home = () => {
 
   const RenderItem = ({ item }: { item: Game }) => (
     <GameCard game={item} key={item.id} />
+  );
+
+  const RenderEmpty = () => (
+    <VStack>
+      <NoData width={150} height={150} />
+      <Heading fontFamily="heading" color="secondary.700" textAlign="center">
+        LOOKS LIKE THIS GAME HASN'T BEEN CREATED YET
+      </Heading>
+    </VStack>
   );
 
   const onSubmit = async (data: FormData) => {
@@ -185,6 +195,7 @@ const Home = () => {
           contentContainerStyle={styles.flatListContent}
           ListHeaderComponent={FlatListHeader}
           ListFooterComponent={() => FlatListFooter(isLoadingNext)}
+          ListEmptyComponent={RenderEmpty}
           ItemSeparatorComponent={FlatListSeparator}
           showsVerticalScrollIndicator={false}
           style={styles.flatList}
