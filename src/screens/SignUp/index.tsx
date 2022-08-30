@@ -196,6 +196,7 @@ const SignUp = () => {
                   autoComplete="name"
                   autoCorrect={false}
                   selectionColor="secondary.700"
+                  isDisabled={isLoading}
                 />
               )}
               name="firstName"
@@ -221,6 +222,7 @@ const SignUp = () => {
                   autoComplete="name"
                   autoCorrect={false}
                   selectionColor="secondary.700"
+                  isDisabled={isLoading}
                 />
               )}
               name="lastName"
@@ -250,6 +252,7 @@ const SignUp = () => {
                   selectionColor="secondary.700"
                   keyboardType="number-pad"
                   maxLength={10}
+                  isDisabled={isLoading}
                 />
               )}
               name="birthDate"
@@ -272,7 +275,8 @@ const SignUp = () => {
                   selectedValue={value}
                   accessibilityLabel="Choose gender"
                   placeholder="Selecionar..."
-                  onValueChange={onChange}>
+                  onValueChange={onChange}
+                  isDisabled={isLoading}>
                   <NativeBaseSelect.Item label="Masculino" value="male" />
                   <NativeBaseSelect.Item label="Feminino" value="female" />
                   <NativeBaseSelect.Item label="Outro" value="other" />
@@ -303,6 +307,7 @@ const SignUp = () => {
                   selectionColor="secondary.700"
                   autoCapitalize="none"
                   keyboardType="email-address"
+                  isDisabled={isLoading}
                 />
               )}
               name="email"
@@ -343,6 +348,7 @@ const SignUp = () => {
                       onPress={() => setIsHidden(!isHidden)}
                     />
                   }
+                  isDisabled={isLoading}
                 />
               )}
               name="password"
@@ -383,6 +389,7 @@ const SignUp = () => {
                       onPress={() => setIsHidden(!isHidden)}
                     />
                   }
+                  isDisabled={isLoading}
                 />
               )}
               name="confirmPassword"
@@ -412,6 +419,7 @@ const SignUp = () => {
                   selectionColor="secondary.700"
                   keyboardType="phone-pad"
                   maxLength={15}
+                  isDisabled={isLoading}
                 />
               )}
               name="phone"
