@@ -109,6 +109,7 @@ const SignUp = () => {
 
       return response;
     } catch (err: any) {
+      console.log('createUser: ', err);
       throw new Error(err.code);
     }
   };
@@ -123,11 +124,14 @@ const SignUp = () => {
     phone: string,
   ) => {
     try {
-      return firestore()
+      await firestore()
         .collection('profiles')
         .doc(uid)
         .set({ firstName, lastName, birthDate, gender, email, phone });
+
+      await firestore().collection('lists').doc(uid).set({ games: [] });
     } catch (err: any) {
+      console.log('createProfile: ', err);
       throw new Error(err.code);
     }
   };
@@ -197,6 +201,7 @@ const SignUp = () => {
                   autoCorrect={false}
                   selectionColor="secondary.700"
                   isDisabled={isLoading}
+                  autoCapitalize="words"
                 />
               )}
               name="firstName"
@@ -223,6 +228,7 @@ const SignUp = () => {
                   autoCorrect={false}
                   selectionColor="secondary.700"
                   isDisabled={isLoading}
+                  autoCapitalize="words"
                 />
               )}
               name="lastName"

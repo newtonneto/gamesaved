@@ -10,6 +10,8 @@ import {
   useTheme,
   Heading,
 } from 'native-base';
+import firestore from '@react-native-firebase/firestore';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import RenderHtml from 'react-native-render-html';
@@ -21,6 +23,7 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import { Game } from '@interfaces/game.dto';
+import { Inventory } from '@interfaces/inventory.dto';
 import rawg from '@services/rawg.api';
 import { useAppDispatch } from '@src/store';
 import { setDrawerHeader } from '@store/slices/navigation-slice';
@@ -30,6 +33,7 @@ import {
   AXIS_Y_PADDING_CONTENT,
   RATIO,
 } from '@styles/sizes';
+import firebaseExceptions from '@utils/firebaseExceptions';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type RouteParams = {
@@ -47,6 +51,7 @@ const GameDetails = () => {
   const { width } = useWindowDimensions();
   const [game, setGame] = useState<Game>({} as Game);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
   useEffect(() => {
     const getGame = async () => {
@@ -76,6 +81,42 @@ const GameDetails = () => {
     };
   }, [dispatch, id]);
 
+  const addToInventory = async () => {
+    let inventory: number[] = [];
+
+    try {
+      const response = await firestore()
+        .collection<Inventory>('lists')
+        .doc(userSession.uid)
+        .get();
+
+      if (response.data()?.games) {
+        inventory = response.data()!.games;
+        inventory.push(game.id);
+      } else {
+        inventory.push(game.id);
+      }
+
+      await firestore()
+        .collection<Inventory>('lists')
+        .doc(userSession.uid)
+        .update({ games: inventory });
+      toast.show({
+        description: "Isn't available right now",
+      });
+    } catch (err: any) {
+      Alert.alert(
+        '>.<',
+        firebaseExceptions[err.code] || 'Não foi possível lootear esse jogo.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    }
+  };
+
   return (
     <ScreenWrapper>
       <VStack>
@@ -90,11 +131,7 @@ const GameDetails = () => {
             <FloppyDisk color={colors.white} style={styles.icon} size={18} />
           }
           label="Save Game"
-          onPress={() =>
-            toast.show({
-              description: "Isn't available right now",
-            })
-          }
+          onPress={() => addToInventory()}
           _pressed={{ bg: 'gray.500' }}
         />
         {!isLoading ? (
