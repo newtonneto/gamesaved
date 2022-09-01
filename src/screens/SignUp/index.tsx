@@ -109,7 +109,6 @@ const SignUp = () => {
 
       return response;
     } catch (err: any) {
-      console.log('createUser: ', err);
       throw new Error(err.code);
     }
   };

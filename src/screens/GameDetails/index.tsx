@@ -51,7 +51,11 @@ const GameDetails = () => {
   const { width } = useWindowDimensions();
   const [game, setGame] = useState<Game>({} as Game);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
+  const inventoryRef = firestore()
+    .collection<Inventory>('lists')
+    .doc(userSession.uid);
 
   useEffect(() => {
     const getGame = async () => {
@@ -59,6 +63,26 @@ const GameDetails = () => {
         const response = await rawg.get<Game>(`games/${id}?key=${GAMEAPI_KEY}`);
 
         setGame(response.data);
+      } catch (err: any) {
+        throw new Error(err);
+      }
+    };
+
+    const getInventory = async () => {
+      try {
+        const response = await inventoryRef.get();
+        const saved = response.data()?.games.indexOf(id);
+
+        saved !== -1 && setIsSaved(true);
+      } catch (err: any) {
+        throw new Error(err);
+      }
+    };
+
+    const initialize = async () => {
+      try {
+        await getGame();
+        await getInventory();
       } catch (err) {
         Alert.alert(
           '>.<',
@@ -74,35 +98,37 @@ const GameDetails = () => {
       }
     };
 
-    getGame();
+    initialize();
 
     return () => {
       dispatch(setDrawerHeader(true));
     };
   }, [dispatch, id]);
 
+  const handleInventory = async (gameId: number) => {
+    isSaved
+      ? await inventoryRef.update({
+          games: firestore.FieldValue.arrayRemove(gameId),
+        })
+      : await inventoryRef.update({
+          games: firestore.FieldValue.arrayUnion(gameId),
+        });
+
+    setIsSaved(!isSaved);
+  };
+
   const addToInventory = async () => {
-    let inventory: number[] = [];
+    toast.show({
+      description: `${
+        isSaved ? 'Removing' : 'Saving'
+      } game, please don't turn off your phone`,
+    });
 
     try {
-      const response = await firestore()
-        .collection<Inventory>('lists')
-        .doc(userSession.uid)
-        .get();
+      await handleInventory(game.id);
 
-      if (response.data()?.games) {
-        inventory = response.data()!.games;
-        inventory.push(game.id);
-      } else {
-        inventory.push(game.id);
-      }
-
-      await firestore()
-        .collection<Inventory>('lists')
-        .doc(userSession.uid)
-        .update({ games: inventory });
       toast.show({
-        description: "Isn't available right now",
+        description: `Game ${isSaved ? 'Removed' : 'Saved'}`,
       });
     } catch (err: any) {
       Alert.alert(
@@ -121,62 +147,68 @@ const GameDetails = () => {
     <ScreenWrapper>
       <VStack>
         <Header title={name} />
-        <Fab
-          placement="bottom-right"
-          renderInPortal={false}
-          shadow={2}
-          size="sm"
-          bg="secondary.700"
-          icon={
-            <FloppyDisk color={colors.white} style={styles.icon} size={18} />
-          }
-          label="Save Game"
-          onPress={() => addToInventory()}
-          _pressed={{ bg: 'gray.500' }}
-        />
         {!isLoading ? (
-          <ScrollView>
-            <AspectRatio w="100%" ratio={RATIO}>
-              <FastImage
-                source={{
-                  uri: game.background_image,
-                }}
-              />
-            </AspectRatio>
-            <VStack px={AXIS_X_PADDING_CONTENT} mt={AXIS_Y_PADDING_CONTENT}>
-              <NativeBaseVStack w={width - 64}>
-                <Heading
-                  fontFamily="heading"
+          <>
+            <Fab
+              placement="bottom-right"
+              renderInPortal={false}
+              shadow={2}
+              size="sm"
+              bg={isSaved ? 'gray.700' : 'secondary.700'}
+              icon={
+                <FloppyDisk
                   color={colors.white}
-                  fontSize={GENERIC_TITTLE}>
-                  {game.name.toUpperCase()}
-                </Heading>
-                <HStack>
-                  <Text color={colors.white} fontWeight="700">
-                    Lançamento:{' '}
-                  </Text>
-                  <Text color={colors.white}>{game.released}</Text>
-                </HStack>
-                <HStack>
-                  <Text color={colors.white} fontWeight="700">
-                    Metacritic:{' '}
-                  </Text>
-                  <Text color={colors.white}>{game.metacritic}</Text>
-                </HStack>
-              </NativeBaseVStack>
-              <RenderHtml
-                contentWidth={width - 16}
-                source={{
-                  html: `<p style="color: white; font-size: 1rem;">
+                  style={styles.icon}
+                  size={18}
+                />
+              }
+              label={isSaved ? 'Remove Game' : 'Save Game'}
+              onPress={() => addToInventory()}
+              _pressed={{ bg: 'gray.500' }}
+            />
+            <ScrollView>
+              <AspectRatio w="100%" ratio={RATIO}>
+                <FastImage
+                  source={{
+                    uri: game.background_image,
+                  }}
+                />
+              </AspectRatio>
+              <VStack px={AXIS_X_PADDING_CONTENT} mt={AXIS_Y_PADDING_CONTENT}>
+                <NativeBaseVStack w={width - 64}>
+                  <Heading
+                    fontFamily="heading"
+                    color={colors.white}
+                    fontSize={GENERIC_TITTLE}>
+                    {game.name.toUpperCase()}
+                  </Heading>
+                  <HStack>
+                    <Text color={colors.white} fontWeight="700">
+                      Lançamento:{' '}
+                    </Text>
+                    <Text color={colors.white}>{game.released}</Text>
+                  </HStack>
+                  <HStack>
+                    <Text color={colors.white} fontWeight="700">
+                      Metacritic:{' '}
+                    </Text>
+                    <Text color={colors.white}>{game.metacritic}</Text>
+                  </HStack>
+                </NativeBaseVStack>
+                <RenderHtml
+                  contentWidth={width - 16}
+                  source={{
+                    html: `<p style="color: white; font-size: 1rem;">
                     <span style="text-align: justify; text-justify: inter-word;">
                     
                       ${game.description}
                     </span>
                   </p>`,
-                }}
-              />
-            </VStack>
-          </ScrollView>
+                  }}
+                />
+              </VStack>
+            </ScrollView>
+          </>
         ) : (
           <Loading />
         )}
