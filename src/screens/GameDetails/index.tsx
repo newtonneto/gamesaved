@@ -23,7 +23,7 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import { Game } from '@interfaces/game.dto';
-import { Inventory } from '@interfaces/inventory.dto';
+import { InventoryDto } from '@interfaces/inventory.dto';
 import rawg from '@services/rawg.api';
 import { useAppDispatch } from '@src/store';
 import { setDrawerHeader } from '@store/slices/navigation-slice';
@@ -54,7 +54,7 @@ const GameDetails = () => {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const inventoryRef = firestore()
-    .collection<Inventory>('lists')
+    .collection<InventoryDto>('lists')
     .doc(userSession.uid);
 
   useEffect(() => {

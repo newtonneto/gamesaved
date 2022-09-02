@@ -62,7 +62,9 @@ const Home = () => {
     setIsLoading(true);
 
     try {
-      const response = await rawg.get<GamesPage>(`games?key=${GAMEAPI_KEY}`);
+      const response = await rawg.get<GamesPage>(
+        `games?ordering=-metacritic&key=${GAMEAPI_KEY}`,
+      );
 
       setGames(response.data.results);
       handleNextPage(response.data);

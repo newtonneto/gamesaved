@@ -1,3 +1,3 @@
-export interface Inventory {
+export interface InventoryDto {
   games: number[];
 }
