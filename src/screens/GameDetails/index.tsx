@@ -105,7 +105,7 @@ const GameDetails = () => {
     };
   }, [dispatch, id]);
 
-  const handleInventory = async (gameId: number) => {
+  const firestoreUpdate = async (gameId: number) => {
     isSaved
       ? await inventoryRef.update({
           games: firestore.FieldValue.arrayRemove(gameId),
@@ -117,7 +117,7 @@ const GameDetails = () => {
     setIsSaved(!isSaved);
   };
 
-  const addToInventory = async () => {
+  const handleInventory = async () => {
     toast.show({
       description: `${
         isSaved ? 'Removing' : 'Saving'
@@ -125,7 +125,7 @@ const GameDetails = () => {
     });
 
     try {
-      await handleInventory(game.id);
+      await firestoreUpdate(game.id);
 
       toast.show({
         description: `Game ${isSaved ? 'Removed' : 'Saved'}`,
@@ -163,7 +163,7 @@ const GameDetails = () => {
                 />
               }
               label={isSaved ? 'Remove Game' : 'Save Game'}
-              onPress={() => addToInventory()}
+              onPress={() => handleInventory()}
               _pressed={{ bg: 'gray.500' }}
             />
             <ScrollView>

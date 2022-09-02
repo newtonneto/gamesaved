@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FlatList, StyleSheet, Alert } from 'react-native';
 import { FormControl, useTheme, IconButton, Heading } from 'native-base';
+import firestore from '@react-native-firebase/firestore';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
@@ -15,6 +18,7 @@ import {
 } from '@components/FlatListComponents';
 import Input from '@components/Input';
 import { Game } from '@interfaces/game.dto';
+import { InventoryDto } from '@interfaces/inventory.dto';
 import { GamesPage } from '@interfaces/gamespage.dto';
 import rawg from '@services/rawg.api';
 import {
@@ -34,6 +38,7 @@ const schema = yup.object().shape({
 });
 
 const Home = () => {
+  const isFocused = useIsFocused();
   const { colors } = useTheme();
   const {
     control,
@@ -42,10 +47,15 @@ const Home = () => {
     setValue,
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [games, setGames] = useState<Game[]>([]);
+  const [inventory, setInventory] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const hasNext = useRef<boolean>(false);
   const nextUrl = useRef<string>('');
   const [isLoadingNext, setIsLoadingNext] = useState<boolean>(false);
+  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
+  const inventoryRef = firestore()
+    .collection<InventoryDto>('lists')
+    .doc(userSession.uid);
 
   const handleNextPage = (data: GamesPage) => {
     if (data.next) {
@@ -83,6 +93,21 @@ const Home = () => {
     getGames();
   }, [getGames]);
 
+  useEffect(() => {
+    const getInventory = async () => {
+      try {
+        const response = await inventoryRef.get();
+        const gamesList = response.data()?.games;
+
+        gamesList && setInventory(gamesList);
+      } catch (err: any) {
+        throw new Error(err);
+      }
+    };
+
+    getInventory();
+  }, [isFocused]);
+
   const getNextGames = async () => {
     setIsLoadingNext(true);
 
@@ -103,7 +128,13 @@ const Home = () => {
   };
 
   const RenderItem = ({ item }: { item: Game }) => (
-    <GameCard game={item} key={item.id} />
+    <GameCard
+      game={item}
+      key={item.id}
+      inventory={inventory}
+      setInventory={setInventory}
+      inventoryRef={inventoryRef}
+    />
   );
 
   const RenderEmpty = () => (
