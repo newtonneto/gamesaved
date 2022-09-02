@@ -14,14 +14,14 @@ const Inventory = () => {
   const [inventory, setInventory] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
-  const inventoryRef = firestore()
-    .collection<InventoryDto>('lists')
-    .doc(userSession.uid);
 
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const response = await inventoryRef.get();
+        const response = await firestore()
+          .collection<InventoryDto>('lists')
+          .doc(userSession.uid)
+          .get();
 
         response.data()?.games.length && setInventory(response.data()!.games);
       } catch (err) {
@@ -40,7 +40,7 @@ const Inventory = () => {
     };
 
     getInventory();
-  }, []);
+  }, [userSession.uid]);
 
   const RenderItem = ({ item }: { item: number }) => (
     <LootCard id={item} key={item} />

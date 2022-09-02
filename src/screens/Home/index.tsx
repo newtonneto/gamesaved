@@ -96,7 +96,10 @@ const Home = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const response = await inventoryRef.get();
+        const response = await firestore()
+          .collection<InventoryDto>('lists')
+          .doc(userSession.uid)
+          .get();
         const gamesList = response.data()?.games;
 
         gamesList && setInventory(gamesList);
@@ -106,7 +109,7 @@ const Home = () => {
     };
 
     getInventory();
-  }, [isFocused]);
+  }, [isFocused, userSession.uid]);
 
   const getNextGames = async () => {
     setIsLoadingNext(true);

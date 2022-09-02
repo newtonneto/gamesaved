@@ -12,8 +12,6 @@ import {
   Pressable,
   IconButton,
   useToast,
-  Alert as NativeBaseAlert,
-  VStack,
 } from 'native-base';
 import firestore, {
   FirebaseFirestoreTypes,

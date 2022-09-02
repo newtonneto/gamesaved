@@ -70,7 +70,10 @@ const GameDetails = () => {
 
     const getInventory = async () => {
       try {
-        const response = await inventoryRef.get();
+        const response = await firestore()
+          .collection<InventoryDto>('lists')
+          .doc(userSession.uid)
+          .get();
         const saved = response.data()?.games.indexOf(id);
 
         saved !== -1 && setIsSaved(true);
@@ -103,7 +106,7 @@ const GameDetails = () => {
     return () => {
       dispatch(setDrawerHeader(true));
     };
-  }, [dispatch, id]);
+  }, [dispatch, id, userSession.uid]);
 
   const firestoreUpdate = async (gameId: number) => {
     isSaved
