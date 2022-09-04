@@ -48,7 +48,7 @@ const GameCard = ({ game, inventory, inventoryRef }: Props) => {
     const checkIsSaved = () => {
       const saved = inventory.indexOf(game.id);
 
-      saved !== -1 && setIsSaved(true);
+      setIsSaved(saved !== -1 ? true : false);
     };
 
     checkIsSaved();
