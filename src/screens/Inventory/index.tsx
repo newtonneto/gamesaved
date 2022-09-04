@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FlatList, StyleSheet, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
@@ -14,6 +14,24 @@ const Inventory = () => {
   const [inventory, setInventory] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
+  const gamesList = useRef<number[]>([]);
+  const nextIndex = useRef<number>(0);
+
+  const controlPagination = () => {
+    if (nextIndex.current < gamesList.current.length) {
+      const endIndex: number = nextIndex.current + 15;
+
+      const nextPage: number[] = gamesList.current.slice(
+        nextIndex.current,
+        endIndex,
+      );
+      setInventory(state => {
+        return [...state, ...nextPage];
+      });
+
+      nextIndex.current = endIndex;
+    }
+  };
 
   useEffect(() => {
     const getInventory = async () => {
@@ -23,7 +41,12 @@ const Inventory = () => {
           .doc(userSession.uid)
           .get();
 
-        response.data()?.games.length && setInventory(response.data()!.games);
+        // response.data()?.games.length && setInventory(response.data()!.games);
+        if (response.data()?.games.length) {
+          gamesList.current = response.data()!.games;
+
+          controlPagination();
+        }
       } catch (err) {
         Alert.alert(
           '>.<',
@@ -52,6 +75,7 @@ const Inventory = () => {
         <FlatList
           data={inventory}
           renderItem={RenderItem}
+          onEndReached={controlPagination}
           onEndReachedThreshold={0.1}
           contentContainerStyle={styles.flatListContent}
           ItemSeparatorComponent={FlatListSeparator}
