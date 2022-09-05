@@ -72,10 +72,7 @@ const GameDetails = () => {
 
     const getInventory = async () => {
       try {
-        const response = await firestore()
-          .collection<InventoryDto>('lists')
-          .doc(userSession.uid)
-          .get();
+        const response = await inventoryRef.current.get();
         const saved = response.data()?.games.indexOf(id);
 
         saved !== -1 && setIsSaved(true);
