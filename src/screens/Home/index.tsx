@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FlatList, StyleSheet, Alert } from 'react-native';
 import { FormControl, useTheme, IconButton, Heading } from 'native-base';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -53,9 +55,9 @@ const Home = () => {
   const nextUrl = useRef<string>('');
   const [isLoadingNext, setIsLoadingNext] = useState<boolean>(false);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
-  const inventoryRef = firestore()
-    .collection<InventoryDto>('lists')
-    .doc(userSession.uid);
+  const inventoryRef = useRef<
+    FirebaseFirestoreTypes.DocumentReference<InventoryDto>
+  >(firestore().collection<InventoryDto>('lists').doc(userSession.uid));
 
   const handleNextPage = (data: GamesPage) => {
     if (data.next) {
@@ -96,10 +98,7 @@ const Home = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const response = await firestore()
-          .collection<InventoryDto>('lists')
-          .doc(userSession.uid)
-          .get();
+        const response = await inventoryRef.current.get();
         const gamesList = response.data()?.games;
 
         gamesList && setInventory(gamesList);
@@ -136,7 +135,7 @@ const Home = () => {
       key={item.id}
       inventory={inventory}
       setInventory={setInventory}
-      inventoryRef={inventoryRef}
+      inventoryRef={inventoryRef.current}
     />
   );
 

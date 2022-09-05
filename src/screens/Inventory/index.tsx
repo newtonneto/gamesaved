@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FlatList, StyleSheet, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { useIsFocused } from '@react-navigation/native';
 
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
@@ -11,6 +12,7 @@ import { InventoryDto } from '@interfaces/inventory.dto';
 import { AXIS_X_PADDING_CONTENT, VERTICAL_PADDING_LISTS } from '@styles/sizes';
 
 const Inventory = () => {
+  const isFocused = useIsFocused();
   const [inventory, setInventory] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
@@ -18,7 +20,7 @@ const Inventory = () => {
   const nextIndex = useRef<number>(0);
 
   const controlPagination = () => {
-    if (nextIndex.current < gamesList.current.length) {
+    if (nextIndex.current !== -1) {
       const endIndex: number = nextIndex.current + 15;
 
       const nextPage: number[] = gamesList.current.slice(
@@ -30,18 +32,26 @@ const Inventory = () => {
       });
 
       nextIndex.current = endIndex;
+
+      if (nextIndex.current > gamesList.current.length) {
+        nextIndex.current = -1;
+      }
     }
   };
 
   useEffect(() => {
     const getInventory = async () => {
+      gamesList.current = [];
+      nextIndex.current = 0;
+      setInventory([]);
+      setIsLoading(true);
+
       try {
         const response = await firestore()
           .collection<InventoryDto>('lists')
           .doc(userSession.uid)
           .get();
 
-        // response.data()?.games.length && setInventory(response.data()!.games);
         if (response.data()?.games.length) {
           gamesList.current = response.data()!.games;
 
@@ -63,7 +73,7 @@ const Inventory = () => {
     };
 
     getInventory();
-  }, [userSession.uid]);
+  }, [userSession.uid, isFocused]);
 
   const RenderItem = ({ item }: { item: number }) => (
     <LootCard id={item} key={item} />

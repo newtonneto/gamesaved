@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, useWindowDimensions, Alert } from 'react-native';
 import {
   AspectRatio,
@@ -10,7 +10,9 @@ import {
   useTheme,
   Heading,
 } from 'native-base';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -53,9 +55,9 @@ const GameDetails = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
-  const inventoryRef = firestore()
-    .collection<InventoryDto>('lists')
-    .doc(userSession.uid);
+  const inventoryRef = useRef<
+    FirebaseFirestoreTypes.DocumentReference<InventoryDto>
+  >(firestore().collection<InventoryDto>('lists').doc(userSession.uid));
 
   useEffect(() => {
     const getGame = async () => {
@@ -110,10 +112,10 @@ const GameDetails = () => {
 
   const firestoreUpdate = async (gameId: number) => {
     isSaved
-      ? await inventoryRef.update({
+      ? await inventoryRef.current.update({
           games: firestore.FieldValue.arrayRemove(gameId),
         })
-      : await inventoryRef.update({
+      : await inventoryRef.current.update({
           games: firestore.FieldValue.arrayUnion(gameId),
         });
 
