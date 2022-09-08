@@ -1,12 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FlatList, StyleSheet, Alert } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Alert,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useIsFocused } from '@react-navigation/native';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
-import LootCard from '@components/LootCard';
+import LootCard, { RightButton } from '@components/LootCard';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { AXIS_X_PADDING_CONTENT, VERTICAL_PADDING_LISTS } from '@styles/sizes';
@@ -80,9 +88,9 @@ const Inventory = () => {
   );
 
   return (
-    <VStack px={AXIS_X_PADDING_CONTENT}>
+    <VStack>
       {!isLoading ? (
-        <FlatList
+        <SwipeListView
           data={inventory}
           renderItem={RenderItem}
           onEndReached={controlPagination}
@@ -91,6 +99,10 @@ const Inventory = () => {
           ItemSeparatorComponent={FlatListSeparator}
           showsVerticalScrollIndicator={false}
           style={styles.flatList}
+          renderHiddenItem={() => <RightButton />}
+          rightOpenValue={-75}
+          stopRightSwipe={-75}
+          stopLeftSwipe={1}
         />
       ) : (
         <Loading />

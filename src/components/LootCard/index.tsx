@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image';
 import Loading from '@components/Loading';
 import { Game } from '@interfaces/game.dto';
 import rawg from '@services/rawg.api';
-import { RATIO } from '@styles/sizes';
+import { AXIS_X_PADDING_CONTENT, RATIO } from '@styles/sizes';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type Props = {
@@ -25,6 +25,7 @@ const LootCard = ({ id }: Props) => {
 
         setGame(response.data);
       } catch (err) {
+        console.warn('err: ', err);
       } finally {
         setIsLoading(false);
       }
@@ -42,13 +43,18 @@ const LootCard = ({ id }: Props) => {
   };
 
   return (
-    <Pressable alignItems="center" onPress={handleNavigation}>
+    <Pressable
+      alignItems="center"
+      onPress={handleNavigation}
+      mx={AXIS_X_PADDING_CONTENT}>
       <Box
         w="full"
         rounded="lg"
         overflow="hidden"
         borderColor="secondary.700"
-        borderWidth="1">
+        borderWidth="1"
+        h={14}
+        bg="gray.600">
         {!isLoading ? (
           <HStack h="14" w="full" alignItems="center">
             <AspectRatio w="30%" ratio={RATIO}>
@@ -73,6 +79,14 @@ const LootCard = ({ id }: Props) => {
         )}
       </Box>
     </Pressable>
+  );
+};
+
+export const RightButton = () => {
+  return (
+    <Box alignItems="flex-end">
+      <Box width={24} h={14} bg="red.700" rounded="lg" mx={8} />
+    </Box>
   );
 };
 
