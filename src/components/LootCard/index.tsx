@@ -1,15 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Pressable,
-  Box,
-  HStack,
-  AspectRatio,
-  Heading,
-  useTheme,
-} from 'native-base';
+import React, { useState, useEffect, memo } from 'react';
+import { Pressable, Box, HStack, AspectRatio, Heading } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import { Trash } from 'phosphor-react-native';
 
 import Loading from '@components/Loading';
 import { Game } from '@interfaces/game.dto';
@@ -27,19 +19,25 @@ const LootCard = ({ id }: Props) => {
   const [game, setGame] = useState<Game>({} as Game);
 
   useEffect(() => {
+    let isMounted = true;
+
     const getGame = async () => {
       try {
         const response = await rawg.get<Game>(`games/${id}?key=${GAMEAPI_KEY}`);
 
-        setGame(response.data);
+        isMounted && setGame(response.data);
       } catch (err) {
         console.warn('err: ', err);
       } finally {
-        setIsLoading(false);
+        isMounted && setIsLoading(false);
       }
     };
 
     getGame();
+
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   const handleNavigation = () => {
@@ -90,23 +88,4 @@ const LootCard = ({ id }: Props) => {
   );
 };
 
-export const RightButton = () => {
-  const { colors } = useTheme();
-
-  return (
-    <Box alignItems="flex-end">
-      <Box
-        width={24}
-        h={14}
-        bg="red.700"
-        rounded="lg"
-        mx={8}
-        alignItems="center"
-        justifyContent="center">
-        <Trash color={colors.white} size={24} />
-      </Box>
-    </Box>
-  );
-};
-
-export default LootCard;
+export default memo(LootCard);

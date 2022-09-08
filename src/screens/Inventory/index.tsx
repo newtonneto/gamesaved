@@ -1,23 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Alert,
-  View,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import { StyleSheet, Alert } from 'react-native';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useIsFocused } from '@react-navigation/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
-import LootCard, { RightButton } from '@components/LootCard';
+import LootCard from '@components/LootCard';
+import LootButton from '@components/LootButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
-import { AXIS_X_PADDING_CONTENT, VERTICAL_PADDING_LISTS } from '@styles/sizes';
+import { VERTICAL_PADDING_LISTS } from '@styles/sizes';
 
 const Inventory = () => {
   const isFocused = useIsFocused();
@@ -26,6 +22,9 @@ const Inventory = () => {
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const gamesList = useRef<number[]>([]);
   const nextIndex = useRef<number>(0);
+  const inventoryRef = useRef<
+    FirebaseFirestoreTypes.DocumentReference<InventoryDto>
+  >(firestore().collection<InventoryDto>('lists').doc(userSession.uid));
 
   const controlPagination = () => {
     if (nextIndex.current !== -1) {
@@ -48,22 +47,21 @@ const Inventory = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
     const getInventory = async () => {
       gamesList.current = [];
       nextIndex.current = 0;
-      setInventory([]);
-      setIsLoading(true);
+      isMounted && setInventory([]);
+      isMounted && setIsLoading(true);
 
       try {
-        const response = await firestore()
-          .collection<InventoryDto>('lists')
-          .doc(userSession.uid)
-          .get();
+        const response = await inventoryRef.current.get();
 
         if (response.data()?.games.length) {
           gamesList.current = response.data()!.games;
 
-          controlPagination();
+          isMounted && controlPagination();
         }
       } catch (err) {
         Alert.alert(
@@ -76,12 +74,37 @@ const Inventory = () => {
           ],
         );
       } finally {
-        setIsLoading(false);
+        isMounted && setIsLoading(false);
       }
     };
 
     getInventory();
+
+    return () => {
+      isMounted = false;
+    };
   }, [userSession.uid, isFocused]);
+
+  const handleRemove = async (removedLoot: number) => {
+    try {
+      await inventoryRef.current.update({
+        games: firestore.FieldValue.arrayRemove(removedLoot),
+      });
+
+      const filteredInventory = inventory.filter(item => item !== removedLoot);
+      setInventory(filteredInventory);
+    } catch (err) {
+      Alert.alert(
+        '>.<',
+        'Não foi possível remover o jogo especificado, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    }
+  };
 
   const RenderItem = ({ item }: { item: number }) => (
     <LootCard id={item} key={item} />
@@ -99,7 +122,9 @@ const Inventory = () => {
           ItemSeparatorComponent={FlatListSeparator}
           showsVerticalScrollIndicator={false}
           style={styles.flatList}
-          renderHiddenItem={() => <RightButton />}
+          renderHiddenItem={item => (
+            <LootButton handleRemove={handleRemove} id={item.item} />
+          )}
           rightOpenValue={-75}
           stopRightSwipe={-75}
           stopLeftSwipe={1}
