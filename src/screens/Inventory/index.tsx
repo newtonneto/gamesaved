@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Alert } from 'react-native';
+import { useToast } from 'native-base';
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
@@ -7,6 +8,7 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useIsFocused } from '@react-navigation/native';
 import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 
+import Toast from '@components/Toast';
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import LootCard from '@components/LootCard';
@@ -16,6 +18,7 @@ import { InventoryDto } from '@interfaces/inventory.dto';
 import { VERTICAL_PADDING_LISTS } from '@styles/sizes';
 
 const Inventory = () => {
+  const toast = useToast();
   const isFocused = useIsFocused();
   const [inventory, setInventory] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -86,6 +89,20 @@ const Inventory = () => {
   }, [userSession.uid, isFocused]);
 
   const handleRemove = async (removedLoot: number, rowMap: RowMap<number>) => {
+    toast.show({
+      duration: 5000,
+      render: () => {
+        return (
+          <Toast
+            status="success"
+            title="GameSaved"
+            description="Removing game, please dont turn off your phone"
+            textColor="darkText"
+          />
+        );
+      },
+    });
+
     try {
       await inventoryRef.current.update({
         games: firestore.FieldValue.arrayRemove(removedLoot),
@@ -94,6 +111,19 @@ const Inventory = () => {
       rowMap[removedLoot].closeRow();
       const filteredInventory = inventory.filter(item => item !== removedLoot);
       setInventory(filteredInventory);
+      toast.show({
+        duration: 5000,
+        render: () => {
+          return (
+            <Toast
+              status="success"
+              title="GameSaved"
+              description="Game Removed"
+              textColor="darkText"
+            />
+          );
+        },
+      });
     } catch (err) {
       console.log('err: ', err);
       Alert.alert(
