@@ -5,7 +5,7 @@ import firestore, {
 } from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useIsFocused } from '@react-navigation/native';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
@@ -85,15 +85,17 @@ const Inventory = () => {
     };
   }, [userSession.uid, isFocused]);
 
-  const handleRemove = async (removedLoot: number) => {
+  const handleRemove = async (removedLoot: number, rowMap: RowMap<number>) => {
     try {
       await inventoryRef.current.update({
         games: firestore.FieldValue.arrayRemove(removedLoot),
       });
 
+      rowMap[removedLoot].closeRow();
       const filteredInventory = inventory.filter(item => item !== removedLoot);
       setInventory(filteredInventory);
     } catch (err) {
+      console.log('err: ', err);
       Alert.alert(
         '>.<',
         'Não foi possível remover o jogo especificado, tente novamente mais tarde.',
@@ -122,12 +124,17 @@ const Inventory = () => {
           ItemSeparatorComponent={FlatListSeparator}
           showsVerticalScrollIndicator={false}
           style={styles.flatList}
-          renderHiddenItem={item => (
-            <LootButton handleRemove={handleRemove} id={item.item} />
+          renderHiddenItem={(rowData, rowMap) => (
+            <LootButton
+              handleRemove={handleRemove}
+              id={rowData.item}
+              rowMap={rowMap}
+            />
           )}
           rightOpenValue={-75}
           stopRightSwipe={-75}
           stopLeftSwipe={1}
+          keyExtractor={gameId => gameId.toString()}
         />
       ) : (
         <Loading />
