@@ -9,7 +9,7 @@ import {
   INPUT_HEIGHT,
   INPUT_BORDER_WIDTH,
   ACTIONSHEET_ROUND_SIZE,
-} from '@styles/sizes';
+} from '@utils/constants';
 
 type Props = ISelectProps & {
   children: ReactNode[];

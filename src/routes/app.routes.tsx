@@ -21,12 +21,12 @@ import auth from '@react-native-firebase/auth';
 
 import AppHeader from '@components/AppHeader';
 import HomeStack from '@modules/HomeStack';
+import InventoryStack from '@modules/InventoryStack';
 import ProfileDetails from '@src/screens/ProfileDetails';
-import Inventory from '@screens/Inventory';
 import Friends from '@screens/Friends';
 import { useAppSelector } from '@src/store';
 import { stateDrawerHeader } from '@store/slices/navigation-slice';
-import { ICON_NORMAL } from '@styles/sizes';
+import { ICON_NORMAL } from '@utils/constants';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
@@ -121,7 +121,7 @@ const AppRoutes = () => {
       />
       <Screen
         name="Inventory"
-        component={Inventory}
+        component={InventoryStack}
         options={{
           headerTitle: () => <AppHeader title="Inventory" />,
           headerLeft: () => (

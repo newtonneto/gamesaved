@@ -5,7 +5,7 @@ import {
   IScrollViewProps,
 } from 'native-base';
 
-import { CONTENT_PADDING_BOTTOM } from '@styles/sizes';
+import { CONTENT_PADDING_BOTTOM } from '@utils/constants';
 
 type Props = IScrollViewProps & {
   children: ReactNode;

@@ -9,7 +9,7 @@ import {
 import { CaretLeft } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { ICON_NORMAL } from '@styles/sizes';
+import { ICON_NORMAL } from '@utils/constants';
 
 type Props = StyledProps & {
   title: string;

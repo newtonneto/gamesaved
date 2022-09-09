@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { HStack, useTheme } from 'native-base';
 
-import { AXIS_Y_PADDING_CONTENT } from '@styles/sizes';
+import { AXIS_Y_PADDING_CONTENT } from '@utils/constants';
 
 export const FlatListFooter = (isLoadingNext: boolean) => {
   const { colors } = useTheme();

@@ -21,7 +21,7 @@ import ScrollView from '@components/ScrollView';
 import Header from '@components/Header';
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
-import { FORM_INPUT_MARGIN_BOTTOM } from '@styles/sizes';
+import { FORM_INPUT_MARGIN_BOTTOM } from '@utils/constants';
 import firebaseExceptions from '@utils/firebaseExceptions';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 
@@ -123,11 +123,14 @@ const SignUp = () => {
     phone: string,
   ) => {
     try {
-      return firestore()
+      await firestore()
         .collection('profiles')
         .doc(uid)
         .set({ firstName, lastName, birthDate, gender, email, phone });
+
+      await firestore().collection('lists').doc(uid).set({ games: [] });
     } catch (err: any) {
+      console.log('createProfile: ', err);
       throw new Error(err.code);
     }
   };
@@ -197,6 +200,7 @@ const SignUp = () => {
                   autoCorrect={false}
                   selectionColor="secondary.700"
                   isDisabled={isLoading}
+                  autoCapitalize="words"
                 />
               )}
               name="firstName"
@@ -223,6 +227,7 @@ const SignUp = () => {
                   autoCorrect={false}
                   selectionColor="secondary.700"
                   isDisabled={isLoading}
+                  autoCapitalize="words"
                 />
               )}
               name="lastName"

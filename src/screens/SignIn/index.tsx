@@ -19,7 +19,7 @@ import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   INPUT_ICON_LEFT_MARGIN,
-} from '@styles/sizes';
+} from '@utils/constants';
 import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
