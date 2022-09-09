@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image';
 import Loading from '@components/Loading';
 import { Game } from '@interfaces/game.dto';
 import rawg from '@services/rawg.api';
-import { AXIS_X_PADDING_CONTENT, RATIO } from '@styles/sizes';
+import { AXIS_X_PADDING_CONTENT, RATIO } from '@utils/constants';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type Props = {

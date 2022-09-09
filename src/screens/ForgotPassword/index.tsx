@@ -16,7 +16,7 @@ import Button from '@components/Button';
 import {
   AXIS_X_PADDING_CONTENT,
   FORM_INPUT_MARGIN_BOTTOM,
-} from '@styles/sizes';
+} from '@utils/constants';
 import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {

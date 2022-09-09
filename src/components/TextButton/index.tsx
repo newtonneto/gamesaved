@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button as NativeBaseButton, IButtonProps, Heading } from 'native-base';
 
-import { GHOST_BUTTON_HEIGHT } from '@styles/sizes';
+import { GHOST_BUTTON_HEIGHT } from '@utils/constants';
 
 type Props = IButtonProps & {
   title: string;

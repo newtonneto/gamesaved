@@ -15,7 +15,7 @@ import LootCard from '@components/LootCard';
 import LootButton from '@components/LootButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
-import { VERTICAL_PADDING_LISTS } from '@styles/sizes';
+import { VERTICAL_PADDING_LISTS, TOAST_DURATION } from '@utils/constants';
 
 const Inventory = () => {
   const toast = useToast();
@@ -90,7 +90,7 @@ const Inventory = () => {
 
   const handleRemove = async (removedLoot: number, rowMap: RowMap<number>) => {
     toast.show({
-      duration: 5000,
+      duration: TOAST_DURATION,
       render: () => {
         return (
           <Toast
@@ -112,7 +112,7 @@ const Inventory = () => {
       const filteredInventory = inventory.filter(item => item !== removedLoot);
       setInventory(filteredInventory);
       toast.show({
-        duration: 5000,
+        duration: TOAST_DURATION,
         render: () => {
           return (
             <Toast

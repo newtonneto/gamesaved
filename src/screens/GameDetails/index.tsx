@@ -35,7 +35,8 @@ import {
   GENERIC_TITTLE,
   AXIS_Y_PADDING_CONTENT,
   RATIO,
-} from '@styles/sizes';
+  TOAST_DURATION,
+} from '@utils/constants';
 import firebaseExceptions from '@utils/firebaseExceptions';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
@@ -122,7 +123,7 @@ const GameDetails = () => {
 
   const handleInventory = async () => {
     toast.show({
-      duration: 5000,
+      duration: TOAST_DURATION,
       render: () => {
         return (
           <Toast
@@ -141,7 +142,7 @@ const GameDetails = () => {
       await firestoreUpdate(game.id);
 
       toast.show({
-        duration: 5000,
+        duration: TOAST_DURATION,
         render: () => {
           return (
             <Toast

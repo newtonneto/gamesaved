@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input as NativeBaseInput, IInputProps } from 'native-base';
 
-import { INPUT_HEIGHT, INPUT_BORDER_WIDTH } from '@styles/sizes';
+import { INPUT_HEIGHT, INPUT_BORDER_WIDTH } from '@utils/constants';
 
 const Input = ({ ...rest }: IInputProps) => {
   return (

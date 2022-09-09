@@ -22,7 +22,7 @@ import Loading from '@components/Loading';
 import {
   AXIS_X_PADDING_CONTENT,
   FORM_INPUT_MARGIN_BOTTOM,
-} from '@styles/sizes';
+} from '@utils/constants';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';

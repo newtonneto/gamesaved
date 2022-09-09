@@ -25,9 +25,9 @@ import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { useAppDispatch } from '@src/store';
 import { setDrawerHeader } from '@store/slices/navigation-slice';
-import { RATIO } from '@styles/sizes';
 import { formatDate } from '@utils/formatDate';
 import firebaseExceptions from '@utils/firebaseExceptions';
+import { RATIO, TOAST_DURATION } from '@utils/constants';
 
 type Props = {
   game: Game;
@@ -77,7 +77,7 @@ const GameCard = ({ game, inventory, inventoryRef }: Props) => {
 
   const handleInventory = async () => {
     toast.show({
-      duration: 5000,
+      duration: TOAST_DURATION,
       render: () => {
         return (
           <Toast
@@ -96,7 +96,7 @@ const GameCard = ({ game, inventory, inventoryRef }: Props) => {
       await firestoreUpdate(game.id);
 
       toast.show({
-        duration: 5000,
+        duration: TOAST_DURATION,
         render: () => {
           return (
             <Toast

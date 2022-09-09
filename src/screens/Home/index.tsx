@@ -27,7 +27,7 @@ import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   VERTICAL_PADDING_LISTS,
-} from '@styles/sizes';
+} from '@utils/constants';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 import NoData from '@assets/imgs/undraw_no_data.svg';
 

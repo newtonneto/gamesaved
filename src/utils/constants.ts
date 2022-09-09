@@ -15,3 +15,4 @@ export const CONTENT_PADDING_BOTTOM = 16;
 export const ACTIONSHEET_ROUND_SIZE = 5;
 export const GHOST_BUTTON_HEIGHT = 10;
 export const AVATAR_NORMAL_BORDER_WIDTH = 4;
+export const TOAST_DURATION = 5000;

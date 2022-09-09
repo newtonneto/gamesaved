@@ -26,7 +26,7 @@ import ProfileDetails from '@src/screens/ProfileDetails';
 import Friends from '@screens/Friends';
 import { useAppSelector } from '@src/store';
 import { stateDrawerHeader } from '@store/slices/navigation-slice';
-import { ICON_NORMAL } from '@styles/sizes';
+import { ICON_NORMAL } from '@utils/constants';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
