@@ -17,6 +17,7 @@ const LootCard = ({ id }: Props) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [game, setGame] = useState<Game>({} as Game);
+  const [hasError, setHasError] = useState<boolean>(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -28,7 +29,7 @@ const LootCard = ({ id }: Props) => {
         isMounted && setGame(response.data);
         isMounted && setIsLoading(false);
       } catch (err) {
-        console.log('getGame: ', err);
+        setHasError(true);
       }
     };
 
@@ -40,11 +41,13 @@ const LootCard = ({ id }: Props) => {
   }, [id]);
 
   const handleNavigation = () => {
-    navigation.navigate('GameScreen', {
-      id: game.id,
-      slug: game.slug,
-      name: game.name,
-    });
+    !hasError &&
+      !isLoading &&
+      navigation.navigate('GameScreen', {
+        id: game.id,
+        slug: game.slug,
+        name: game.name,
+      });
   };
 
   return (
@@ -62,13 +65,15 @@ const LootCard = ({ id }: Props) => {
         bg="gray.600">
         {!isLoading ? (
           <HStack h={14} w="full" alignItems="center">
-            <AspectRatio w="30%" ratio={RATIO} h={14} zIndex={-1}>
-              <FastImage
-                source={{
-                  uri: game.background_image,
-                }}
-              />
-            </AspectRatio>
+            {!hasError && (
+              <AspectRatio w="30%" ratio={RATIO} h={14} zIndex={-1}>
+                <FastImage
+                  source={{
+                    uri: game.background_image,
+                  }}
+                />
+              </AspectRatio>
+            )}
             <Heading
               size="sm"
               color="white"
@@ -76,7 +81,7 @@ const LootCard = ({ id }: Props) => {
               w="70%"
               numberOfLines={1}
               px={4}>
-              {game.name}
+              {hasError ? 'Fetch Failed x_x' : game.name}
             </Heading>
           </HStack>
         ) : (
