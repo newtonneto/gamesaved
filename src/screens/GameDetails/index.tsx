@@ -23,6 +23,7 @@ import ScrollView from '@components/ScrollView';
 import Header from '@components/Header';
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
+import Toast from '@components/Toast';
 import Loading from '@components/Loading';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
@@ -121,16 +122,36 @@ const GameDetails = () => {
 
   const handleInventory = async () => {
     toast.show({
-      description: `${
-        isSaved ? 'Removing' : 'Saving'
-      } game, please don't turn off your phone`,
+      duration: 5000,
+      render: () => {
+        return (
+          <Toast
+            status="success"
+            title="GameSaved"
+            description={`${
+              isSaved ? 'Removing' : 'Saving'
+            } game, please don't turn off your phone`}
+            textColor="darkText"
+          />
+        );
+      },
     });
 
     try {
       await firestoreUpdate(game.id);
 
       toast.show({
-        description: `Game ${isSaved ? 'Removed' : 'Saved'}`,
+        duration: 5000,
+        render: () => {
+          return (
+            <Toast
+              status="success"
+              title="GameSaved"
+              description={`Game ${isSaved ? 'Removed' : 'Saved'}`}
+              textColor="darkText"
+            />
+          );
+        },
       });
     } catch (err: any) {
       Alert.alert(
