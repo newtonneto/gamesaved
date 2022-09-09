@@ -26,10 +26,9 @@ const LootCard = ({ id }: Props) => {
         const response = await rawg.get<Game>(`games/${id}?key=${GAMEAPI_KEY}`);
 
         isMounted && setGame(response.data);
-      } catch (err) {
-        console.warn('err: ', err);
-      } finally {
         isMounted && setIsLoading(false);
+      } catch (err) {
+        console.log('getGame: ', err);
       }
     };
 
@@ -54,16 +53,16 @@ const LootCard = ({ id }: Props) => {
       onPress={handleNavigation}
       mx={AXIS_X_PADDING_CONTENT}>
       <Box
-        w="full"
+        w="98%"
         rounded="lg"
         overflow="hidden"
+        borderWidth={1}
         borderColor="secondary.700"
-        borderWidth="1"
         h={14}
         bg="gray.600">
         {!isLoading ? (
-          <HStack h="14" w="full" alignItems="center">
-            <AspectRatio w="30%" ratio={RATIO}>
+          <HStack h={14} w="full" alignItems="center">
+            <AspectRatio w="30%" ratio={RATIO} h={14} zIndex={-1}>
               <FastImage
                 source={{
                   uri: game.background_image,

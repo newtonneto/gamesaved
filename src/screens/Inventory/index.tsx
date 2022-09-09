@@ -125,7 +125,6 @@ const Inventory = () => {
         },
       });
     } catch (err) {
-      console.log('err: ', err);
       Alert.alert(
         '>.<',
         'Não foi possível remover o jogo especificado, tente novamente mais tarde.',
