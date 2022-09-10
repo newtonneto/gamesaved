@@ -15,10 +15,13 @@ import LootCard from '@components/LootCard';
 import LootButton from '@components/LootButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
+import { useAppDispatch } from '@store/index';
+import { setTitle } from '@store/slices/navigation-slice';
 import { VERTICAL_PADDING_LISTS, TOAST_DURATION } from '@utils/constants';
 
 const Inventory = () => {
   const toast = useToast();
+  const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
   const [inventory, setInventory] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -28,6 +31,16 @@ const Inventory = () => {
   const inventoryRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<InventoryDto>
   >(firestore().collection<InventoryDto>('lists').doc(userSession.uid));
+
+  useEffect(() => {
+    let isMounted = true;
+
+    isMounted && isFocused && dispatch(setTitle('Inventory'));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
   const controlPagination = () => {
     if (nextIndex.current !== -1) {

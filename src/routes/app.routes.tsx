@@ -25,7 +25,7 @@ import InventoryStack from '@modules/InventoryStack';
 import ProfileDetails from '@src/screens/ProfileDetails';
 import Friends from '@screens/Friends';
 import { useAppSelector } from '@src/store';
-import { stateDrawerHeader } from '@store/slices/navigation-slice';
+import { stateDrawerHeader, stateTitle } from '@store/slices/navigation-slice';
 import { ICON_NORMAL } from '@utils/constants';
 
 const { Navigator, Screen } = createDrawerNavigator();
@@ -34,6 +34,7 @@ const AppRoutes = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const showDrawerHeader = useAppSelector(state => stateDrawerHeader(state));
+  const title = useAppSelector(state => stateTitle(state));
 
   const handleLogout = () => {
     Alert.alert(
@@ -95,8 +96,25 @@ const AppRoutes = () => {
         name="Home"
         component={HomeStack}
         options={{
-          headerTitle: () => <AppHeader title="Home" />,
-          headerLeft: () => <></>,
+          headerTitle: () => <AppHeader title={title} />,
+          headerLeft: () =>
+            title !== 'Home' ? (
+              <HStack
+                w="full"
+                bg="gray.600"
+                alignItems="center"
+                justifyContent="center"
+                h="full">
+                <IconButton
+                  icon={
+                    <SkipBack color={colors.gray[200]} size={ICON_NORMAL} />
+                  }
+                  onPress={() => navigation.goBack()}
+                />
+              </HStack>
+            ) : (
+              <></>
+            ),
           headerRight: () => (
             <HStack
               w="full"
@@ -123,7 +141,7 @@ const AppRoutes = () => {
         name="Inventory"
         component={InventoryStack}
         options={{
-          headerTitle: () => <AppHeader title="Inventory" />,
+          headerTitle: () => <AppHeader title={title} />,
           headerLeft: () => (
             <HStack
               w="full"
@@ -163,7 +181,7 @@ const AppRoutes = () => {
         name="Stats"
         component={ProfileDetails}
         options={{
-          headerTitle: () => <AppHeader title="Stats" />,
+          headerTitle: () => <AppHeader title={title} />,
           headerLeft: () => (
             <HStack
               w="full"
@@ -203,7 +221,7 @@ const AppRoutes = () => {
         name="Party"
         component={Friends}
         options={{
-          headerTitle: () => <AppHeader title="Party" />,
+          headerTitle: () => <AppHeader title={title} />,
           headerLeft: () => (
             <HStack
               w="full"

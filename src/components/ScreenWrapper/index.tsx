@@ -1,38 +1,29 @@
 import React, { ReactElement } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { IScrollViewProps } from 'native-base';
 
-import { GRAY_600 } from '@styles/colors';
+import { SafeAreaViewStyled, KeyboardAvoidingViewStyled } from './styles';
 
 type Props = IScrollViewProps & {
   children: ReactElement;
 };
 
 const ScreenWrapper = ({ children }: Props) => {
+  const headerHeight = useHeaderHeight();
+  const pTop = Platform.OS === 'ios' ? -headerHeight : 0;
+
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaViewStyled pTop={pTop}>
       {Platform.OS === 'ios' ? (
-        <KeyboardAvoidingView
-          style={styles.KeyboardAvoidingView}
-          behavior="padding">
+        <KeyboardAvoidingViewStyled behavior="padding">
           {children}
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingViewStyled>
       ) : (
         <>{children}</>
       )}
-    </SafeAreaView>
+    </SafeAreaViewStyled>
   );
 };
-
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: GRAY_600,
-  },
-  KeyboardAvoidingView: {
-    flex: 1,
-  },
-});
 
 export default ScreenWrapper;

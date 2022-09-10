@@ -11,6 +11,7 @@ import * as yup from 'yup';
 import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
 import { useIsFocused } from '@react-navigation/native';
 
+import NoData from '@assets/imgs/undraw_no_data.svg';
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import GameCard from '@components/GameCard';
@@ -28,8 +29,9 @@ import {
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
+import { useAppDispatch } from '@store/index';
+import { setTitle } from '@store/slices/navigation-slice';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
-import NoData from '@assets/imgs/undraw_no_data.svg';
 
 type FormData = {
   searchValue: string;
@@ -40,6 +42,7 @@ const schema = yup.object().shape({
 });
 
 const Home = () => {
+  const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
   const { colors } = useTheme();
   const {
@@ -58,6 +61,16 @@ const Home = () => {
   const inventoryRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<InventoryDto>
   >(firestore().collection<InventoryDto>('lists').doc(userSession.uid));
+
+  useEffect(() => {
+    let isMounted = true;
+
+    isMounted && isFocused && dispatch(setTitle('Home'));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
   const handleNextPage = (data: GamesPage) => {
     if (data.next) {
