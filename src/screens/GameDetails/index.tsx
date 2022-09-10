@@ -17,8 +17,8 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import RenderHtml from 'react-native-render-html';
-import { FloppyDisk } from 'phosphor-react-native';
 
+import { FloppyDiskStyled } from './styles';
 import ScrollView from '@components/ScrollView';
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
@@ -28,7 +28,7 @@ import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import rawg from '@services/rawg.api';
 import { useAppDispatch } from '@src/store';
-import { setDrawerHeader, setTitle } from '@store/slices/navigation-slice';
+import { setTitle } from '@store/slices/navigation-slice';
 import {
   AXIS_X_PADDING_CONTENT,
   GENERIC_TITTLE,
@@ -65,7 +65,6 @@ const GameDetails = () => {
     let isMounted = true;
 
     isMounted && isFocused && dispatch(setTitle(name));
-    // dispatch(setDrawerHeader(false));
 
     return () => {
       isMounted = false;
@@ -185,13 +184,7 @@ const GameDetails = () => {
               shadow={2}
               size="sm"
               bg={isSaved ? 'gray.700' : 'secondary.700'}
-              icon={
-                <FloppyDisk
-                  color={colors.white}
-                  style={styles.icon}
-                  size={18}
-                />
-              }
+              icon={<FloppyDiskStyled color={colors.white} size={18} />}
               label={isSaved ? 'Remove Game' : 'Save Game'}
               onPress={() => handleInventory()}
               _pressed={{ bg: 'gray.500' }}
@@ -246,11 +239,5 @@ const GameDetails = () => {
     </ScreenWrapper>
   );
 };
-
-const styles = StyleSheet.create({
-  icon: {
-    marginRight: 4,
-  },
-});
 
 export default GameDetails;

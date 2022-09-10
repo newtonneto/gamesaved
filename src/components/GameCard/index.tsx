@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import {
   AspectRatio,
   Box,
@@ -16,10 +16,10 @@ import {
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
-import { Star, FloppyDisk } from 'phosphor-react-native';
 import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native';
 
+import { FloppyDiskStyled, StarStyled } from './styles';
 import Toast from '@components/Toast';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
@@ -144,16 +144,15 @@ const GameCard = ({ game, inventory, inventoryRef }: Props) => {
             w="full"
             justifyContent="space-between">
             <HStack alignItems="center">
-              <Star color={colors.secondary[700]} style={styles.icon} />
+              <StarStyled color={colors.secondary[700]} />
               <Text color={colors.secondary[700]}>{game.metacritic}</Text>
             </HStack>
             <HStack>
               <IconButton
                 _icon={{
                   as: (
-                    <FloppyDisk
+                    <FloppyDiskStyled
                       color={colors.secondary[700]}
-                      style={styles.icon}
                       weight={isSaved ? 'fill' : 'light'}
                     />
                   ),
@@ -182,11 +181,5 @@ const GameCard = ({ game, inventory, inventoryRef }: Props) => {
     </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  icon: {
-    marginRight: 4,
-  },
-});
 
 export default memo(GameCard);
