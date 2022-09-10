@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, useWindowDimensions, Alert } from 'react-native';
+import { useWindowDimensions, Alert } from 'react-native';
 import {
   AspectRatio,
   VStack as NativeBaseVStack,
