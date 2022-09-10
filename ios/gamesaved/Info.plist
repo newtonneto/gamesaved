@@ -65,5 +65,7 @@
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>GameSaved needs to access photo gallery to upload profile picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>GameSaved needs access to your camera to upload profile picture.</string>
 </dict>
 </plist>

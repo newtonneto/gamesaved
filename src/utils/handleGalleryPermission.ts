@@ -7,6 +7,8 @@ import {
   PermissionStatus,
 } from 'react-native-permissions';
 
+import { permissionsAndroid, permissionsIos } from '@src/hashmaps/permissions';
+
 const blockedPermission = () => {
   Alert.alert(
     'x_x',
@@ -24,26 +26,26 @@ const blockedPermission = () => {
   );
 };
 
-const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
+const getPermissions = async (): Promise<PermissionStatus> => {
   let result: PermissionStatus;
 
   Platform.OS === 'android'
-    ? (result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE))
-    : (result = await check(PERMISSIONS.IOS.PHOTO_LIBRARY));
+    ? (result = await check(permissionsAndroid['gallery']))
+    : (result = await check(permissionsIos['gallery']));
 
   switch (result) {
     case RESULTS.UNAVAILABLE:
       await request(
         Platform.OS === 'android'
-          ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
-          : PERMISSIONS.IOS.PHOTO_LIBRARY,
+          ? permissionsAndroid['gallery']
+          : permissionsIos['gallery'],
       );
       break;
     case RESULTS.DENIED:
       const status = await request(
         Platform.OS === 'android'
-          ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
-          : PERMISSIONS.IOS.PHOTO_LIBRARY,
+          ? permissionsAndroid['gallery']
+          : permissionsIos['gallery'],
       );
 
       if (status === 'blocked' && Platform.OS === 'android') {
@@ -54,8 +56,8 @@ const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
     case RESULTS.LIMITED:
       await request(
         Platform.OS === 'android'
-          ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
-          : PERMISSIONS.IOS.PHOTO_LIBRARY,
+          ? permissionsAndroid['gallery']
+          : permissionsIos['gallery'],
       );
       break;
     case RESULTS.BLOCKED:
@@ -66,4 +68,4 @@ const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
   return result;
 };
 
-export default handleGalleryPermissions;
+export default getPermissions;

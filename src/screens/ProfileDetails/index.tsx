@@ -29,7 +29,7 @@ import { Profile } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
-import handleGalleryPermissions from '@utils/handleGalleryPermission';
+import getPermissions from '@utils/handleGalleryPermission';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
 import getImageType from '@utils/getImageType';
 import firebaseExceptions from '@utils/firebaseExceptions';
@@ -202,7 +202,7 @@ const ProfileDetails = () => {
   };
 
   const handleGallery = async () => {
-    const permissionStatus = await handleGalleryPermissions();
+    const permissionStatus = await getPermissions();
 
     if (permissionStatus === 'granted') {
       const imageFromStorage = await getPictureFromStorage();
