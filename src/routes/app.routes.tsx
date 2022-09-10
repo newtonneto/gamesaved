@@ -97,19 +97,24 @@ const AppRoutes = () => {
         component={HomeStack}
         options={{
           headerTitle: () => <AppHeader title={title} />,
-          headerLeft: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() => navigation.goBack()}
-              />
-            </HStack>
-          ),
+          headerLeft: () =>
+            title !== 'Home' ? (
+              <HStack
+                w="full"
+                bg="gray.600"
+                alignItems="center"
+                justifyContent="center"
+                h="full">
+                <IconButton
+                  icon={
+                    <SkipBack color={colors.gray[200]} size={ICON_NORMAL} />
+                  }
+                  onPress={() => navigation.goBack()}
+                />
+              </HStack>
+            ) : (
+              <></>
+            ),
           headerRight: () => (
             <HStack
               w="full"
