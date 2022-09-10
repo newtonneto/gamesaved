@@ -23,8 +23,6 @@ import { useNavigation } from '@react-navigation/native';
 import Toast from '@components/Toast';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
-import { useAppDispatch } from '@src/store';
-import { setDrawerHeader } from '@store/slices/navigation-slice';
 import { formatDate } from '@utils/formatDate';
 import firebaseExceptions from '@utils/firebaseExceptions';
 import { RATIO, TOAST_DURATION } from '@utils/constants';
@@ -39,7 +37,6 @@ type Props = {
 const GameCard = ({ game, inventory, inventoryRef }: Props) => {
   const toast = useToast();
   const navigation = useNavigation();
-  const dispatch = useAppDispatch();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const { colors } = useTheme();
   const released = formatDate(game.released);
@@ -55,7 +52,6 @@ const GameCard = ({ game, inventory, inventoryRef }: Props) => {
   }, [game.id, inventory]);
 
   const handleNavigation = () => {
-    dispatch(setDrawerHeader(false));
     navigation.navigate('GameScreen', {
       id: game.id,
       slug: game.slug,

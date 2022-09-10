@@ -14,13 +14,12 @@ import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { useRoute } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import RenderHtml from 'react-native-render-html';
 import { FloppyDisk } from 'phosphor-react-native';
 
 import ScrollView from '@components/ScrollView';
-import Header from '@components/Header';
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
 import Toast from '@components/Toast';
@@ -29,7 +28,7 @@ import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import rawg from '@services/rawg.api';
 import { useAppDispatch } from '@src/store';
-import { setDrawerHeader } from '@store/slices/navigation-slice';
+import { setDrawerHeader, setTitle } from '@store/slices/navigation-slice';
 import {
   AXIS_X_PADDING_CONTENT,
   GENERIC_TITTLE,
@@ -49,6 +48,7 @@ type RouteParams = {
 const GameDetails = () => {
   const toast = useToast();
   const { colors } = useTheme();
+  const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
   const route = useRoute();
   const { id, name } = route.params as RouteParams;
@@ -60,6 +60,17 @@ const GameDetails = () => {
   const inventoryRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<InventoryDto>
   >(firestore().collection<InventoryDto>('lists').doc(userSession.uid));
+
+  useEffect(() => {
+    let isMounted = true;
+
+    isMounted && isFocused && dispatch(setTitle(name));
+    // dispatch(setDrawerHeader(false));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
   useEffect(() => {
     const getGame = async () => {
@@ -103,11 +114,7 @@ const GameDetails = () => {
     };
 
     initialize();
-
-    return () => {
-      dispatch(setDrawerHeader(true));
-    };
-  }, [dispatch, id, userSession.uid]);
+  }, [id, userSession.uid]);
 
   const firestoreUpdate = async (gameId: number) => {
     isSaved
@@ -170,7 +177,6 @@ const GameDetails = () => {
   return (
     <ScreenWrapper>
       <VStack>
-        <Header title={name} />
         {!isLoading ? (
           <>
             <Fab
