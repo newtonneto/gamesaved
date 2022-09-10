@@ -12,6 +12,7 @@ import * as yup from 'yup';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { useIsFocused } from '@react-navigation/native';
 
 import VStack from '@components/VStack';
 import ScrollView from '@components/ScrollView';
@@ -26,6 +27,8 @@ import {
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
+import { useAppDispatch } from '@store/index';
+import { setTitle } from '@store/slices/navigation-slice';
 import handleGalleryPermissions from '@utils/handleGalleryPermission';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
 import getImageType from '@utils/getImageType';
@@ -70,6 +73,8 @@ const schema = yup.object().shape({
 });
 
 const ProfileDetails = () => {
+  const dispatch = useAppDispatch();
+  const isFocused = useIsFocused();
   const toast = useToast();
   const {
     control,
@@ -82,6 +87,16 @@ const ProfileDetails = () => {
   const [image, setImage] = useState<string | undefined>(undefined);
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
+
+  useEffect(() => {
+    let isMounted = true;
+
+    isMounted && isFocused && dispatch(setTitle('Stats'));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
   useEffect(() => {
     const getProfile = async () => {
