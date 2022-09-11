@@ -214,9 +214,7 @@ const ProfileDetails = () => {
       const filename = imageFromStorage.assets?.[0].fileName;
       const uri = imageFromStorage.assets?.[0].uri;
 
-      if (!filename || !uri) {
-        Alert.alert('Selecione uma imagem válida!');
-      } else {
+      if (filename && uri) {
         setSelectedImage({
           filename,
           uri,
@@ -234,9 +232,7 @@ const ProfileDetails = () => {
       const filename = imageFromCamera.assets?.[0].fileName;
       const uri = imageFromCamera.assets?.[0].uri;
 
-      if (!filename || !uri) {
-        Alert.alert('Selecione uma imagem válida!');
-      } else {
+      if (filename && uri) {
         setSelectedImage({
           filename,
           uri,
