@@ -5,6 +5,9 @@ import {
   FormControl,
   Select as NativeBaseSelect,
   useToast,
+  Actionsheet,
+  Box,
+  Text,
 } from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -31,6 +34,7 @@ import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
 import getPermissions from '@utils/handleGalleryPermission';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
+import getPictureFromCamera from '@utils/getPictureFromCamera';
 import getImageType from '@utils/getImageType';
 import firebaseExceptions from '@utils/firebaseExceptions';
 
@@ -85,6 +89,7 @@ const ProfileDetails = () => {
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile>({} as Profile);
   const [image, setImage] = useState<string | undefined>(undefined);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
@@ -220,11 +225,31 @@ const ProfileDetails = () => {
     }
   };
 
+  const handleCamera = async () => {
+    const permissionStatus = await getPermissions('camera');
+
+    if (permissionStatus === 'granted') {
+      console.log('test');
+      const imageFromCamera = await getPictureFromCamera();
+      const filename = imageFromCamera.assets?.[0].fileName;
+      const uri = imageFromCamera.assets?.[0].uri;
+
+      if (!filename || !uri) {
+        Alert.alert('Selecione uma imagem válida!');
+      } else {
+        setSelectedImage({
+          filename,
+          uri,
+        });
+      }
+    }
+  };
+
   return (
     <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
         <ScrollView pt={8}>
-          <Pressable onPress={handleGallery}>
+          <Pressable onPress={() => setIsOpen(true)}>
             <Avatar
               bg="gray.700"
               alignSelf="center"
@@ -402,6 +427,12 @@ const ProfileDetails = () => {
       ) : (
         <Loading />
       )}
+      <Actionsheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <Actionsheet.Content>
+          <Actionsheet.Item onPress={handleGallery}>Galeria</Actionsheet.Item>
+          <Actionsheet.Item onPress={handleCamera}>Camera</Actionsheet.Item>
+        </Actionsheet.Content>
+      </Actionsheet>
     </VStack>
   );
 };
