@@ -202,7 +202,7 @@ const ProfileDetails = () => {
   };
 
   const handleGallery = async () => {
-    const permissionStatus = await getPermissions();
+    const permissionStatus = await getPermissions('gallery');
 
     if (permissionStatus === 'granted') {
       const imageFromStorage = await getPictureFromStorage();

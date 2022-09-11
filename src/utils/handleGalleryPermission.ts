@@ -1,7 +1,6 @@
 import { Platform, Linking, Alert } from 'react-native';
 import {
   check,
-  PERMISSIONS,
   request,
   RESULTS,
   PermissionStatus,
@@ -26,26 +25,26 @@ const blockedPermission = () => {
   );
 };
 
-const getPermissions = async (): Promise<PermissionStatus> => {
+const getPermissions = async (type: string): Promise<PermissionStatus> => {
   let result: PermissionStatus;
 
   Platform.OS === 'android'
-    ? (result = await check(permissionsAndroid['gallery']))
-    : (result = await check(permissionsIos['gallery']));
+    ? (result = await check(permissionsAndroid[type]))
+    : (result = await check(permissionsIos[type]));
 
   switch (result) {
     case RESULTS.UNAVAILABLE:
       await request(
         Platform.OS === 'android'
-          ? permissionsAndroid['gallery']
-          : permissionsIos['gallery'],
+          ? permissionsAndroid[type]
+          : permissionsIos[type],
       );
       break;
     case RESULTS.DENIED:
       const status = await request(
         Platform.OS === 'android'
-          ? permissionsAndroid['gallery']
-          : permissionsIos['gallery'],
+          ? permissionsAndroid[type]
+          : permissionsIos[type],
       );
 
       if (status === 'blocked' && Platform.OS === 'android') {
@@ -56,8 +55,8 @@ const getPermissions = async (): Promise<PermissionStatus> => {
     case RESULTS.LIMITED:
       await request(
         Platform.OS === 'android'
-          ? permissionsAndroid['gallery']
-          : permissionsIos['gallery'],
+          ? permissionsAndroid[type]
+          : permissionsIos[type],
       );
       break;
     case RESULTS.BLOCKED:
