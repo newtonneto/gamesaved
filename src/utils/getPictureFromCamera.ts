@@ -10,11 +10,7 @@ const getPictureFromCamera = async (): Promise<ImagePickerResponse> => {
     mediaType: 'photo',
   };
 
-  const resp = await launchCamera(options);
-
-  console.log(resp);
-
-  return resp;
+  return launchCamera(options);
 };
 
 export default getPictureFromCamera;
