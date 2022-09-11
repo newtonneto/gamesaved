@@ -15,12 +15,12 @@ import Logo from '@components/Logo';
 import ScrollView from '@components/ScrollView';
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
+import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   INPUT_ICON_LEFT_MARGIN,
 } from '@utils/constants';
-import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   email: string;

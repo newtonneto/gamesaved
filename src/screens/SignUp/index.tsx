@@ -21,8 +21,8 @@ import ScrollView from '@components/ScrollView';
 import Header from '@components/Header';
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
+import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { FORM_INPUT_MARGIN_BOTTOM } from '@utils/constants';
-import firebaseExceptions from '@utils/firebaseExceptions';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 
 type FormData = {

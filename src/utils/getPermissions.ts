@@ -6,7 +6,7 @@ import {
   PermissionStatus,
 } from 'react-native-permissions';
 
-import { permissionsAndroid, permissionsIos } from '@src/hashmaps/permissions';
+import { permissionsAndroid, permissionsIos } from '@hashmaps/permissions';
 
 const blockedPermission = () => {
   Alert.alert(
@@ -28,9 +28,10 @@ const blockedPermission = () => {
 const getPermissions = async (type: string): Promise<PermissionStatus> => {
   let result: PermissionStatus;
 
-  Platform.OS === 'android'
-    ? (result = await check(permissionsAndroid[type]))
-    : (result = await check(permissionsIos[type]));
+  result =
+    Platform.OS === 'android'
+      ? await check(permissionsAndroid[type])
+      : await check(permissionsIos[type]);
 
   switch (result) {
     case RESULTS.UNAVAILABLE:

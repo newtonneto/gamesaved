@@ -6,7 +6,6 @@ import {
   Select as NativeBaseSelect,
   useToast,
   Actionsheet,
-  Box,
   Text,
 } from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
@@ -27,16 +26,16 @@ import {
   AXIS_X_PADDING_CONTENT,
   FORM_INPUT_MARGIN_BOTTOM,
 } from '@utils/constants';
+import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
-import getPermissions from '@utils/handleGalleryPermission';
+import getPermissions from '@src/utils/getPermissions';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
 import getPictureFromCamera from '@utils/getPictureFromCamera';
 import getImageType from '@utils/getImageType';
-import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   firstName: string;
@@ -424,9 +423,17 @@ const ProfileDetails = () => {
         <Loading />
       )}
       <Actionsheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <Actionsheet.Content>
-          <Actionsheet.Item onPress={handleGallery}>Galeria</Actionsheet.Item>
-          <Actionsheet.Item onPress={handleCamera}>Camera</Actionsheet.Item>
+        <Actionsheet.Content bg="gray.900">
+          <Actionsheet.Item bg="gray.900" onPress={handleGallery}>
+            <Text fontSize="md" color="white">
+              Galeria
+            </Text>
+          </Actionsheet.Item>
+          <Actionsheet.Item bg="gray.900" onPress={handleCamera}>
+            <Text fontSize="md" color="white">
+              Camera
+            </Text>
+          </Actionsheet.Item>
         </Actionsheet.Content>
       </Actionsheet>
     </VStack>

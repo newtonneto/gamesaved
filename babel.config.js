@@ -24,6 +24,7 @@ module.exports = {
           '@src': './src',
           '@assets': './src/assets',
           '@components': './src/components',
+          '@hashmaps': './src/hashmaps',
           '@interfaces': './src/interfaces',
           '@modules': './src/modules',
           '@routes': './src/routes',
