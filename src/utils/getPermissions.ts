@@ -26,9 +26,7 @@ const blockedPermission = () => {
 };
 
 const getPermissions = async (type: string): Promise<PermissionStatus> => {
-  let result: PermissionStatus;
-
-  result =
+  const result: PermissionStatus =
     Platform.OS === 'android'
       ? await check(permissionsAndroid[type])
       : await check(permissionsIos[type]);

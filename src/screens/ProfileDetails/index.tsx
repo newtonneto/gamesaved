@@ -226,7 +226,6 @@ const ProfileDetails = () => {
     const permissionStatus = await getPermissions('camera');
 
     if (permissionStatus === 'granted') {
-      console.log('test');
       const imageFromCamera = await getPictureFromCamera();
       const filename = imageFromCamera.assets?.[0].fileName;
       const uri = imageFromCamera.assets?.[0].uri;
