@@ -21,10 +21,10 @@ import { useNavigation } from '@react-navigation/native';
 
 import { FloppyDiskStyled, StarStyled } from './styles';
 import Toast from '@components/Toast';
+import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { formatDate } from '@utils/formatDate';
-import firebaseExceptions from '@utils/firebaseExceptions';
 import { RATIO, TOAST_DURATION } from '@utils/constants';
 
 type Props = {

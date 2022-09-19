@@ -5,6 +5,8 @@ import {
   FormControl,
   Select as NativeBaseSelect,
   useToast,
+  Actionsheet,
+  Text,
 } from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,15 +26,16 @@ import {
   AXIS_X_PADDING_CONTENT,
   FORM_INPUT_MARGIN_BOTTOM,
 } from '@utils/constants';
+import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 import { Profile } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
-import handleGalleryPermissions from '@utils/handleGalleryPermission';
+import getPermissions from '@src/utils/getPermissions';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
+import getPictureFromCamera from '@utils/getPictureFromCamera';
 import getImageType from '@utils/getImageType';
-import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   firstName: string;
@@ -85,6 +88,7 @@ const ProfileDetails = () => {
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile>({} as Profile);
   const [image, setImage] = useState<string | undefined>(undefined);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
@@ -202,16 +206,31 @@ const ProfileDetails = () => {
   };
 
   const handleGallery = async () => {
-    const permissionStatus = await handleGalleryPermissions();
+    const permissionStatus = await getPermissions('gallery');
 
     if (permissionStatus === 'granted') {
       const imageFromStorage = await getPictureFromStorage();
       const filename = imageFromStorage.assets?.[0].fileName;
       const uri = imageFromStorage.assets?.[0].uri;
 
-      if (!filename || !uri) {
-        Alert.alert('Selecione uma imagem válida!');
-      } else {
+      if (filename && uri) {
+        setSelectedImage({
+          filename,
+          uri,
+        });
+      }
+    }
+  };
+
+  const handleCamera = async () => {
+    const permissionStatus = await getPermissions('camera');
+
+    if (permissionStatus === 'granted') {
+      const imageFromCamera = await getPictureFromCamera();
+      const filename = imageFromCamera.assets?.[0].fileName;
+      const uri = imageFromCamera.assets?.[0].uri;
+
+      if (filename && uri) {
         setSelectedImage({
           filename,
           uri,
@@ -224,7 +243,7 @@ const ProfileDetails = () => {
     <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
         <ScrollView pt={8}>
-          <Pressable onPress={handleGallery}>
+          <Pressable onPress={() => setIsOpen(true)}>
             <Avatar
               bg="gray.700"
               alignSelf="center"
@@ -402,6 +421,20 @@ const ProfileDetails = () => {
       ) : (
         <Loading />
       )}
+      <Actionsheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <Actionsheet.Content bg="gray.900">
+          <Actionsheet.Item bg="gray.900" onPress={handleGallery}>
+            <Text fontSize="md" color="white">
+              Galeria
+            </Text>
+          </Actionsheet.Item>
+          <Actionsheet.Item bg="gray.900" onPress={handleCamera}>
+            <Text fontSize="md" color="white">
+              Camera
+            </Text>
+          </Actionsheet.Item>
+        </Actionsheet.Content>
+      </Actionsheet>
     </VStack>
   );
 };

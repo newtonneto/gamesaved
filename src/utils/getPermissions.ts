@@ -1,11 +1,12 @@
 import { Platform, Linking, Alert } from 'react-native';
 import {
   check,
-  PERMISSIONS,
   request,
   RESULTS,
   PermissionStatus,
 } from 'react-native-permissions';
+
+import { permissionsAndroid, permissionsIos } from '@hashmaps/permissions';
 
 const blockedPermission = () => {
   Alert.alert(
@@ -24,26 +25,25 @@ const blockedPermission = () => {
   );
 };
 
-const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
-  let result: PermissionStatus;
-
-  Platform.OS === 'android'
-    ? (result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE))
-    : (result = await check(PERMISSIONS.IOS.PHOTO_LIBRARY));
+const getPermissions = async (type: string): Promise<PermissionStatus> => {
+  const result: PermissionStatus =
+    Platform.OS === 'android'
+      ? await check(permissionsAndroid[type])
+      : await check(permissionsIos[type]);
 
   switch (result) {
     case RESULTS.UNAVAILABLE:
       await request(
         Platform.OS === 'android'
-          ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
-          : PERMISSIONS.IOS.PHOTO_LIBRARY,
+          ? permissionsAndroid[type]
+          : permissionsIos[type],
       );
       break;
     case RESULTS.DENIED:
       const status = await request(
         Platform.OS === 'android'
-          ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
-          : PERMISSIONS.IOS.PHOTO_LIBRARY,
+          ? permissionsAndroid[type]
+          : permissionsIos[type],
       );
 
       if (status === 'blocked' && Platform.OS === 'android') {
@@ -54,8 +54,8 @@ const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
     case RESULTS.LIMITED:
       await request(
         Platform.OS === 'android'
-          ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
-          : PERMISSIONS.IOS.PHOTO_LIBRARY,
+          ? permissionsAndroid[type]
+          : permissionsIos[type],
       );
       break;
     case RESULTS.BLOCKED:
@@ -66,4 +66,4 @@ const handleGalleryPermissions = async (): Promise<PermissionStatus> => {
   return result;
 };
 
-export default handleGalleryPermissions;
+export default getPermissions;

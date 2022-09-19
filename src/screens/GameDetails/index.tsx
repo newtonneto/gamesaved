@@ -24,6 +24,7 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
 import Toast from '@components/Toast';
 import Loading from '@components/Loading';
+import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import rawg from '@services/rawg.api';
@@ -36,7 +37,6 @@ import {
   RATIO,
   TOAST_DURATION,
 } from '@utils/constants';
-import firebaseExceptions from '@utils/firebaseExceptions';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type RouteParams = {

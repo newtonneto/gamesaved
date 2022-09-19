@@ -13,11 +13,11 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import ScrollView from '@components/ScrollView';
 import VStack from '@components/VStack';
 import Button from '@components/Button';
+import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import {
   AXIS_X_PADDING_CONTENT,
   FORM_INPUT_MARGIN_BOTTOM,
 } from '@utils/constants';
-import firebaseExceptions from '@utils/firebaseExceptions';
 
 type FormData = {
   email: string;
