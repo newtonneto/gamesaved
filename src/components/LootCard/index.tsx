@@ -66,7 +66,7 @@ const LootCard = ({ id }: Props) => {
         {!isLoading ? (
           <HStack h={14} w="full" alignItems="center">
             {!hasError && (
-              <AspectRatio w="30%" ratio={RATIO} h={14} zIndex={-1}>
+              <AspectRatio ratio={RATIO} h={14}>
                 <FastImage
                   source={{
                     uri: game.background_image,
