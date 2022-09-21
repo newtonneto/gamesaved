@@ -22,8 +22,8 @@ import auth from '@react-native-firebase/auth';
 import AppHeader from '@components/AppHeader';
 import HomeStack from '@modules/HomeStack';
 import InventoryStack from '@modules/InventoryStack';
+import PartyStack from '@modules/PartyStack';
 import ProfileDetails from '@screens/ProfileDetails';
-import Party from '@screens/Party';
 import { useAppSelector } from '@src/store';
 import { stateDrawerHeader, stateTitle } from '@store/slices/navigation-slice';
 import { ICON_NORMAL } from '@utils/constants';
@@ -219,7 +219,7 @@ const AppRoutes = () => {
       />
       <Screen
         name="Party"
-        component={Party}
+        component={PartyStack}
         options={{
           headerTitle: () => <AppHeader title={title} />,
           headerLeft: () => (

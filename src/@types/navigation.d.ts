@@ -6,6 +6,7 @@ export declare global {
       ForgotPassword: undefined;
       GameScreen: { id: number; slug: string; name: string };
       Stats: undefined;
+      FindFriendsScreen: undefined;
     }
   }
 }

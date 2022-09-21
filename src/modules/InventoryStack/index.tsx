@@ -11,16 +11,8 @@ const InventoryStack = () => {
     <Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName="InventoryScreen">
-      <Screen
-        name="InventoryScreen"
-        component={Inventory}
-        options={{ headerShown: false }}
-      />
-      <Screen
-        name="GameScreen"
-        component={GameDetails}
-        options={{ headerShown: false }}
-      />
+      <Screen name="InventoryScreen" component={Inventory} />
+      <Screen name="GameScreen" component={GameDetails} />
     </Navigator>
   );
 };

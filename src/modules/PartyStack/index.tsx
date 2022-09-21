@@ -1,20 +1,20 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Home from '@screens/Home';
-import GameDetails from '@screens/GameDetails';
+import Party from '@screens/Party';
+import FindFriends from '@screens/FindFriends';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
-const HomeStack = () => {
+const PartyStack = () => {
   return (
     <Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName="HomeScreen">
-      <Screen name="HomeScreen" component={Home} />
-      <Screen name="GameScreen" component={GameDetails} />
+      <Screen name="PartyScreen" component={Party} />
+      <Screen name="FindFriendsScreen" component={FindFriends} />
     </Navigator>
   );
 };
 
-export default HomeStack;
+export default PartyStack;
