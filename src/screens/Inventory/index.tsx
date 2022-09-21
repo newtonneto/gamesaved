@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert, ListRenderItem } from 'react-native';
 import { useToast } from 'native-base';
 import firestore, {
   FirebaseFirestoreTypes,
@@ -150,7 +150,7 @@ const Inventory = () => {
     }
   };
 
-  const RenderItem = ({ item }: { item: number }) => (
+  const RenderItem: ListRenderItem<number> = ({ item }) => (
     <LootCard id={item} key={item} />
   );
 
@@ -160,6 +160,7 @@ const Inventory = () => {
         <SwipeListView
           data={inventory}
           renderItem={RenderItem}
+          keyExtractor={(item: number) => item.toString()}
           onEndReached={controlPagination}
           onEndReachedThreshold={0.1}
           contentContainerStyle={styles.flatListContent}
@@ -176,7 +177,6 @@ const Inventory = () => {
           rightOpenValue={-75}
           stopRightSwipe={-75}
           stopLeftSwipe={1}
-          keyExtractor={gameId => gameId.toString()}
         />
       ) : (
         <Loading />

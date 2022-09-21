@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { FlatList, StyleSheet, Alert } from 'react-native';
+import { Alert, ListRenderItem } from 'react-native';
 import { FormControl, useTheme, IconButton, Heading } from 'native-base';
 import firestore, {
   FirebaseFirestoreTypes,
@@ -19,6 +19,7 @@ import {
   FlatListFooter,
   FlatListSeparator,
 } from '@components/FlatListComponents';
+import FlatList from '@components/FlatList';
 import Input from '@components/Input';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
@@ -27,7 +28,6 @@ import rawg from '@services/rawg.api';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
-  VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
@@ -142,7 +142,7 @@ const Home = () => {
     }
   };
 
-  const RenderItem = ({ item }: { item: Game }) => (
+  const RenderItem: ListRenderItem<Game> = ({ item }) => (
     <GameCard
       game={item}
       key={item.id}
@@ -238,15 +238,14 @@ const Home = () => {
         <FlatList
           data={games}
           renderItem={RenderItem}
+          keyExtractor={(item: Game) => item.id.toString()}
           onEndReached={getNextGames}
           onEndReachedThreshold={0.1}
-          contentContainerStyle={styles.flatListContent}
           ListHeaderComponent={FlatListHeader}
           ListFooterComponent={() => FlatListFooter(isLoadingNext)}
           ListEmptyComponent={RenderEmpty}
           ItemSeparatorComponent={FlatListSeparator}
           showsVerticalScrollIndicator={false}
-          style={styles.flatList}
         />
       ) : (
         <Loading />
@@ -254,14 +253,5 @@ const Home = () => {
     </VStack>
   );
 };
-
-const styles = StyleSheet.create({
-  flatListContent: {
-    paddingVertical: VERTICAL_PADDING_LISTS,
-  },
-  flatList: {
-    width: '100%',
-  },
-});
 
 export default Home;
