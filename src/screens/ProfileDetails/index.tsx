@@ -28,7 +28,7 @@ import {
 } from '@utils/constants';
 import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
-import { Profile } from '@interfaces/profile.dto';
+import { ProfileDto } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
@@ -86,7 +86,7 @@ const ProfileDetails = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
-  const [profile, setProfile] = useState<Profile>({} as Profile);
+  const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
   const [image, setImage] = useState<string | undefined>(undefined);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
@@ -106,7 +106,7 @@ const ProfileDetails = () => {
     const getProfile = async () => {
       try {
         const response = await firestore()
-          .collection<Profile>('profiles')
+          .collection<ProfileDto>('profiles')
           .doc(userSession.uid)
           .get();
 
@@ -167,7 +167,7 @@ const ProfileDetails = () => {
 
     try {
       await firestore()
-        .collection<Profile>('profiles')
+        .collection<ProfileDto>('profiles')
         .doc(userSession.uid)
         .update({
           birthDate: data.birthDate,
