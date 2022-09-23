@@ -25,7 +25,7 @@ import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { formatDate } from '@utils/formatDate';
-import { RATIO, TOAST_DURATION } from '@utils/constants';
+import { CARDS_BORDER_WIDTH, RATIO, TOAST_DURATION } from '@utils/constants';
 
 type Props = {
   game: Game;
@@ -124,7 +124,7 @@ const GameCard = ({ game, inventory, inventoryRef }: Props) => {
         rounded="lg"
         overflow="hidden"
         borderColor="secondary.700"
-        borderWidth="1">
+        borderWidth={CARDS_BORDER_WIDTH}>
         <Box>
           <AspectRatio w="100%" ratio={RATIO}>
             <FastImage

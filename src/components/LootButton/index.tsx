@@ -3,11 +3,12 @@ import { Box, useTheme } from 'native-base';
 import { Trash } from 'phosphor-react-native';
 import { RowMap } from 'react-native-swipe-list-view';
 import { TouchableOpacityStyled } from './styles';
+import { ProfileDto } from '@src/interfaces/profile.dto';
 
 type Props = {
   handleRemove: Function;
   id: number;
-  rowMap: RowMap<number>;
+  rowMap: RowMap<number | ProfileDto>;
 };
 
 const LootButton = ({ handleRemove, id, rowMap }: Props) => {

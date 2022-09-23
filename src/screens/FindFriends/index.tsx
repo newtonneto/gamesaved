@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
-import { FormControl, useTheme, IconButton, Heading } from 'native-base';
+import { Alert, ListRenderItem, StyleSheet, View } from 'react-native';
+import { FormControl, useTheme, IconButton, useToast } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 import { Controller, useForm } from 'react-hook-form';
@@ -10,16 +10,20 @@ import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
 
+import Toast from '@components/Toast';
 import VStack from '@components/VStack';
 import Input from '@components/Input';
+import UserCard from '@components/UserCard';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
+  TOAST_DURATION,
   VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
+import LootButton from '@src/components/LootButton';
 
 type FormData = {
   searchValue: string;
@@ -30,6 +34,7 @@ const schema = yup.object().shape({
 });
 
 const FindFriends = () => {
+  const toast = useToast();
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
   const { colors } = useTheme();
@@ -41,7 +46,9 @@ const FindFriends = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<ProfileDto[]>([]);
-  const profilesRef = useRef(firestore().collection<ProfileDto>('profiles'));
+  const profilesRef = useRef<
+    FirebaseFirestoreTypes.CollectionReference<ProfileDto>
+  >(firestore().collection<ProfileDto>('profiles'));
 
   useEffect(() => {
     let isMounted = true;
@@ -68,10 +75,12 @@ const FindFriends = () => {
 
         if (response.length > 0) {
           const data: ProfileDto[] = response.map(item => {
-            return item.data();
+            return { ...item.data() };
           });
 
-          setUsers(data);
+          setUsers([...data]);
+        } else {
+          setUsers([]);
         }
       } catch (err) {
         Alert.alert(
@@ -93,7 +102,8 @@ const FindFriends = () => {
     <FormControl
       isRequired
       isInvalid={'searchValue' in errors}
-      mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
+      mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
+      px={AXIS_X_PADDING_CONTENT}>
       <Controller
         control={control}
         render={({ field: { onChange, value } }) => (
@@ -133,15 +143,45 @@ const FindFriends = () => {
     </FormControl>
   );
 
+  const RenderItem: ListRenderItem<ProfileDto> = ({ item }) => (
+    <UserCard profile={item} key={item.email} />
+  );
+
+  const handleRemove = async (removedLoot: number, rowMap: RowMap<number>) => {
+    toast.show({
+      duration: TOAST_DURATION,
+      render: () => {
+        return (
+          <Toast
+            status="success"
+            title="GameSaved"
+            description="Removing game, please dont turn off your phone"
+            textColor="darkText"
+          />
+        );
+      },
+    });
+  };
+
   return (
-    <VStack px={AXIS_X_PADDING_CONTENT}>
+    <VStack>
       <SwipeListView
-        data={[]}
-        renderItem={() => <></>}
+        data={users}
+        renderItem={RenderItem}
         ListHeaderComponent={FlatListHeader}
         style={styles.flatList}
         contentContainerStyle={styles.flatListContent}
         showsVerticalScrollIndicator={false}
+        renderHiddenItem={(rowData, rowMap) => (
+          <LootButton
+            handleRemove={handleRemove}
+            id={rowData.index}
+            rowMap={rowMap}
+          />
+        )}
+        rightOpenValue={-75}
+        stopRightSwipe={-75}
+        stopLeftSwipe={1}
       />
     </VStack>
   );
