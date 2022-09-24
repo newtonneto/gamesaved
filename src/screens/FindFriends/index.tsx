@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 import Toast from '@components/Toast';
 import VStack from '@components/VStack';
@@ -49,6 +50,7 @@ const FindFriends = () => {
   const profilesRef = useRef<
     FirebaseFirestoreTypes.CollectionReference<ProfileDto>
   >(firestore().collection<ProfileDto>('profiles'));
+  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
   useEffect(() => {
     let isMounted = true;
@@ -67,6 +69,7 @@ const FindFriends = () => {
       try {
         const response = await (
           await profilesRef.current
+            .where('email', '!=', userSession.email)
             .orderBy('email')
             .startAt(data.searchValue)
             .endAt(data.searchValue + '\uf8ff')
