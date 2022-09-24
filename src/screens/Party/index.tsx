@@ -16,9 +16,10 @@ const Party = () => {
   const isFocused = useIsFocused();
   const [members, setMembers] = useState<any>([]);
   const profilesRef = useRef(firestore().collection<ProfileDto>('profiles'));
+  let unsubscribe: Function = () => {};
 
   const getUsers = async () => {
-    await profilesRef.current.onSnapshot(snapshot => {
+    unsubscribe = await profilesRef.current.onSnapshot(snapshot => {
       const data = snapshot.docs.map(item => {
         console.log('item: ', item.data());
       });
@@ -33,6 +34,7 @@ const Party = () => {
 
     return () => {
       isMounted = false;
+      unsubscribe();
     };
   }, [isFocused]);
 
