@@ -6,7 +6,11 @@ import FastImage from 'react-native-fast-image';
 import Loading from '@components/Loading';
 import { Game } from '@interfaces/game.dto';
 import rawg from '@services/rawg.api';
-import { AXIS_X_PADDING_CONTENT, RATIO } from '@utils/constants';
+import {
+  AXIS_X_PADDING_CONTENT,
+  CARDS_BORDER_WIDTH,
+  RATIO,
+} from '@utils/constants';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type Props = {
@@ -59,7 +63,7 @@ const LootCard = ({ id }: Props) => {
         w="98%"
         rounded="lg"
         overflow="hidden"
-        borderWidth={1}
+        borderWidth={CARDS_BORDER_WIDTH}
         borderColor="secondary.700"
         h={14}
         bg="gray.600">

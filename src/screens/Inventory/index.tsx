@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert, ListRenderItem } from 'react-native';
 import { useToast } from 'native-base';
 import firestore, {
   FirebaseFirestoreTypes,
@@ -12,7 +12,7 @@ import Toast from '@components/Toast';
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import LootCard from '@components/LootCard';
-import LootButton from '@components/LootButton';
+import HiddenButton from '@components/HiddenButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { useAppDispatch } from '@store/index';
@@ -150,7 +150,7 @@ const Inventory = () => {
     }
   };
 
-  const RenderItem = ({ item }: { item: number }) => (
+  const RenderItem: ListRenderItem<number> = ({ item }) => (
     <LootCard id={item} key={item} />
   );
 
@@ -160,6 +160,7 @@ const Inventory = () => {
         <SwipeListView
           data={inventory}
           renderItem={RenderItem}
+          keyExtractor={(item: number) => item.toString()}
           onEndReached={controlPagination}
           onEndReachedThreshold={0.1}
           contentContainerStyle={styles.flatListContent}
@@ -167,16 +168,16 @@ const Inventory = () => {
           showsVerticalScrollIndicator={false}
           style={styles.flatList}
           renderHiddenItem={(rowData, rowMap) => (
-            <LootButton
-              handleRemove={handleRemove}
+            <HiddenButton
+              handler={handleRemove}
               id={rowData.item}
               rowMap={rowMap}
+              type="remove_loot"
             />
           )}
           rightOpenValue={-75}
           stopRightSwipe={-75}
           stopLeftSwipe={1}
-          keyExtractor={gameId => gameId.toString()}
         />
       ) : (
         <Loading />
