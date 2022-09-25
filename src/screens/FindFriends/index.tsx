@@ -153,7 +153,7 @@ const FindFriends = () => {
     <UserCard profile={item} key={item.email} />
   );
 
-  const handleRemove = async (removedLoot: number, rowMap: RowMap<number>) => {
+  const handleInvite = async () => {
     toast.show({
       duration: TOAST_DURATION,
       render: () => {
@@ -161,7 +161,7 @@ const FindFriends = () => {
           <Toast
             status="success"
             title="GameSaved"
-            description="Removing game, please dont turn off your phone"
+            description="Feature not available"
             textColor="darkText"
           />
         );
@@ -180,7 +180,7 @@ const FindFriends = () => {
         showsVerticalScrollIndicator={false}
         renderHiddenItem={(rowData, rowMap) => (
           <HiddenButton
-            handler={handleRemove}
+            handler={handleInvite}
             id={rowData.index}
             rowMap={rowMap}
             type="add_friend"

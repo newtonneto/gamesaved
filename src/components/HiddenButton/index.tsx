@@ -19,7 +19,7 @@ const HiddenButton = ({ handler, id, rowMap, type }: Props) => {
     <Box alignItems="flex-end">
       {type === 'add_friend' && (
         <TouchableOpacityStyled
-          onPress={() => handler(id, rowMap)}
+          onPress={() => handler()}
           bgColor={colors.success[700]}>
           <UserCirclePlus color={colors.white} size={24} />
         </TouchableOpacityStyled>
