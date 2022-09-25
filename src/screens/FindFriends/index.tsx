@@ -118,7 +118,10 @@ const FindFriends = () => {
                   _icon={{
                     as: <XCircle color={colors.gray[300]} />,
                   }}
-                  onPress={() => setValue('searchValue', '')}
+                  onPress={() => {
+                    setValue('searchValue', '');
+                    setUsers([]);
+                  }}
                 />
               ) : undefined
             }
