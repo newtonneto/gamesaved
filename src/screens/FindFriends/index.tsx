@@ -15,6 +15,7 @@ import Toast from '@components/Toast';
 import VStack from '@components/VStack';
 import Input from '@components/Input';
 import UserCard from '@components/UserCard';
+import HiddenButton from '@components/HiddenButton';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
@@ -24,7 +25,6 @@ import {
   TOAST_DURATION,
   VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
-import LootButton from '@src/components/LootButton';
 
 type FormData = {
   searchValue: string;
@@ -176,10 +176,11 @@ const FindFriends = () => {
         contentContainerStyle={styles.flatListContent}
         showsVerticalScrollIndicator={false}
         renderHiddenItem={(rowData, rowMap) => (
-          <LootButton
-            handleRemove={handleRemove}
+          <HiddenButton
+            handler={handleRemove}
             id={rowData.index}
             rowMap={rowMap}
+            type="add_friend"
           />
         )}
         rightOpenValue={-75}

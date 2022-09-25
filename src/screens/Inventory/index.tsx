@@ -12,7 +12,7 @@ import Toast from '@components/Toast';
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import LootCard from '@components/LootCard';
-import LootButton from '@components/LootButton';
+import HiddenButton from '@components/HiddenButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { useAppDispatch } from '@store/index';
@@ -168,10 +168,11 @@ const Inventory = () => {
           showsVerticalScrollIndicator={false}
           style={styles.flatList}
           renderHiddenItem={(rowData, rowMap) => (
-            <LootButton
-              handleRemove={handleRemove}
+            <HiddenButton
+              handler={handleRemove}
               id={rowData.item}
               rowMap={rowMap}
+              type="remove_loot"
             />
           )}
           rightOpenValue={-75}
