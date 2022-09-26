@@ -26,6 +26,7 @@ import { FORM_INPUT_MARGIN_BOTTOM } from '@utils/constants';
 import { handleDateMask, handlePhoneMask } from '@utils/inputMasks';
 
 type FormData = {
+  username: string;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -34,9 +35,17 @@ type FormData = {
   password: string;
   confirmPassword: string;
   phone: string;
+  psnId: string;
+  xboxGamertag: string;
+  nintendoAccount: string;
+  steamProfile: string;
 };
 
 const schema = yup.object().shape({
+  username: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .min(6, 'Username deve ter no mínimo 2 caracteres'),
   firstName: yup
     .string()
     .required('Prenchimento obrigatorio')
@@ -85,6 +94,42 @@ const schema = yup.object().shape({
       'Telefone deve conter 11 dígitos',
       (value: string | undefined): boolean => value?.toString().length === 15,
     ),
+  psnId: yup
+    .string()
+    .test(
+      'len',
+      'PSN ID deve ter no mínimo 3 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 3,
+    )
+    .max(16, 'PSN ID deve ter no máximo 16 caracteres'),
+  xboxGamertag: yup
+    .string()
+    .test(
+      'len',
+      'Xbox Gamertag deve ter no mínimo 3 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 3,
+    )
+    .max(12, 'Xbox Gamertag deve ter no máximo 12 caracteres'),
+  nintendoAccount: yup
+    .string()
+    .test(
+      'len',
+      'Nintendo Account deve ter no mínimo 6 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 6,
+    )
+    .max(10, 'Nintendo Account deve ter no máximo 6 caracteres'),
+  steamProfile: yup
+    .string()
+    .test(
+      'len',
+      'Steam Profile deve ter no mínimo 2 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 2,
+    )
+    .max(32, 'Steam Profile deve ter no máximo 32 caracteres'),
 });
 
 const SignUp = () => {
@@ -115,6 +160,7 @@ const SignUp = () => {
 
   const createProfile = async (
     uid: string,
+    username: string,
     firstName: string,
     lastName: string,
     birthDate: string,
@@ -123,10 +169,15 @@ const SignUp = () => {
     phone: string,
   ) => {
     try {
-      await firestore()
-        .collection('profiles')
-        .doc(uid)
-        .set({ firstName, lastName, birthDate, gender, email, phone });
+      await firestore().collection('profiles').doc(uid).set({
+        username,
+        firstName,
+        lastName,
+        birthDate,
+        gender,
+        email,
+        phone,
+      });
 
       await firestore().collection('lists').doc(uid).set({ games: [] });
     } catch (err: any) {
@@ -142,6 +193,7 @@ const SignUp = () => {
       const response = await createUser(data.email, data.password);
       await createProfile(
         response.user.uid,
+        data.username,
         data.firstName,
         data.lastName,
         data.birthDate,
@@ -184,6 +236,33 @@ const SignUp = () => {
       <VStack px={8}>
         <Header title="Cadastro" />
         <ScrollView>
+          <FormControl
+            isRequired
+            isInvalid={'username' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Username</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="XCloud"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoading}
+                  autoCapitalize="words"
+                />
+              )}
+              name="username"
+              defaultValue=""
+            />
+            <FormControl.ErrorMessage>
+              {errors.username?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
           <FormControl
             isRequired
             isInvalid={'firstName' in errors}
@@ -432,6 +511,110 @@ const SignUp = () => {
             />
             <FormControl.ErrorMessage>
               {errors.phone?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'psnId' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>PSN ID</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="CloudAvalanchePS"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoading}
+                  autoCapitalize="words"
+                />
+              )}
+              name="psnId"
+              defaultValue=""
+            />
+            <FormControl.ErrorMessage>
+              {errors.psnId?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'xboxGamertag' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Xbox Gamertag</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="XCloudAvalanche"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoading}
+                  autoCapitalize="words"
+                />
+              )}
+              name="xboxGamertag"
+              defaultValue=""
+            />
+            <FormControl.ErrorMessage>
+              {errors.xboxGamertag?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'nintendoAccount' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Nintendo Account</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="RedCloud"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoading}
+                  autoCapitalize="words"
+                />
+              )}
+              name="nintendoAccount"
+              defaultValue=""
+            />
+            <FormControl.ErrorMessage>
+              {errors.nintendoAccount?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'steamProfile' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Steam Profile</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="Cloud_Ex-Soldier"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoading}
+                  autoCapitalize="words"
+                />
+              )}
+              name="steamProfile"
+              defaultValue=""
+            />
+            <FormControl.ErrorMessage>
+              {errors.steamProfile?.message}
             </FormControl.ErrorMessage>
           </FormControl>
 

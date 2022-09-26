@@ -92,6 +92,8 @@ const ProfileDetails = () => {
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
+  console.log('userSession.displayName: ', userSession.email);
+
   useEffect(() => {
     let isMounted = true;
 
