@@ -167,6 +167,10 @@ const SignUp = () => {
     gender: string,
     email: string,
     phone: string,
+    psnId: string,
+    xboxGamertag: string,
+    nintendoAccount: string,
+    steamProfile: string,
   ) => {
     try {
       await firestore().collection('profiles').doc(uid).set({
@@ -177,6 +181,10 @@ const SignUp = () => {
         gender,
         email,
         phone,
+        psnId,
+        xboxGamertag,
+        nintendoAccount,
+        steamProfile,
       });
 
       await firestore().collection('lists').doc(uid).set({ games: [] });
@@ -200,6 +208,10 @@ const SignUp = () => {
         data.gender,
         data.email,
         data.phone,
+        data.psnId,
+        data.xboxGamertag,
+        data.nintendoAccount,
+        data.steamProfile,
       );
 
       Alert.alert(
