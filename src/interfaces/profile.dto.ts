@@ -5,4 +5,9 @@ export interface ProfileDto {
   gender: 'male' | 'female' | 'other';
   phone: string;
   email: string;
+  username: string;
+  psnId: string;
+  xboxGamertag: string;
+  nintendoAccount: string;
+  steamProfile: string;
 }

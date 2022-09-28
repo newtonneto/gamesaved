@@ -43,9 +43,18 @@ type FormData = {
   birthDate: string;
   gender: 'male' | 'female' | 'other';
   phone: string;
+  username: string;
+  psnId: string;
+  xboxGamertag: string;
+  nintendoAccount: string;
+  steamProfile: string;
 };
 
 const schema = yup.object().shape({
+  username: yup
+    .string()
+    .required('Prenchimento obrigatorio')
+    .min(6, 'Username deve ter no mínimo 2 caracteres'),
   firstName: yup
     .string()
     .required('Prenchimento obrigatorio')
@@ -73,6 +82,42 @@ const schema = yup.object().shape({
       'Telefone deve conter 11 dígitos',
       (value: string | undefined): boolean => value?.toString().length === 15,
     ),
+  psnId: yup
+    .string()
+    .test(
+      'len',
+      'PSN ID deve ter no mínimo 3 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 3,
+    )
+    .max(16, 'PSN ID deve ter no máximo 16 caracteres'),
+  xboxGamertag: yup
+    .string()
+    .test(
+      'len',
+      'Xbox Gamertag deve ter no mínimo 3 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 3,
+    )
+    .max(12, 'Xbox Gamertag deve ter no máximo 12 caracteres'),
+  nintendoAccount: yup
+    .string()
+    .test(
+      'len',
+      'Nintendo Account deve ter no mínimo 6 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 6,
+    )
+    .max(10, 'Nintendo Account deve ter no máximo 6 caracteres'),
+  steamProfile: yup
+    .string()
+    .test(
+      'len',
+      'Steam Profile deve ter no mínimo 2 caracteres',
+      (value: string | undefined): boolean =>
+        value === undefined || value === '' ? true : value.length >= 2,
+    )
+    .max(32, 'Steam Profile deve ter no máximo 32 caracteres'),
 });
 
 const ProfileDetails = () => {
@@ -258,6 +303,33 @@ const ProfileDetails = () => {
           </Pressable>
           <FormControl
             isRequired
+            isInvalid={'username' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Username</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="XCloud"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoadingRequest}
+                  autoCapitalize="words"
+                />
+              )}
+              name="username"
+              defaultValue={profile.username}
+            />
+            <FormControl.ErrorMessage>
+              {errors.username?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isRequired
             isInvalid={'firstName' in errors}
             mb={FORM_INPUT_MARGIN_BOTTOM}>
             <FormControl.Label>Nome</FormControl.Label>
@@ -406,6 +478,110 @@ const ProfileDetails = () => {
             />
             <FormControl.ErrorMessage>
               {errors.phone?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'psnId' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>PSN ID</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="CloudAvalanchePS"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoadingRequest}
+                  autoCapitalize="words"
+                />
+              )}
+              name="psnId"
+              defaultValue={profile.psnId}
+            />
+            <FormControl.ErrorMessage>
+              {errors.psnId?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'xboxGamertag' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Xbox Gamertag</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="XCloudAvalanche"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoadingRequest}
+                  autoCapitalize="words"
+                />
+              )}
+              name="xboxGamertag"
+              defaultValue={profile.xboxGamertag}
+            />
+            <FormControl.ErrorMessage>
+              {errors.xboxGamertag?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'nintendoAccount' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Nintendo Account</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="RedCloud"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoadingRequest}
+                  autoCapitalize="words"
+                />
+              )}
+              name="nintendoAccount"
+              defaultValue={profile.nintendoAccount}
+            />
+            <FormControl.ErrorMessage>
+              {errors.nintendoAccount?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={'steamProfile' in errors}
+            mb={FORM_INPUT_MARGIN_BOTTOM}>
+            <FormControl.Label>Steam Profile</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="Cloud_Ex-Soldier"
+                  onChangeText={onChange}
+                  value={value}
+                  autoComplete="name"
+                  autoCorrect={false}
+                  selectionColor="secondary.700"
+                  isDisabled={isLoadingRequest}
+                  autoCapitalize="words"
+                />
+              )}
+              name="steamProfile"
+              defaultValue={profile.steamProfile}
+            />
+            <FormControl.ErrorMessage>
+              {errors.steamProfile?.message}
             </FormControl.ErrorMessage>
           </FormControl>
 
