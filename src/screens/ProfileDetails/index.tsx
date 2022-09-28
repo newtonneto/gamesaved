@@ -137,8 +137,6 @@ const ProfileDetails = () => {
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
 
-  console.log('userSession.displayName: ', userSession.email);
-
   useEffect(() => {
     let isMounted = true;
 
@@ -222,6 +220,11 @@ const ProfileDetails = () => {
           lastName: data.lastName,
           gender: data.gender,
           phone: data.phone,
+          username: data.username,
+          psnId: data.psnId,
+          xboxGamertag: data.xboxGamertag,
+          nintendoAccount: data.nintendoAccount,
+          steamProfile: data.steamProfile,
         });
 
       if (Object.keys(selectedImage).length !== 0) {
