@@ -188,6 +188,7 @@ const SignUp = () => {
       });
 
       await firestore().collection('lists').doc(uid).set({ games: [] });
+      await auth().signOut();
     } catch (err: any) {
       console.log('createProfile: ', err);
       throw new Error(err.code);
