@@ -108,7 +108,7 @@ const schema = yup.object().shape({
       (value: string | undefined): boolean =>
         value === undefined || value === '' ? true : value.length >= 6,
     )
-    .max(10, 'Nintendo Account deve ter no máximo 6 caracteres'),
+    .max(10, 'Nintendo Account deve ter no máximo 10 caracteres'),
   steamProfile: yup
     .string()
     .test(
