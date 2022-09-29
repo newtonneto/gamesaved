@@ -34,7 +34,7 @@ const UserCard = ({ profile }: Props) => {
             color="white"
             ellipsizeMode="tail"
             numberOfLines={1}>
-            {profile.email}
+            {profile.username}
           </Heading>
           <Text color="white" ellipsizeMode="tail" numberOfLines={1}>
             {profile.firstName} {profile.lastName}
