@@ -53,11 +53,27 @@ const SignIn = () => {
     };
   }, []);
 
+  const logoutUnconfirmedUser = async (emailVerified: boolean) => {
+    if (!emailVerified) {
+      await auth().signOut();
+
+      Alert.alert(
+        'Email não verificado',
+        'É necessário verificar seu email antes de prosseguir, verifique a caixa de mensagens do email cadastrado',
+      );
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
 
     try {
-      await auth().signInWithEmailAndPassword(data.email, data.password);
+      const response = await auth().signInWithEmailAndPassword(
+        data.email,
+        data.password,
+      );
+
+      logoutUnconfirmedUser(response.user.emailVerified);
     } catch (err: any) {
       Alert.alert(
         '>.<',
