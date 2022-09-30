@@ -23,6 +23,7 @@ import VStack from '@components/VStack';
 import Input from '@components/Input';
 import UserCard from '@components/UserCard';
 import HiddenButton from '@components/HiddenButton';
+import { FlatListSeparator } from '@components/FlatListComponents';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
@@ -194,10 +195,16 @@ const FindFriends = () => {
           defaultValue=""
         />
       </FormControl>
-      <Button.Group isAttached colorScheme="blue" size="sm" w="full">
+      <Button.Group
+        isAttached
+        size="sm"
+        w="full"
+        mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
         <Button
-          // bg={filterSelected === 'email' ? 'secondary.700' : 'gray.600'}
-          colorScheme="pink"
+          bg={filterSelected === 'email' ? 'secondary.700' : 'gray.600'}
+          _text={{
+            color: 'white',
+          }}
           flexGrow={1}
           flexShrink={1}
           flexBasis={0}
@@ -208,8 +215,10 @@ const FindFriends = () => {
           EMAIL
         </Button>
         <Button
-          // bg={filterSelected === 'username' ? 'secondary.700' : 'gray.600'}
-          colorScheme="pink"
+          bg={filterSelected === 'username' ? 'secondary.700' : 'gray.600'}
+          _text={{
+            color: 'white',
+          }}
           flexGrow={1}
           flexShrink={1}
           flexBasis={0}
@@ -250,6 +259,7 @@ const FindFriends = () => {
         renderItem={RenderItem}
         ListHeaderComponent={FlatListHeader}
         style={styles.flatList}
+        ItemSeparatorComponent={FlatListSeparator}
         contentContainerStyle={styles.flatListContent}
         showsVerticalScrollIndicator={false}
         renderHiddenItem={(rowData, rowMap) => (

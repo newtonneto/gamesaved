@@ -1,4 +1,5 @@
 export interface ProfileDto {
+  uuid: string;
   birthDate: string;
   firstName: string;
   lastName: string;
