@@ -11,4 +11,5 @@ export interface ProfileDto {
   xboxGamertag: string;
   nintendoAccount: string;
   steamProfile: string;
+  avatarRef: string;
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Pressable, Heading, Text, VStack, Avatar } from 'native-base';
 import storage from '@react-native-firebase/storage';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_PADDING_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
@@ -13,16 +12,22 @@ type Props = {
 const UserCard = ({ profile }: Props) => {
   const [image, setImage] = useState<string | undefined>(undefined);
 
+  const avatarRefIsValid = (): boolean => {
+    return (
+      profile.avatarRef !== '' &&
+      profile.avatarRef !== undefined &&
+      profile.avatarRef !== null
+    );
+  };
+
   useEffect(() => {
     const getImage = async () => {
-      const imageUrl = await storage()
-        .ref(`${profile.uuid}.jpg`)
-        .getDownloadURL();
+      const imageUrl = await storage().ref(profile.avatarRef).getDownloadURL();
 
       setImage(imageUrl);
     };
 
-    getImage();
+    avatarRefIsValid() && getImage();
   }, []);
 
   return (
