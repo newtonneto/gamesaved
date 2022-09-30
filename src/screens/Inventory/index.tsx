@@ -101,13 +101,13 @@ const Inventory = () => {
     };
   }, [userSession.uid, isFocused]);
 
-  const handleRemove = async (removedLoot: number, rowMap: RowMap<number>) => {
+  const handleRemove = async (removedLoot: string, rowMap: RowMap<number>) => {
     toast.show({
       duration: TOAST_DURATION,
       render: () => {
         return (
           <Toast
-            status="success"
+            status="warning"
             title="GameSaved"
             description="Removing game, please dont turn off your phone"
             textColor="darkText"
@@ -117,12 +117,14 @@ const Inventory = () => {
     });
 
     try {
+      const gameId: number = parseInt(removedLoot);
+
       await inventoryRef.current.update({
-        games: firestore.FieldValue.arrayRemove(removedLoot),
+        games: firestore.FieldValue.arrayRemove(gameId),
       });
 
       rowMap[removedLoot].closeRow();
-      const filteredInventory = inventory.filter(item => item !== removedLoot);
+      const filteredInventory = inventory.filter(item => item !== gameId);
       setInventory(filteredInventory);
       toast.show({
         duration: TOAST_DURATION,
@@ -170,7 +172,7 @@ const Inventory = () => {
           renderHiddenItem={(rowData, rowMap) => (
             <HiddenButton
               handler={handleRemove}
-              id={rowData.item}
+              id={rowData.item.toString()}
               rowMap={rowMap}
               type="remove_loot"
             />

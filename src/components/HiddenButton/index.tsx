@@ -7,7 +7,7 @@ import { ProfileDto } from '@src/interfaces/profile.dto';
 
 type Props = {
   handler: Function;
-  id: number;
+  id: string;
   rowMap: RowMap<number | ProfileDto>;
   type: 'add_friend' | 'remove_loot';
 };
@@ -19,7 +19,7 @@ const HiddenButton = ({ handler, id, rowMap, type }: Props) => {
     <Box alignItems="flex-end">
       {type === 'add_friend' && (
         <TouchableOpacityStyled
-          onPress={() => handler()}
+          onPress={() => handler(id, rowMap)}
           bgColor={colors.success[700]}>
           <UserCirclePlus color={colors.white} size={24} />
         </TouchableOpacityStyled>

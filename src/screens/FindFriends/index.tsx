@@ -25,6 +25,7 @@ import UserCard from '@components/UserCard';
 import HiddenButton from '@components/HiddenButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { ProfileDto } from '@interfaces/profile.dto';
+import { PartyDto } from '@interfaces/party.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
 import {
@@ -57,16 +58,16 @@ const FindFriends = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<ProfileDto[]>([]);
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
-  const [statusSelected, setSelectedStatus] = useState<'open' | 'closed'>(
-    'open',
-  );
   const [filterSelected, setFilterSelected] = useState<'email' | 'username'>(
     'email',
   );
+  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profilesRef = useRef<
     FirebaseFirestoreTypes.CollectionReference<ProfileDto>
   >(firestore().collection<ProfileDto>('profiles'));
-  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
+  const partyRef = useRef<FirebaseFirestoreTypes.DocumentReference<PartyDto>>(
+    firestore().collection<PartyDto>('parties').doc(userSession.uid),
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -233,23 +234,46 @@ const FindFriends = () => {
   );
 
   const RenderItem: ListRenderItem<ProfileDto> = ({ item }) => (
-    <UserCard profile={item} key={item.email} />
+    <UserCard profile={item} key={item.uuid} />
   );
 
-  const handleInvite = async () => {
+  const handleInvite = async (usersIndex: string, rowMap: RowMap<number>) => {
     toast.show({
       duration: TOAST_DURATION,
       render: () => {
         return (
           <Toast
-            status="success"
+            status="warning"
             title="GameSaved"
-            description="Feature not available"
+            description="Inviting member to party"
             textColor="darkText"
           />
         );
       },
     });
+
+    try {
+      await partyRef.current.update({
+        members: firestore.FieldValue.arrayUnion(usersIndex),
+      });
+
+      rowMap[usersIndex].closeRow();
+      toast.show({
+        duration: TOAST_DURATION,
+        render: () => {
+          return (
+            <Toast
+              status="success"
+              title="GameSaved"
+              description="Member joined to the party"
+              textColor="darkText"
+            />
+          );
+        },
+      });
+    } catch (err) {
+      console.log('err: ', err);
+    }
   };
 
   return (
@@ -257,6 +281,7 @@ const FindFriends = () => {
       <SwipeListView
         data={users}
         renderItem={RenderItem}
+        keyExtractor={(item: ProfileDto) => item.uuid}
         ListHeaderComponent={FlatListHeader}
         style={styles.flatList}
         ItemSeparatorComponent={FlatListSeparator}
@@ -265,7 +290,7 @@ const FindFriends = () => {
         renderHiddenItem={(rowData, rowMap) => (
           <HiddenButton
             handler={handleInvite}
-            id={rowData.index}
+            id={rowData.item.uuid}
             rowMap={rowMap}
             type="add_friend"
           />

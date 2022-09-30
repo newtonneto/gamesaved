@@ -174,6 +174,7 @@ const SignUp = () => {
   ) => {
     try {
       await firestore().collection('profiles').doc(uid).set({
+        uuid: uid,
         username,
         firstName,
         lastName,
@@ -188,6 +189,7 @@ const SignUp = () => {
       });
 
       await firestore().collection('lists').doc(uid).set({ games: [] });
+      await firestore().collection('parties').doc(uid).set({ members: [] });
       await auth().signOut();
     } catch (err: any) {
       console.log('createProfile: ', err);
