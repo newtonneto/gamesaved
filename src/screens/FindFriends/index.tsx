@@ -50,6 +50,7 @@ const FindFriends = () => {
   const [filterSelected, setFilterSelected] = useState<'email' | 'username'>(
     'email',
   );
+  const [showSearchFeedback, setShowSearchFeedback] = useState<boolean>(false);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profilesRef = useRef<
     FirebaseFirestoreTypes.CollectionReference<ProfileDto>
@@ -132,6 +133,7 @@ const FindFriends = () => {
           setUsers([...data]);
         } else {
           setUsers([]);
+          setShowSearchFeedback(true);
         }
       } catch (err) {
         Alert.alert(
@@ -211,7 +213,10 @@ const FindFriends = () => {
           borderRightRadius={0}
           borderWidth={filterSelected === 'email' ? 1 : 0}
           variant={filterSelected === 'email' ? 'solid' : 'outline'}
-          onPress={() => setFilterSelected('email')}>
+          onPress={() => {
+            setFilterSelected('email');
+            setShowSearchFeedback(false);
+          }}>
           EMAIL
         </Button>
         <Button
@@ -225,7 +230,10 @@ const FindFriends = () => {
           borderLeftRadius={0}
           borderWidth={filterSelected === 'username' ? 1 : 0}
           variant={filterSelected === 'username' ? 'solid' : 'outline'}
-          onPress={() => setFilterSelected('username')}>
+          onPress={() => {
+            setFilterSelected('username');
+            setShowSearchFeedback(false);
+          }}>
           USERNAME
         </Button>
       </Button.Group>
@@ -240,6 +248,8 @@ const FindFriends = () => {
           members={members}
           users={users}
           flatListHeader={FlatListHeader}
+          filterSelected={filterSelected}
+          showSearchFeedback={showSearchFeedback}
         />
       ) : (
         <Loading />

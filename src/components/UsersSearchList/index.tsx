@@ -26,6 +26,8 @@ type Props = {
   members: string[];
   users: ProfileDto[];
   flatListHeader: () => JSX.Element;
+  filterSelected: string;
+  showSearchFeedback: boolean;
 };
 
 const UsersSearchList = ({
@@ -33,6 +35,8 @@ const UsersSearchList = ({
   members,
   users,
   flatListHeader,
+  filterSelected,
+  showSearchFeedback,
 }: Props) => {
   const toast = useToast();
 
@@ -140,10 +144,17 @@ const UsersSearchList = ({
 
   const RenderEmpty = () => (
     <VStack px={AXIS_X_PADDING_CONTENT}>
-      <NotFound width={150} height={150} />
-      <Heading fontFamily="heading" color="secondary.700" textAlign="center">
-        GO AHEAD AND INVITE SOME FRIENDS!
-      </Heading>
+      {showSearchFeedback && (
+        <VStack>
+          <NotFound width={150} height={150} />
+          <Heading
+            fontFamily="heading"
+            color="secondary.700"
+            textAlign="center">
+            {`NO ONE WITH THIS ${filterSelected.toUpperCase()}`}
+          </Heading>
+        </VStack>
+      )}
     </VStack>
   );
 
