@@ -4,6 +4,7 @@ import storage from '@react-native-firebase/storage';
 
 import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_PADDING_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
+import avatarRefIsValid from '@utils/avatarRefIsValid';
 
 type Props = {
   profile: ProfileDto;
@@ -12,14 +13,6 @@ type Props = {
 const UserCard = ({ profile }: Props) => {
   const [image, setImage] = useState<string | undefined>(undefined);
 
-  const avatarRefIsValid = (): boolean => {
-    return (
-      profile.avatarRef !== '' &&
-      profile.avatarRef !== undefined &&
-      profile.avatarRef !== null
-    );
-  };
-
   useEffect(() => {
     const getImage = async () => {
       const imageUrl = await storage().ref(profile.avatarRef).getDownloadURL();
@@ -27,7 +20,7 @@ const UserCard = ({ profile }: Props) => {
       setImage(imageUrl);
     };
 
-    avatarRefIsValid() && getImage();
+    avatarRefIsValid(profile.avatarRef) && getImage();
   }, []);
 
   return (

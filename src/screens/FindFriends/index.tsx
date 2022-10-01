@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import VStack from '@components/VStack';
 import Input from '@components/Input';
+import UsersSearchList from '@components/UsersSearchList';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
 import { useAppDispatch } from '@store/index';
@@ -21,7 +22,6 @@ import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
 } from '@utils/constants';
-import UsersSearchList from '@src/components/UsersSearchList';
 
 type FormData = {
   searchValue: string;

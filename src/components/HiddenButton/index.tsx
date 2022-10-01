@@ -8,7 +8,7 @@ import { ProfileDto } from '@src/interfaces/profile.dto';
 type Props = {
   handler: Function;
   id: string;
-  rowMap: RowMap<number | ProfileDto>;
+  rowMap: RowMap<number | ProfileDto | string>;
   type: 'add_friend' | 'remove_loot' | 'remove_friend';
 };
 
