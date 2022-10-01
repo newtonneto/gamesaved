@@ -283,7 +283,62 @@ const FindFriends = () => {
         },
       });
     } catch (err) {
-      console.log('err: ', err);
+      Alert.alert(
+        '>.<',
+        'Não foi possível concluir a operação, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    }
+  };
+
+  const handleBan = async (usersIndex: string, rowMap: RowMap<number>) => {
+    toast.show({
+      duration: TOAST_DURATION,
+      render: () => {
+        return (
+          <Toast
+            status="warning"
+            title="GameSaved"
+            description="Banning party member"
+            textColor="darkText"
+          />
+        );
+      },
+    });
+
+    try {
+      await partyRef.current.update({
+        members: firestore.FieldValue.arrayRemove(usersIndex),
+      });
+
+      rowMap[usersIndex].closeRow();
+      toast.show({
+        duration: TOAST_DURATION,
+        render: () => {
+          return (
+            <Toast
+              status="success"
+              title="GameSaved"
+              description="Member banned to the party"
+              textColor="darkText"
+            />
+          );
+        },
+      });
+    } catch (err) {
+      Alert.alert(
+        '>.<',
+        'Não foi possível concluir a operação, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
     }
   };
 
@@ -304,7 +359,9 @@ const FindFriends = () => {
         showsVerticalScrollIndicator={false}
         renderHiddenItem={(rowData, rowMap) => (
           <HiddenButton
-            handler={handleInvite}
+            handler={
+              verifyJoinedMembers(rowData.item.uuid) ? handleBan : handleInvite
+            }
             id={rowData.item.uuid}
             rowMap={rowMap}
             type={
