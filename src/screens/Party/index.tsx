@@ -85,11 +85,12 @@ const Party = () => {
     });
 
     try {
+      rowMap[usersUuid].closeRow();
+
       await partyRef.current.update({
         members: firestore.FieldValue.arrayRemove(usersUuid),
       });
-
-      // rowMap[usersUuid].closeRow();
+      rowMap;
       toast.show({
         duration: TOAST_DURATION,
         render: () => {
