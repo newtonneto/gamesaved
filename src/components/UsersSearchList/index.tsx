@@ -34,7 +34,7 @@ const UsersSearchList = ({
     <UserCard profile={item} key={item.uuid} />
   );
 
-  const handleInvite = async (usersIndex: string, rowMap: RowMap<number>) => {
+  const handleInvite = async (usersUuid: string, rowMap: RowMap<number>) => {
     toast.show({
       duration: TOAST_DURATION,
       render: () => {
@@ -51,10 +51,10 @@ const UsersSearchList = ({
 
     try {
       await partyRef.current.update({
-        members: firestore.FieldValue.arrayUnion(usersIndex),
+        members: firestore.FieldValue.arrayUnion(usersUuid),
       });
 
-      rowMap[usersIndex].closeRow();
+      rowMap[usersUuid].closeRow();
       toast.show({
         duration: TOAST_DURATION,
         render: () => {
@@ -81,7 +81,7 @@ const UsersSearchList = ({
     }
   };
 
-  const handleBan = async (usersIndex: string, rowMap: RowMap<number>) => {
+  const handleBan = async (usersUuid: string, rowMap: RowMap<number>) => {
     toast.show({
       duration: TOAST_DURATION,
       render: () => {
@@ -98,10 +98,10 @@ const UsersSearchList = ({
 
     try {
       await partyRef.current.update({
-        members: firestore.FieldValue.arrayRemove(usersIndex),
+        members: firestore.FieldValue.arrayRemove(usersUuid),
       });
 
-      rowMap[usersIndex].closeRow();
+      rowMap[usersUuid].closeRow();
       toast.show({
         duration: TOAST_DURATION,
         render: () => {

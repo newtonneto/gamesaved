@@ -69,7 +69,7 @@ const Party = () => {
     <MemberCard uuid={item} key={item} />
   );
 
-  const handleBan = async (usersIndex: string, rowMap: RowMap<number>) => {
+  const handleBan = async (usersUuid: string, rowMap: RowMap<number>) => {
     toast.show({
       duration: TOAST_DURATION,
       render: () => {
@@ -86,10 +86,10 @@ const Party = () => {
 
     try {
       await partyRef.current.update({
-        members: firestore.FieldValue.arrayRemove(usersIndex),
+        members: firestore.FieldValue.arrayRemove(usersUuid),
       });
 
-      rowMap[usersIndex].closeRow();
+      // rowMap[usersUuid].closeRow();
       toast.show({
         duration: TOAST_DURATION,
         render: () => {
