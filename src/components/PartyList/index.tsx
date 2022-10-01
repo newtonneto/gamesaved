@@ -1,87 +1,39 @@
 import React, { MutableRefObject } from 'react';
-import { Alert, ListRenderItem, StyleSheet } from 'react-native';
-import { useToast } from 'native-base';
+import { ListRenderItem, StyleSheet, Alert } from 'react-native';
+import { Heading, useToast } from 'native-base';
 import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
 
+import Void from '@assets/imgs/undraw_void.svg';
 import Toast from '@components/Toast';
-import UserCard from '@components/UserCard';
+import VStack from '@components/VStack';
+import MemberCard from '@components/MemberCard';
 import HiddenButton from '@components/HiddenButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
-import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
-import { TOAST_DURATION, VERTICAL_PADDING_LISTS } from '@utils/constants';
+import {
+  AXIS_X_PADDING_CONTENT,
+  VERTICAL_PADDING_LISTS,
+  TOAST_DURATION,
+} from '@utils/constants';
 
 type Props = {
   partyRef: MutableRefObject<
     FirebaseFirestoreTypes.DocumentReference<PartyDto>
   >;
   members: string[];
-  users: ProfileDto[];
   flatListHeader: () => JSX.Element;
 };
 
-const UsersSearchList = ({
-  partyRef,
-  members,
-  users,
-  flatListHeader,
-}: Props) => {
+const PartyList = ({ partyRef, members, flatListHeader }: Props) => {
   const toast = useToast();
 
-  const RenderItem: ListRenderItem<ProfileDto> = ({ item }) => (
-    <UserCard profile={item} key={item.uuid} />
+  const RenderItem: ListRenderItem<string> = ({ item }) => (
+    <MemberCard uuid={item} key={item} />
   );
 
-  const handleInvite = async (usersUuid: string, rowMap: RowMap<number>) => {
-    toast.show({
-      duration: TOAST_DURATION,
-      render: () => {
-        return (
-          <Toast
-            status="warning"
-            title="GameSaved"
-            description="Inviting member to party"
-            textColor="darkText"
-          />
-        );
-      },
-    });
-
-    try {
-      await partyRef.current.update({
-        members: firestore.FieldValue.arrayUnion(usersUuid),
-      });
-
-      rowMap[usersUuid].closeRow();
-      toast.show({
-        duration: TOAST_DURATION,
-        render: () => {
-          return (
-            <Toast
-              status="success"
-              title="GameSaved"
-              description="Member joined to the party"
-              textColor="darkText"
-            />
-          );
-        },
-      });
-    } catch (err) {
-      Alert.alert(
-        '>.<',
-        'Não foi possível concluir a operação, tente novamente mais tarde.',
-        [
-          {
-            text: 'Ok',
-          },
-        ],
-      );
-    }
-  };
-
-  const handleBan = async (usersUuid: string, rowMap: RowMap<number>) => {
+  const handleBan = async (usersUuid: string) => {
     toast.show({
       duration: TOAST_DURATION,
       render: () => {
@@ -101,7 +53,6 @@ const UsersSearchList = ({
         members: firestore.FieldValue.arrayRemove(usersUuid),
       });
 
-      rowMap[usersUuid].closeRow();
       toast.show({
         duration: TOAST_DURATION,
         render: () => {
@@ -128,15 +79,20 @@ const UsersSearchList = ({
     }
   };
 
-  const verifyJoinedMembers = (uuid: string) => {
-    return members.includes(uuid);
-  };
+  const RenderEmpty = () => (
+    <VStack px={AXIS_X_PADDING_CONTENT}>
+      <Void width={150} height={150} />
+      <Heading fontFamily="heading" color="secondary.700" textAlign="center">
+        GO AHEAD AND INVITE SOME FRIENDS!
+      </Heading>
+    </VStack>
+  );
 
   return (
     <SwipeListView
-      data={users}
+      data={members}
       renderItem={RenderItem}
-      keyExtractor={(item: ProfileDto) => item.uuid}
+      keyExtractor={(item: string) => item}
       ListHeaderComponent={flatListHeader}
       style={styles.flatList}
       ItemSeparatorComponent={FlatListSeparator}
@@ -144,18 +100,13 @@ const UsersSearchList = ({
       showsVerticalScrollIndicator={false}
       renderHiddenItem={(rowData, rowMap) => (
         <HiddenButton
-          handler={
-            verifyJoinedMembers(rowData.item.uuid) ? handleBan : handleInvite
-          }
-          id={rowData.item.uuid}
+          handler={handleBan}
+          id={rowData.item}
           rowMap={rowMap}
-          type={
-            verifyJoinedMembers(rowData.item.uuid)
-              ? 'remove_friend'
-              : 'add_friend'
-          }
+          type={'remove_friend'}
         />
       )}
+      ListEmptyComponent={RenderEmpty}
       rightOpenValue={-75}
       stopRightSwipe={-75}
       stopLeftSwipe={1}
@@ -172,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UsersSearchList;
+export default PartyList;

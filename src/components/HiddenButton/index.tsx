@@ -9,7 +9,7 @@ type Props = {
   handler: Function;
   id: string;
   rowMap: RowMap<number | ProfileDto | string>;
-  type: 'add_friend' | 'remove_loot' | 'remove_friend';
+  type: 'add_friend' | 'remove_loot' | 'remove_friend' | 'remove_member';
 };
 
 const HiddenButton = ({ handler, id, rowMap, type }: Props) => {
@@ -34,6 +34,13 @@ const HiddenButton = ({ handler, id, rowMap, type }: Props) => {
       {type === 'remove_friend' && (
         <TouchableOpacityStyled
           onPress={() => handler(id, rowMap)}
+          bgColor={colors.red[700]}>
+          <UserCircleMinus color={colors.white} size={24} />
+        </TouchableOpacityStyled>
+      )}
+      {type === 'remove_member' && (
+        <TouchableOpacityStyled
+          onPress={() => handler(id)}
           bgColor={colors.red[700]}>
           <UserCircleMinus color={colors.white} size={24} />
         </TouchableOpacityStyled>
