@@ -1,14 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, ListRenderItem, StyleSheet, View } from 'react-native';
-import {
-  FormControl,
-  useTheme,
-  IconButton,
-  useToast,
-  Button,
-} from 'native-base';
+import { Alert } from 'react-native';
+import { FormControl, useTheme, IconButton, Button } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
-import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -18,12 +11,8 @@ import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
-import Toast from '@components/Toast';
 import VStack from '@components/VStack';
 import Input from '@components/Input';
-import UserCard from '@components/UserCard';
-import HiddenButton from '@components/HiddenButton';
-import { FlatListSeparator } from '@components/FlatListComponents';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
 import { useAppDispatch } from '@store/index';
@@ -31,9 +20,8 @@ import { setTitle } from '@store/slices/navigation-slice';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
-  TOAST_DURATION,
-  VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
+import UsersSearchList from '@src/components/UsersSearchList';
 
 type FormData = {
   searchValue: string;
@@ -45,7 +33,6 @@ const schema = yup.object().shape({
 
 const FindFriends = () => {
   const navigation = useNavigation();
-  const toast = useToast();
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
   const { colors } = useTheme();
@@ -244,148 +231,16 @@ const FindFriends = () => {
     </VStack>
   );
 
-  const RenderItem: ListRenderItem<ProfileDto> = ({ item }) => (
-    <UserCard profile={item} key={item.uuid} />
-  );
-
-  const handleInvite = async (usersIndex: string, rowMap: RowMap<number>) => {
-    toast.show({
-      duration: TOAST_DURATION,
-      render: () => {
-        return (
-          <Toast
-            status="warning"
-            title="GameSaved"
-            description="Inviting member to party"
-            textColor="darkText"
-          />
-        );
-      },
-    });
-
-    try {
-      await partyRef.current.update({
-        members: firestore.FieldValue.arrayUnion(usersIndex),
-      });
-
-      rowMap[usersIndex].closeRow();
-      toast.show({
-        duration: TOAST_DURATION,
-        render: () => {
-          return (
-            <Toast
-              status="success"
-              title="GameSaved"
-              description="Member joined to the party"
-              textColor="darkText"
-            />
-          );
-        },
-      });
-    } catch (err) {
-      Alert.alert(
-        '>.<',
-        'Não foi possível concluir a operação, tente novamente mais tarde.',
-        [
-          {
-            text: 'Ok',
-          },
-        ],
-      );
-    }
-  };
-
-  const handleBan = async (usersIndex: string, rowMap: RowMap<number>) => {
-    toast.show({
-      duration: TOAST_DURATION,
-      render: () => {
-        return (
-          <Toast
-            status="warning"
-            title="GameSaved"
-            description="Banning party member"
-            textColor="darkText"
-          />
-        );
-      },
-    });
-
-    try {
-      await partyRef.current.update({
-        members: firestore.FieldValue.arrayRemove(usersIndex),
-      });
-
-      rowMap[usersIndex].closeRow();
-      toast.show({
-        duration: TOAST_DURATION,
-        render: () => {
-          return (
-            <Toast
-              status="success"
-              title="GameSaved"
-              description="Member banned to the party"
-              textColor="darkText"
-            />
-          );
-        },
-      });
-    } catch (err) {
-      Alert.alert(
-        '>.<',
-        'Não foi possível concluir a operação, tente novamente mais tarde.',
-        [
-          {
-            text: 'Ok',
-          },
-        ],
-      );
-    }
-  };
-
-  const verifyJoinedMembers = (uuid: string) => {
-    return members.includes(uuid);
-  };
-
   return (
     <VStack>
-      <SwipeListView
-        data={users}
-        renderItem={RenderItem}
-        keyExtractor={(item: ProfileDto) => item.uuid}
-        ListHeaderComponent={FlatListHeader}
-        style={styles.flatList}
-        ItemSeparatorComponent={FlatListSeparator}
-        contentContainerStyle={styles.flatListContent}
-        showsVerticalScrollIndicator={false}
-        renderHiddenItem={(rowData, rowMap) => (
-          <HiddenButton
-            handler={
-              verifyJoinedMembers(rowData.item.uuid) ? handleBan : handleInvite
-            }
-            id={rowData.item.uuid}
-            rowMap={rowMap}
-            type={
-              verifyJoinedMembers(rowData.item.uuid)
-                ? 'remove_friend'
-                : 'add_friend'
-            }
-          />
-        )}
-        rightOpenValue={-75}
-        stopRightSwipe={-75}
-        stopLeftSwipe={1}
+      <UsersSearchList
+        partyRef={partyRef}
+        members={members}
+        users={users}
+        flatListHeader={FlatListHeader}
       />
     </VStack>
   );
 };
-
-const styles = StyleSheet.create({
-  flatList: {
-    width: '100%',
-  },
-  flatListContent: {
-    paddingVertical: VERTICAL_PADDING_LISTS,
-  },
-});
 
 export default FindFriends;
