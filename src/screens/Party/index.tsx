@@ -6,6 +6,7 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 import VStack from '@components/VStack';
 import Button from '@components/Button';
+import Loading from '@components/Loading';
 import { PartyDto } from '@interfaces/party.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
@@ -19,6 +20,7 @@ const Party = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [members, setMembers] = useState<string[]>([]);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const partyRef = useRef<FirebaseFirestoreTypes.DocumentReference<PartyDto>>(
@@ -58,11 +60,15 @@ const Party = () => {
 
   return (
     <VStack>
-      <PartyList
-        partyRef={partyRef}
-        members={members}
-        flatListHeader={FlatListHeader}
-      />
+      {!isLoading ? (
+        <PartyList
+          partyRef={partyRef}
+          members={members}
+          flatListHeader={FlatListHeader}
+        />
+      ) : (
+        <Loading />
+      )}
     </VStack>
   );
 };

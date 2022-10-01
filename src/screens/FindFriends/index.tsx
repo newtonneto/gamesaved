@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import VStack from '@components/VStack';
 import Input from '@components/Input';
+import Loading from '@components/Loading';
 import UsersSearchList from '@components/UsersSearchList';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
@@ -42,7 +43,7 @@ const FindFriends = () => {
     formState: { errors },
     setValue,
   } = useForm<FormData>({ resolver: yupResolver(schema) });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [users, setUsers] = useState<ProfileDto[]>([]);
   const [members, setMembers] = useState<string[]>([]);
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
@@ -233,12 +234,16 @@ const FindFriends = () => {
 
   return (
     <VStack>
-      <UsersSearchList
-        partyRef={partyRef}
-        members={members}
-        users={users}
-        flatListHeader={FlatListHeader}
-      />
+      {!isLoading ? (
+        <UsersSearchList
+          partyRef={partyRef}
+          members={members}
+          users={users}
+          flatListHeader={FlatListHeader}
+        />
+      ) : (
+        <Loading />
+      )}
     </VStack>
   );
 };

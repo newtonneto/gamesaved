@@ -1,17 +1,23 @@
 import React, { MutableRefObject } from 'react';
 import { Alert, ListRenderItem, StyleSheet } from 'react-native';
-import { useToast } from 'native-base';
+import { Heading, useToast } from 'native-base';
 import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
 
+import NotFound from '@assets/imgs/undraw_not_found.svg';
+import VStack from '@components/VStack';
 import Toast from '@components/Toast';
 import UserCard from '@components/UserCard';
 import HiddenButton from '@components/HiddenButton';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
-import { TOAST_DURATION, VERTICAL_PADDING_LISTS } from '@utils/constants';
+import {
+  AXIS_X_PADDING_CONTENT,
+  TOAST_DURATION,
+  VERTICAL_PADDING_LISTS,
+} from '@utils/constants';
 
 type Props = {
   partyRef: MutableRefObject<
@@ -132,6 +138,15 @@ const UsersSearchList = ({
     return members.includes(uuid);
   };
 
+  const RenderEmpty = () => (
+    <VStack px={AXIS_X_PADDING_CONTENT}>
+      <NotFound width={150} height={150} />
+      <Heading fontFamily="heading" color="secondary.700" textAlign="center">
+        GO AHEAD AND INVITE SOME FRIENDS!
+      </Heading>
+    </VStack>
+  );
+
   return (
     <SwipeListView
       data={users}
@@ -156,6 +171,7 @@ const UsersSearchList = ({
           }
         />
       )}
+      ListEmptyComponent={RenderEmpty}
       rightOpenValue={-75}
       stopRightSwipe={-75}
       stopLeftSwipe={1}
