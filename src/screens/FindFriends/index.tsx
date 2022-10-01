@@ -57,6 +57,7 @@ const FindFriends = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<ProfileDto[]>([]);
+  const [members, setMembers] = useState<string[]>([]);
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
   const [filterSelected, setFilterSelected] = useState<'email' | 'username'>(
     'email',
@@ -78,6 +79,16 @@ const FindFriends = () => {
       isMounted = false;
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    const subscriber = partyRef.current.onSnapshot(snapshot => {
+      const list: string[] = snapshot.get('members');
+
+      setMembers(list);
+    });
+
+    return subscriber;
+  }, []);
 
   useEffect(() => {
     const getProfile = async () => {
@@ -276,6 +287,10 @@ const FindFriends = () => {
     }
   };
 
+  const verifyJoinedMembers = (uuid: string) => {
+    return members.includes(uuid);
+  };
+
   return (
     <VStack>
       <SwipeListView
@@ -292,7 +307,11 @@ const FindFriends = () => {
             handler={handleInvite}
             id={rowData.item.uuid}
             rowMap={rowMap}
-            type="add_friend"
+            type={
+              verifyJoinedMembers(rowData.item.uuid)
+                ? 'remove_friend'
+                : 'add_friend'
+            }
           />
         )}
         rightOpenValue={-75}
