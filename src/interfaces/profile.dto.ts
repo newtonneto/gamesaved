@@ -1,4 +1,5 @@
 export interface ProfileDto {
+  uuid: string;
   birthDate: string;
   firstName: string;
   lastName: string;
@@ -10,4 +11,5 @@ export interface ProfileDto {
   xboxGamertag: string;
   nintendoAccount: string;
   steamProfile: string;
+  avatarRef: string;
 }

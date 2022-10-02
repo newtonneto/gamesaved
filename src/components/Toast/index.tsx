@@ -2,7 +2,7 @@ import React from 'react';
 import { HStack, Text, Alert, VStack } from 'native-base';
 
 type Props = {
-  status: string;
+  status: 'success' | 'error' | 'warning' | 'info';
   title: string;
   description: string;
   textColor: string;

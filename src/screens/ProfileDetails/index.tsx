@@ -225,6 +225,10 @@ const ProfileDetails = () => {
           xboxGamertag: data.xboxGamertag,
           nintendoAccount: data.nintendoAccount,
           steamProfile: data.steamProfile,
+          avatarRef:
+            selectedImage.filename !== undefined
+              ? `${userSession.uid}.${getImageType(selectedImage.filename)}`
+              : '',
         });
 
       if (Object.keys(selectedImage).length !== 0) {

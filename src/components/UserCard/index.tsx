@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Pressable, Heading, Text, VStack, Avatar } from 'native-base';
+import storage from '@react-native-firebase/storage';
 
 import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_PADDING_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
+import avatarRefIsValid from '@utils/avatarRefIsValid';
 
 type Props = {
   profile: ProfileDto;
 };
 
 const UserCard = ({ profile }: Props) => {
+  const [image, setImage] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const getImage = async () => {
+      const imageUrl = await storage().ref(profile.avatarRef).getDownloadURL();
+
+      setImage(imageUrl);
+    };
+
+    avatarRefIsValid(profile.avatarRef) && getImage();
+  }, []);
+
   return (
     <Pressable mx={AXIS_X_PADDING_CONTENT}>
       <Box
@@ -27,14 +41,17 @@ const UserCard = ({ profile }: Props) => {
           h={10}
           w={10}
           bg="gray.700"
-          alignSelf="center">{`${profile.firstName[0]}${profile.lastName[0]}`}</Avatar>
+          alignSelf="center"
+          source={{
+            uri: image,
+          }}>{`${profile.firstName[0]}${profile.lastName[0]}`}</Avatar>
         <VStack px={4}>
           <Heading
             size="sm"
             color="white"
             ellipsizeMode="tail"
             numberOfLines={1}>
-            {profile.email}
+            {profile.username}
           </Heading>
           <Text color="white" ellipsizeMode="tail" numberOfLines={1}>
             {profile.firstName} {profile.lastName}
