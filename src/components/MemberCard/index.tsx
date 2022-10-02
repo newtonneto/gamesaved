@@ -10,6 +10,7 @@ import {
 } from 'native-base';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 
 import Loading from '@components/Loading';
 import Toast from '@components/Toast';
@@ -23,6 +24,7 @@ type Props = {
 };
 
 const MemberCard = ({ uuid }: Props) => {
+  const navigation = useNavigation();
   const toast = useToast();
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
   const [image, setImage] = useState<string | undefined>(undefined);
@@ -65,8 +67,14 @@ const MemberCard = ({ uuid }: Props) => {
     getProfile();
   }, []);
 
+  const handleNavigation = () => {
+    navigation.navigate('UserStats', {
+      uuid,
+    });
+  };
+
   return (
-    <Pressable mx={AXIS_X_PADDING_CONTENT}>
+    <Pressable mx={AXIS_X_PADDING_CONTENT} onPress={handleNavigation}>
       <Box
         w="98%"
         rounded="lg"

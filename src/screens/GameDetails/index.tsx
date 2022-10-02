@@ -182,7 +182,6 @@ const GameDetails = () => {
               placement="bottom-right"
               renderInPortal={false}
               shadow={2}
-              size="sm"
               bg={isSaved ? 'gray.700' : 'secondary.700'}
               icon={<FloppyDiskStyled color={colors.white} size={18} />}
               label={isSaved ? 'Remove Game' : 'Save Game'}
