@@ -26,7 +26,7 @@ const Attribute = ({ type, value, svg }: Props) => {
   const { colors } = useTheme();
 
   return (
-    <HStack w="full" alignItems="center">
+    <HStack w="full" alignItems="center" py={2}>
       {!svg &&
         createElement(statsIcons[type], {
           color: colors.white,
