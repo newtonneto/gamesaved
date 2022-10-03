@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_PADDING_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
-import avatarRefIsValid from '@utils/avatarRefIsValid';
+import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 
 type Props = {
   profile: ProfileDto;
@@ -22,7 +22,7 @@ const UserCard = ({ profile }: Props) => {
       setImage(imageUrl);
     };
 
-    avatarRefIsValid(profile.avatarRef) && getImage();
+    firestoreValueIsValid(profile.avatarRef) && getImage();
   }, []);
 
   const handleNavigation = () => {

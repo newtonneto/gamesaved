@@ -9,11 +9,12 @@ import { useRoute, useIsFocused } from '@react-navigation/native';
 import VStack from '@components/VStack';
 import ScrollView from '@components/ScrollView';
 import Loading from '@components/Loading';
+import Attribute from '@components/Attribute';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
 import { AXIS_X_PADDING_CONTENT } from '@utils/constants';
-import Attribute from '@src/components/Attribute';
+import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 
 type RouteParams = {
   uuid: string;
@@ -56,20 +57,26 @@ const UserStats = () => {
     <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
         <ScrollView pt={8}>
-          <Attribute type="sword" value={profile.username} />
+          <Attribute type="sword" value={profile.username} svg={false} />
           <Attribute
-            type="sword"
+            type="shield"
             value={`${profile.firstName} ${profile.lastName}`}
+            svg={false}
           />
-          <Attribute type="sword" value={profile.email.toUpperCase()} />
-          <Attribute type="sword" value={profile.gender.toUpperCase()} />
-          <Attribute type="sword" value={profile.psnId.toUpperCase()} />
-          <Attribute type="sword" value={profile.xboxGamertag.toUpperCase()} />
-          <Attribute
-            type="sword"
-            value={profile.nintendoAccount.toUpperCase()}
-          />
-          <Attribute type="sword" value={profile.steamProfile.toUpperCase()} />
+          <Attribute type="magicWand" value={profile.email} svg={false} />
+          <Attribute type="genderIntersex" value={profile.gender} svg={false} />
+          {firestoreValueIsValid(profile.psnId) && (
+            <Attribute type="playstation" value={profile.psnId} svg={true} />
+          )}
+          {firestoreValueIsValid(profile.xboxGamertag) && (
+            <Attribute type="xbox" value={profile.psnId} svg={true} />
+          )}
+          {firestoreValueIsValid(profile.nintendoAccount) && (
+            <Attribute type="nintendo" value={profile.psnId} svg={true} />
+          )}
+          {firestoreValueIsValid(profile.steamProfile) && (
+            <Attribute type="steam" value={profile.psnId} svg={true} />
+          )}
         </ScrollView>
       ) : (
         <Loading />

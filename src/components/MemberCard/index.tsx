@@ -16,7 +16,7 @@ import Loading from '@components/Loading';
 import Toast from '@components/Toast';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_PADDING_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
-import avatarRefIsValid from '@utils/avatarRefIsValid';
+import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 import { TOAST_DURATION } from '@utils/constants';
 
 type Props = {
@@ -46,7 +46,7 @@ const MemberCard = ({ uuid }: Props) => {
 
         setProfile(response.data()!);
         setIsLoading(false);
-        avatarRefIsValid(response.data()!.avatarRef) && getImage();
+        firestoreValueIsValid(response.data()!.avatarRef) && getImage();
       } catch (err) {
         toast.show({
           duration: TOAST_DURATION,
