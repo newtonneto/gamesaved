@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Alert } from 'react-native';
 import { Avatar, Text } from 'native-base';
 import storage from '@react-native-firebase/storage';
 import firestore, {
@@ -27,6 +28,7 @@ const UserStats = () => {
   const { uuid } = route.params as RouteParams;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
+  const [image, setImage] = useState<string | undefined>(undefined);
   const profileRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<ProfileDto>
   >(firestore().collection<ProfileDto>('profiles').doc(uuid));
@@ -41,22 +43,68 @@ const UserStats = () => {
     };
   }, [isFocused]);
 
+  const getImage = async (avatarRef: string) => {
+    if (firestoreValueIsValid(avatarRef)) {
+      try {
+        const response = await storage().ref(avatarRef).getDownloadURL();
+
+        setImage(response);
+      } catch (err) {
+        Alert.alert(
+          '>.<',
+          'Conteúdo indisponível, tente novamente mais tarde.',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
+      }
+    }
+  };
+
   useEffect(() => {
-    const subscriber = profileRef.current.onSnapshot(snapshot => {
-      const profileStats: ProfileDto = snapshot.data()!;
+    const getProfile = async () => {
+      try {
+        const response = await profileRef.current.get();
+        const profileStats = response.data();
 
-      setProfile(profileStats);
-    });
+        if (profileStats !== undefined) {
+          setProfile(profileStats);
 
-    setIsLoading(false);
+          await getImage(profileStats.avatarRef);
+        }
+      } catch (err) {
+        Alert.alert(
+          '>.<',
+          'Conteúdo indisponível, tente novamente mais tarde.',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return subscriber;
+    getProfile();
   }, []);
 
   return (
     <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
         <ScrollView pt={8}>
+          <Avatar
+            bg="gray.700"
+            alignSelf="center"
+            size="2xl"
+            mb={8}
+            source={{
+              uri: image,
+            }}>{`${profile.firstName[0]}${profile.lastName[0]}`}</Avatar>
+
           <Attribute type="sword" value={profile.username} svg={false} />
           <Attribute
             type="shield"

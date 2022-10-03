@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Pressable,
@@ -9,7 +9,9 @@ import {
   useToast,
 } from 'native-base';
 import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 
 import Loading from '@components/Loading';
@@ -29,24 +31,45 @@ const MemberCard = ({ uuid }: Props) => {
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
   const [image, setImage] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const profileRef = useRef<
+    FirebaseFirestoreTypes.DocumentReference<ProfileDto>
+  >(firestore().collection<ProfileDto>('profiles').doc(uuid));
 
-  const getImage = async () => {
-    const imageUrl = await storage().ref(profile.avatarRef).getDownloadURL();
+  const getImage = async (avatarRef: string) => {
+    if (firestoreValueIsValid(avatarRef)) {
+      try {
+        const response = await storage().ref(avatarRef).getDownloadURL();
 
-    setImage(imageUrl);
+        setImage(response);
+      } catch (err) {
+        toast.show({
+          duration: TOAST_DURATION,
+          render: () => {
+            return (
+              <Toast
+                status="error"
+                title="GameSaved"
+                description="Error to retrieve member avatar"
+                textColor="darkText"
+              />
+            );
+          },
+        });
+      }
+    }
   };
 
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const response = await firestore()
-          .collection<ProfileDto>('profiles')
-          .doc(uuid)
-          .get();
+        const response = await profileRef.current.get();
+        const profileStats = response.data();
 
-        setProfile(response.data()!);
-        setIsLoading(false);
-        firestoreValueIsValid(response.data()!.avatarRef) && getImage();
+        if (profileStats !== undefined) {
+          setProfile(profileStats);
+
+          await getImage(profileStats.avatarRef);
+        }
       } catch (err) {
         toast.show({
           duration: TOAST_DURATION,
@@ -61,6 +84,8 @@ const MemberCard = ({ uuid }: Props) => {
             );
           },
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
