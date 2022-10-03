@@ -1,20 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
-import { Avatar, Text } from 'native-base';
+import { Avatar, useToast } from 'native-base';
 import storage from '@react-native-firebase/storage';
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
-import { useRoute, useIsFocused } from '@react-navigation/native';
+import {
+  useRoute,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 
+import Toast from '@components/Toast';
 import VStack from '@components/VStack';
 import ScrollView from '@components/ScrollView';
 import Loading from '@components/Loading';
 import Attribute from '@components/Attribute';
+import genderTranslator from '@hashmaps/genderTranslator';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
-import { AXIS_X_PADDING_CONTENT } from '@utils/constants';
+import { AXIS_X_PADDING_CONTENT, TOAST_DURATION } from '@utils/constants';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 
 type RouteParams = {
@@ -22,6 +28,8 @@ type RouteParams = {
 };
 
 const UserStats = () => {
+  const toast = useToast();
+  const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const route = useRoute();
   const isFocused = useIsFocused();
@@ -50,15 +58,19 @@ const UserStats = () => {
 
         setImage(response);
       } catch (err) {
-        Alert.alert(
-          '>.<',
-          'Conteúdo indisponível, tente novamente mais tarde.',
-          [
-            {
-              text: 'Ok',
-            },
-          ],
-        );
+        toast.show({
+          duration: TOAST_DURATION,
+          render: () => {
+            return (
+              <Toast
+                status="error"
+                title="GameSaved"
+                description="Error to retrieve user avatar"
+                textColor="darkText"
+              />
+            );
+          },
+        });
       }
     }
   };
@@ -80,7 +92,8 @@ const UserStats = () => {
           'Conteúdo indisponível, tente novamente mais tarde.',
           [
             {
-              text: 'Ok',
+              text: 'Voltar',
+              onPress: () => navigation.goBack(),
             },
           ],
         );
@@ -112,7 +125,11 @@ const UserStats = () => {
             svg={false}
           />
           <Attribute type="magicWand" value={profile.email} svg={false} />
-          <Attribute type="genderIntersex" value={profile.gender} svg={false} />
+          <Attribute
+            type="genderIntersex"
+            value={genderTranslator[profile.gender]}
+            svg={false}
+          />
           {firestoreValueIsValid(profile.psnId) && (
             <Attribute type="playstation" value={profile.psnId} svg={true} />
           )}

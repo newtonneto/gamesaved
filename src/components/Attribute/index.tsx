@@ -37,7 +37,13 @@ const Attribute = ({ type, value, svg }: Props) => {
           width: 24,
           height: 24,
         })}
-      <Heading fontFamily="body" fontSize="lg" color="white" ml={4}>
+      <Heading
+        fontFamily="body"
+        fontSize="lg"
+        color="white"
+        ml={4}
+        numberOfLines={1}
+        ellipsizeMode="tail">
         {value}
       </Heading>
     </HStack>
