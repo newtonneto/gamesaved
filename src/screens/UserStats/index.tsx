@@ -118,29 +118,61 @@ const UserStats = () => {
               uri: image,
             }}>{`${profile.firstName[0]}${profile.lastName[0]}`}</Avatar>
 
-          <Attribute type="sword" value={profile.username} svg={false} />
+          <Attribute
+            type="sword"
+            value={profile.username}
+            svg={false}
+            label="Username"
+          />
           <Attribute
             type="shield"
             value={`${profile.firstName} ${profile.lastName}`}
             svg={false}
+            label="Nome"
           />
-          <Attribute type="magicWand" value={profile.email} svg={false} />
+          <Attribute
+            type="magicWand"
+            value={profile.email}
+            svg={false}
+            label="Email"
+          />
           <Attribute
             type="genderIntersex"
             value={genderTranslator[profile.gender]}
             svg={false}
+            label="Gênero"
           />
           {firestoreValueIsValid(profile.psnId) && (
-            <Attribute type="playstation" value={profile.psnId} svg={true} />
+            <Attribute
+              type="playstation"
+              value={profile.psnId}
+              svg={true}
+              label="PSN ID"
+            />
           )}
           {firestoreValueIsValid(profile.xboxGamertag) && (
-            <Attribute type="xbox" value={profile.psnId} svg={true} />
+            <Attribute
+              type="xbox"
+              value={profile.psnId}
+              svg={true}
+              label="Xbox Gamertag"
+            />
           )}
           {firestoreValueIsValid(profile.nintendoAccount) && (
-            <Attribute type="nintendo" value={profile.psnId} svg={true} />
+            <Attribute
+              type="nintendo"
+              value={profile.psnId}
+              svg={true}
+              label="Nintendo Account"
+            />
           )}
           {firestoreValueIsValid(profile.steamProfile) && (
-            <Attribute type="steam" value={profile.psnId} svg={true} />
+            <Attribute
+              type="steam"
+              value={profile.psnId}
+              svg={true}
+              label="Steam Profile"
+            />
           )}
         </ScrollView>
       ) : (
