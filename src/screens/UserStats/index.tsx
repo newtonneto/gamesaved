@@ -135,6 +135,106 @@ const UserStats = () => {
     getProfile();
   }, []);
 
+  const handleInvite = async () => {
+    toast.show({
+      duration: TOAST_DURATION,
+      render: () => {
+        return (
+          <Toast
+            status="warning"
+            title="GameSaved"
+            description="Inviting member to party"
+            textColor="darkText"
+          />
+        );
+      },
+    });
+
+    try {
+      await partyRef.current.update({
+        members: firestore.FieldValue.arrayUnion(uuid),
+      });
+
+      setIsMember(true);
+
+      toast.show({
+        duration: TOAST_DURATION,
+        render: () => {
+          return (
+            <Toast
+              status="success"
+              title="GameSaved"
+              description="Member joined to the party"
+              textColor="darkText"
+            />
+          );
+        },
+      });
+    } catch (err) {
+      Alert.alert(
+        '>.<',
+        'Não foi possível concluir a operação, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    }
+  };
+
+  const handleBan = async () => {
+    toast.show({
+      duration: TOAST_DURATION,
+      render: () => {
+        return (
+          <Toast
+            status="warning"
+            title="GameSaved"
+            description="Banning party member"
+            textColor="darkText"
+          />
+        );
+      },
+    });
+
+    try {
+      await partyRef.current.update({
+        members: firestore.FieldValue.arrayRemove(uuid),
+      });
+
+      setIsMember(false);
+
+      toast.show({
+        duration: TOAST_DURATION,
+        render: () => {
+          return (
+            <Toast
+              status="success"
+              title="GameSaved"
+              description="Member banned to the party"
+              textColor="darkText"
+            />
+          );
+        },
+      });
+    } catch (err) {
+      Alert.alert(
+        '>.<',
+        'Não foi possível concluir a operação, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    }
+  };
+
+  const handleMember = async () => {
+    isMember ? handleBan() : handleInvite();
+  };
+
   return (
     <VStack px={AXIS_X_PADDING_CONTENT}>
       {!isLoading ? (
@@ -152,7 +252,7 @@ const UserStats = () => {
               )
             }
             label={isMember ? 'Ban Member' : 'Invite Member'}
-            onPress={() => {}}
+            onPress={handleMember}
             _pressed={{ bg: 'gray.500' }}
           />
           <ScrollView pt={8}>
