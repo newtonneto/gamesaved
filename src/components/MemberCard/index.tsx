@@ -62,13 +62,12 @@ const MemberCard = ({ uuid }: Props) => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const response = await profileRef.current.get();
-        const profileStats = response.data();
+        const response = (await profileRef.current.get())?.data();
 
-        if (profileStats !== undefined) {
-          setProfile(profileStats);
+        if (!!response) {
+          setProfile(response);
 
-          await getImage(profileStats.avatarRef);
+          await getImage(response.avatarRef);
         }
       } catch (err) {
         toast.show({

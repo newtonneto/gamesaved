@@ -41,6 +41,7 @@ const UserStats = () => {
   const { uuid } = route.params as RouteParams;
   const [isMember, setIsMember] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
   const [image, setImage] = useState<string | undefined>(undefined);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
@@ -63,9 +64,9 @@ const UserStats = () => {
 
   const checkMember = async () => {
     try {
-      const response = (await partyRef.current.get()).data();
+      const response = (await partyRef.current.get())?.data();
 
-      if (response !== undefined) {
+      if (!!response) {
         setIsMember(response.members.includes(uuid));
       }
     } catch {
@@ -109,13 +110,12 @@ const UserStats = () => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const response = await profileRef.current.get();
-        const profileStats = response.data();
+        const response = (await profileRef.current.get()).data();
 
-        if (profileStats !== undefined) {
-          setProfile(profileStats);
+        if (!!response) {
+          setProfile(response);
 
-          await getImage(profileStats.avatarRef);
+          await getImage(response.avatarRef);
         }
       } catch (err) {
         Alert.alert(
@@ -233,7 +233,9 @@ const UserStats = () => {
   };
 
   const handleMember = async () => {
-    isMember ? handleBan() : handleInvite();
+    setIsLoadingRequest(true);
+    isMember ? await handleBan() : await handleInvite();
+    setIsLoadingRequest(false);
   };
 
   return (
@@ -256,6 +258,7 @@ const UserStats = () => {
               label={isMember ? 'Ban Member' : 'Invite Member'}
               onPress={handleMember}
               _pressed={{ bg: 'gray.500' }}
+              disabled={isLoadingRequest}
             />
             <ScrollView pt={8}>
               <Avatar
