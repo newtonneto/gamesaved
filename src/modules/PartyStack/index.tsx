@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Party from '@screens/Party';
 import FindFriends from '@screens/FindFriends';
+import UserStats from '@screens/UserStats';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -13,6 +14,7 @@ const PartyStack = () => {
       initialRouteName="HomeScreen">
       <Screen name="PartyScreen" component={Party} />
       <Screen name="FindFriendsScreen" component={FindFriends} />
+      <Screen name="UserStats" component={UserStats} />
     </Navigator>
   );
 };

@@ -7,6 +7,7 @@ export declare global {
       GameScreen: { id: number; slug: string; name: string };
       Stats: undefined;
       FindFriendsScreen: undefined;
+      UserStats: { uuid: string };
     }
   }
 }

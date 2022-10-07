@@ -20,7 +20,7 @@ const Party = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [members, setMembers] = useState<string[]>([]);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const partyRef = useRef<FirebaseFirestoreTypes.DocumentReference<PartyDto>>(
@@ -43,6 +43,8 @@ const Party = () => {
 
       setMembers(list);
     });
+
+    setIsLoading(false);
 
     return subscriber;
   }, []);

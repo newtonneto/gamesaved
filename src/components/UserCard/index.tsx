@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Pressable, Heading, Text, VStack, Avatar } from 'native-base';
 import storage from '@react-native-firebase/storage';
+import { useNavigation } from '@react-navigation/native';
 
 import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_PADDING_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
-import avatarRefIsValid from '@utils/avatarRefIsValid';
+import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 
 type Props = {
   profile: ProfileDto;
 };
 
 const UserCard = ({ profile }: Props) => {
+  const navigation = useNavigation();
   const [image, setImage] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -20,11 +22,17 @@ const UserCard = ({ profile }: Props) => {
       setImage(imageUrl);
     };
 
-    avatarRefIsValid(profile.avatarRef) && getImage();
+    firestoreValueIsValid(profile.avatarRef) && getImage();
   }, []);
 
+  const handleNavigation = () => {
+    navigation.navigate('UserStats', {
+      uuid: profile.uuid,
+    });
+  };
+
   return (
-    <Pressable mx={AXIS_X_PADDING_CONTENT}>
+    <Pressable mx={AXIS_X_PADDING_CONTENT} onPress={handleNavigation}>
       <Box
         w="98%"
         rounded="lg"
