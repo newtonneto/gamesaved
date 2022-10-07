@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Alert, Pressable } from 'react-native';
 import {
   Avatar,
@@ -12,7 +12,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -136,6 +138,9 @@ const ProfileDetails = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
+  const profileRef = useRef<
+    FirebaseFirestoreTypes.DocumentReference<ProfileDto>
+  >(firestore().collection<ProfileDto>('profiles').doc(userSession.uid));
 
   useEffect(() => {
     let isMounted = true;
@@ -150,10 +155,7 @@ const ProfileDetails = () => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const response = await firestore()
-          .collection<ProfileDto>('profiles')
-          .doc(userSession.uid)
-          .get();
+        const response = await profileRef.current.get();
 
         setProfile(response.data()!);
 
