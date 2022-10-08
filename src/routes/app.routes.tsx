@@ -1,16 +1,13 @@
 import React from 'react';
 import { Alert } from 'react-native';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import { HStack, useTheme, IconButton } from 'native-base';
+import { useTheme } from 'native-base';
 import {
-  SkipBack,
-  Pause,
   GameController,
   Scroll,
   FinnTheHuman,
@@ -20,6 +17,8 @@ import {
 import auth from '@react-native-firebase/auth';
 
 import AppHeader from '@components/AppHeader';
+import BackButton from '@components/BackButton';
+import DrawerButton from '@components/DrawerButton';
 import HomeStack from '@modules/HomeStack';
 import InventoryStack from '@modules/InventoryStack';
 import PartyStack from '@modules/PartyStack';
@@ -31,7 +30,6 @@ import { ICON_NORMAL } from '@utils/constants';
 const { Navigator, Screen } = createDrawerNavigator();
 
 const AppRoutes = () => {
-  const navigation = useNavigation();
   const { colors } = useTheme();
   const showDrawerHeader = useAppSelector(state => stateDrawerHeader(state));
   const title = useAppSelector(state => stateTitle(state));
@@ -97,39 +95,8 @@ const AppRoutes = () => {
         component={HomeStack}
         options={{
           headerTitle: () => <AppHeader title={title} />,
-          headerLeft: () =>
-            title !== 'Home' ? (
-              <HStack
-                w="full"
-                bg="gray.600"
-                alignItems="center"
-                justifyContent="center"
-                h="full">
-                <IconButton
-                  icon={
-                    <SkipBack color={colors.gray[200]} size={ICON_NORMAL} />
-                  }
-                  onPress={() => navigation.goBack()}
-                />
-              </HStack>
-            ) : (
-              <></>
-            ),
-          headerRight: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() =>
-                  navigation.dispatch(DrawerActions.toggleDrawer())
-                }
-              />
-            </HStack>
-          ),
+          headerLeft: () => (title !== 'Home' ? <BackButton /> : <></>),
+          headerRight: () => <DrawerButton />,
           drawerIcon: () => (
             <Scroll color={colors.gray[200]} size={ICON_NORMAL} />
           ),
@@ -142,34 +109,8 @@ const AppRoutes = () => {
         component={InventoryStack}
         options={{
           headerTitle: () => <AppHeader title={title} />,
-          headerLeft: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() => navigation.goBack()}
-              />
-            </HStack>
-          ),
-          headerRight: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() =>
-                  navigation.dispatch(DrawerActions.toggleDrawer())
-                }
-              />
-            </HStack>
-          ),
+          headerLeft: () => <BackButton />,
+          headerRight: () => <DrawerButton />,
           drawerIcon: () => (
             <GameController color={colors.gray[200]} size={ICON_NORMAL} />
           ),
@@ -182,34 +123,8 @@ const AppRoutes = () => {
         component={ProfileDetails}
         options={{
           headerTitle: () => <AppHeader title={title} />,
-          headerLeft: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() => navigation.goBack()}
-              />
-            </HStack>
-          ),
-          headerRight: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() =>
-                  navigation.dispatch(DrawerActions.toggleDrawer())
-                }
-              />
-            </HStack>
-          ),
+          headerLeft: () => <BackButton />,
+          headerRight: () => <DrawerButton />,
           drawerIcon: () => (
             <FinnTheHuman color={colors.gray[200]} size={ICON_NORMAL} />
           ),
@@ -222,34 +137,8 @@ const AppRoutes = () => {
         component={PartyStack}
         options={{
           headerTitle: () => <AppHeader title={title} />,
-          headerLeft: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() => navigation.goBack()}
-              />
-            </HStack>
-          ),
-          headerRight: () => (
-            <HStack
-              w="full"
-              bg="gray.600"
-              alignItems="center"
-              justifyContent="center"
-              h="full">
-              <IconButton
-                icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
-                onPress={() =>
-                  navigation.dispatch(DrawerActions.toggleDrawer())
-                }
-              />
-            </HStack>
-          ),
+          headerLeft: () => <BackButton />,
+          headerRight: () => <DrawerButton />,
           drawerIcon: () => (
             <UsersThree color={colors.gray[200]} size={ICON_NORMAL} />
           ),
