@@ -598,10 +598,6 @@ const ProfileDetails = () => {
             title="Enviar"
             onPress={handleSubmit(onSubmit)}
             isLoading={isLoadingRequest}
-            isDisabled={
-              Object.keys(dirtyFields).length === 0 ||
-              Object.keys(errors).length !== 0
-            }
             w="full"
           />
         </ScrollView>
