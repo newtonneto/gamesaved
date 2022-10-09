@@ -13,6 +13,7 @@ import {
   FinnTheHuman,
   UsersThree,
   SignOut,
+  Books,
 } from 'phosphor-react-native';
 import auth from '@react-native-firebase/auth';
 
@@ -22,6 +23,7 @@ import DrawerButton from '@components/DrawerButton';
 import HomeStack from '@modules/HomeStack';
 import InventoryStack from '@modules/InventoryStack';
 import PartyStack from '@modules/PartyStack';
+import GuildStack from '@modules/GuildStack';
 import ProfileDetails from '@screens/ProfileDetails';
 import { useAppSelector } from '@src/store';
 import { stateDrawerHeader, stateTitle } from '@store/slices/navigation-slice';
@@ -141,6 +143,20 @@ const AppRoutes = () => {
           headerRight: () => <DrawerButton />,
           drawerIcon: () => (
             <UsersThree color={colors.gray[200]} size={ICON_NORMAL} />
+          ),
+          drawerActiveTintColor: colors.secondary[700],
+          drawerInactiveTintColor: colors.gray[100],
+        }}
+      />
+      <Screen
+        name="Guild"
+        component={GuildStack}
+        options={{
+          headerTitle: () => <AppHeader title={title} />,
+          headerLeft: () => <BackButton />,
+          headerRight: () => <DrawerButton />,
+          drawerIcon: () => (
+            <Books color={colors.gray[200]} size={ICON_NORMAL} />
           ),
           drawerActiveTintColor: colors.secondary[700],
           drawerInactiveTintColor: colors.gray[100],
