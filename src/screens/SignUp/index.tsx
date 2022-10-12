@@ -186,6 +186,7 @@ const SignUp = () => {
         xboxGamertag,
         nintendoAccount,
         steamProfile,
+        guild: '',
       });
 
       await firestore().collection('lists').doc(uid).set({ games: [] });
