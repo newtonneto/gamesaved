@@ -20,6 +20,7 @@ import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
 } from '@utils/constants';
+import Button from '@src/components/Button';
 
 type FormData = {
   searchValue: string;
@@ -85,7 +86,8 @@ const Guild = () => {
       <FormControl
         isRequired
         isInvalid={'searchValue' in errors}
-        mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
+        mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
+        mt={6}>
         <Controller
           control={control}
           render={({ field: { onChange, value } }) => (
@@ -127,6 +129,8 @@ const Guild = () => {
       <Heading fontFamily="heading" color="secondary.700" textAlign="center">
         LOOK FOR A GUILD TO JOIN...OR CREATE YOUR OWN
       </Heading>
+
+      <Button title="Create your own" w="full" mt={8} />
     </Fragment>
   );
 
