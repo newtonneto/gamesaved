@@ -15,12 +15,13 @@ import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import Input from '@components/Input';
 import FlatList from '@components/FlatList';
+import Button from '@components/Button';
 import { ProfileDto } from '@interfaces/profile.dto';
+import { GuildDto } from '@interfaces/guild.dto';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
 } from '@utils/constants';
-import Button from '@src/components/Button';
 
 type FormData = {
   searchValue: string;
@@ -40,7 +41,7 @@ const Guild = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasGuild, setHasGuild] = useState<boolean>(false);
-  const [guilds, setGuilds] = useState<any[]>([]);
+  const [guilds, setGuilds] = useState<GuildDto[]>([]);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<ProfileDto>
