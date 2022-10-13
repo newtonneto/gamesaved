@@ -40,6 +40,7 @@ const Guild = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasGuild, setHasGuild] = useState<boolean>(false);
+  const [guilds, setGuilds] = useState<any[]>([]);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<ProfileDto>
@@ -79,15 +80,16 @@ const Guild = () => {
     };
   }, []);
 
-  const onSubmit = async (data: FormData) => {};
+  const onSubmit = async (data: FormData) => {
+    //TO-DO: search guild
+  };
 
-  const NoGuildComponent = () => (
+  const NoGuildHeader = () => (
     <Fragment>
       <FormControl
         isRequired
         isInvalid={'searchValue' in errors}
-        mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
-        mt={6}>
+        mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
         <Controller
           control={control}
           render={({ field: { onChange, value } }) => (
@@ -125,13 +127,18 @@ const Guild = () => {
           defaultValue=""
         />
       </FormControl>
+
+      <Button title="Create your own" w="full" />
+    </Fragment>
+  );
+
+  const RenderEmptyNoGuild = () => (
+    <VStack>
       <DarkAlley width={150} height={150} />
       <Heading fontFamily="heading" color="secondary.700" textAlign="center">
         LOOK FOR A GUILD TO JOIN...OR CREATE YOUR OWN
       </Heading>
-
-      <Button title="Create your own" w="full" mt={8} />
-    </Fragment>
+    </VStack>
   );
 
   return (
@@ -145,7 +152,13 @@ const Guild = () => {
               showsVerticalScrollIndicator={false}
             />
           ) : (
-            <NoGuildComponent />
+            <FlatList
+              data={[]}
+              renderItem={() => null}
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={NoGuildHeader}
+              ListEmptyComponent={RenderEmptyNoGuild}
+            />
           )}
         </Fragment>
       ) : (
