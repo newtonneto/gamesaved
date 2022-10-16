@@ -12,4 +12,5 @@ export interface ProfileDto {
   nintendoAccount: string;
   steamProfile: string;
   avatarRef: string;
+  guild: string;
 }
