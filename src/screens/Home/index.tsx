@@ -61,6 +61,7 @@ const Home = () => {
   const inventoryRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<InventoryDto>
   >(firestore().collection<InventoryDto>('lists').doc(userSession.uid));
+  const searchDone = useRef<boolean>(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -85,6 +86,7 @@ const Home = () => {
   const getGames = useCallback(async () => {
     setValue('searchValue', '');
     setIsLoading(true);
+    searchDone.current = false;
 
     try {
       const response = await rawg.get<GamesPage>(
@@ -172,6 +174,7 @@ const Home = () => {
 
         setGames(response.data.results);
         handleNextPage(response.data);
+        searchDone.current = true;
       } catch (err) {
         Alert.alert(
           '>.<',
@@ -216,7 +219,12 @@ const Home = () => {
                 onPress={handleSubmit(onSubmit)}
               />
             }
-            onChangeText={onChange}
+            onChangeText={(value: string) => {
+              if (value === '' && searchDone.current) {
+                getGames();
+              }
+              onChange(value);
+            }}
             value={value}
             isDisabled={isLoading}
             autoCorrect={false}
