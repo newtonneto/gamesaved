@@ -9,6 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import DarkAlley from '@assets/imgs/undraw_dark_alley.svg';
 import VStack from '@components/VStack';
@@ -32,6 +33,7 @@ const schema = yup.object().shape({
 });
 
 const Guild = () => {
+  const navigation = useNavigation();
   const { colors } = useTheme();
   const {
     control,
@@ -129,7 +131,11 @@ const Guild = () => {
         />
       </FormControl>
 
-      <Button title="Create your own" w="full" />
+      <Button
+        title="Create your own"
+        w="full"
+        onPress={() => navigation.navigate('CreateGuild')}
+      />
     </Fragment>
   );
 
