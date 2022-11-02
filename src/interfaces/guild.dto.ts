@@ -1,3 +1,5 @@
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+
 export interface GuildDto {
   uuid: string;
   name: string;
@@ -5,6 +7,6 @@ export interface GuildDto {
   description: string;
   members: string[];
   owner: string;
-  createdAt: Date;
+  createdAt: FirebaseFirestoreTypes.FieldValue;
   warCry: string;
 }

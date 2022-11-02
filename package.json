@@ -28,6 +28,7 @@
     "react-native-dotenv": "^3.3.1",
     "react-native-fast-image": "^8.5.11",
     "react-native-gesture-handler": "^2.5.0",
+    "react-native-get-random-values": "^1.8.0",
     "react-native-image-picker": "^4.8.5",
     "react-native-permissions": "^3.6.1",
     "react-native-reanimated": "^2.9.1",
@@ -38,6 +39,7 @@
     "react-native-swipe-list-view": "^3.2.9",
     "react-redux": "^8.0.2",
     "styled-components": "^5.3.5",
+    "uuid": "^9.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -48,6 +50,7 @@
     "@types/react-native": "^0.67.3",
     "@types/react-native-dotenv": "^0.2.0",
     "@types/react-test-renderer": "^17.0.1",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "babel-jest": "^26.6.3",
