@@ -24,6 +24,7 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
 import Toast from '@components/Toast';
 import Loading from '@components/Loading';
+import Header from '@components/Header';
 import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
@@ -176,6 +177,7 @@ const GameDetails = () => {
   return (
     <ScreenWrapper>
       <VStack>
+        <Header title={name} />
         {!isLoading ? (
           <>
             <Fab

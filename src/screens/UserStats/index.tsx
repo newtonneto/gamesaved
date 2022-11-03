@@ -19,6 +19,7 @@ import ScrollView from '@components/ScrollView';
 import Loading from '@components/Loading';
 import Attribute from '@components/Attribute';
 import ScreenWrapper from '@components/ScreenWrapper';
+import Header from '@components/Header';
 import genderTranslator from '@hashmaps/genderTranslator';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
@@ -240,9 +241,10 @@ const UserStats = () => {
 
   return (
     <ScreenWrapper>
-      <VStack px={AXIS_X_PADDING_CONTENT}>
+      <VStack>
+        <Header title="User Stats" />
         {!isLoading ? (
-          <>
+          <VStack w="full" px={AXIS_X_PADDING_CONTENT}>
             <Fab
               placement="bottom-right"
               renderInPortal={false}
@@ -327,7 +329,7 @@ const UserStats = () => {
                 />
               )}
             </ScrollView>
-          </>
+          </VStack>
         ) : (
           <Loading />
         )}

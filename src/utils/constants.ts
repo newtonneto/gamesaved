@@ -3,6 +3,7 @@ export const AXIS_Y_PADDING_CONTENT = 8;
 export const FORM_INPUT_MARGIN_BOTTOM = 3;
 export const GENERIC_TITTLE = 32;
 export const VERTICAL_PADDING_LISTS = 24;
+export const HORIZONTAL_PADDING_LISTS = 32;
 export const NO_LABEL_INPUT_MARGIN_BOTTOM = 4;
 export const INPUT_ICON_LEFT_MARGIN = 4;
 export const INPUT_ICON_RIGHT_MARGIN = 4;

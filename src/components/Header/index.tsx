@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   HStack,
   StyledProps,
@@ -6,8 +6,8 @@ import {
   Heading,
   useTheme,
 } from 'native-base';
-import { CaretLeft } from 'phosphor-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { Pause, SkipBack } from 'phosphor-react-native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { ICON_NORMAL } from '@utils/constants';
 
@@ -18,6 +18,11 @@ type Props = StyledProps & {
 const Header = ({ title, ...rest }: Props) => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+  const [canGoBack, setCanGoBack] = useState<boolean>(false);
+
+  useEffect(() => {
+    setCanGoBack(navigation.canGoBack());
+  }, []);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -29,23 +34,29 @@ const Header = ({ title, ...rest }: Props) => {
       justifyContent="space-between"
       alignItems="center"
       bg="gray.600"
-      pb={4}
-      pt={4}
+      py={2}
+      px={2.5}
       {...rest}>
-      <IconButton
-        icon={<CaretLeft color={colors.gray[200]} size={ICON_NORMAL} />}
-        onPress={handleGoBack}
-      />
+      {canGoBack && (
+        <IconButton
+          icon={<SkipBack color={colors.gray[200]} size={ICON_NORMAL} />}
+          onPress={handleGoBack}
+        />
+      )}
       <Heading
         color="gray.100"
         textAlign="center"
         fontSize="lg"
         flex={1}
-        mr={12}
+        ml={canGoBack ? 0 : 12}
         ellipsizeMode="tail"
         numberOfLines={1}>
         {title}
       </Heading>
+      <IconButton
+        icon={<Pause color={colors.gray[200]} size={ICON_NORMAL} />}
+        onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+      />
     </HStack>
   );
 };

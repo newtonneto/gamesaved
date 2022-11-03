@@ -24,6 +24,7 @@ import Button from '@components/Button';
 import Select from '@components/Select';
 import Input from '@components/Input';
 import Loading from '@components/Loading';
+import Header from '@components/Header';
 import {
   AXIS_X_PADDING_CONTENT,
   FORM_INPUT_MARGIN_BOTTOM,
@@ -296,9 +297,10 @@ const ProfileDetails = () => {
   };
 
   return (
-    <VStack px={AXIS_X_PADDING_CONTENT}>
+    <VStack>
+      <Header title="Stats" />
       {!isLoading ? (
-        <ScrollView pt={8}>
+        <ScrollView pt={8} px={AXIS_X_PADDING_CONTENT}>
           <Pressable onPress={() => setIsOpen(true)}>
             <Avatar
               bg="gray.700"
