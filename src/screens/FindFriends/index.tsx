@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import VStack from '@components/VStack';
 import Input from '@components/Input';
 import Loading from '@components/Loading';
+import Header from '@components/Header';
 import UsersSearchList from '@components/UsersSearchList';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
@@ -242,6 +243,7 @@ const FindFriends = () => {
 
   return (
     <VStack>
+      <Header title="Find Friends" />
       {!isLoading ? (
         <UsersSearchList
           partyRef={partyRef}

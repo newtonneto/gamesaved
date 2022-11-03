@@ -21,14 +21,12 @@ import {
 } from '@components/FlatListComponents';
 import FlatList from '@components/FlatList';
 import Input from '@components/Input';
+import Header from '@components/Header';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { GamesPage } from '@interfaces/gamespage.dto';
 import rawg from '@services/rawg.api';
-import {
-  AXIS_X_PADDING_CONTENT,
-  NO_LABEL_INPUT_MARGIN_BOTTOM,
-} from '@utils/constants';
+import { NO_LABEL_INPUT_MARGIN_BOTTOM } from '@utils/constants';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
 import { GAMEAPI_KEY } from 'react-native-dotenv';
@@ -241,7 +239,8 @@ const Home = () => {
   );
 
   return (
-    <VStack px={AXIS_X_PADDING_CONTENT}>
+    <VStack>
+      <Header title="Home" />
       {!isLoading ? (
         <FlatList
           data={games}

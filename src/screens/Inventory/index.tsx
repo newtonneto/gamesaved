@@ -13,6 +13,7 @@ import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import LootCard from '@components/LootCard';
 import HiddenButton from '@components/HiddenButton';
+import Header from '@components/Header';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { useAppDispatch } from '@store/index';
@@ -158,6 +159,7 @@ const Inventory = () => {
 
   return (
     <VStack>
+      <Header title="Inventory" />
       {!isLoading ? (
         <SwipeListView
           data={inventory}
