@@ -1,5 +1,5 @@
-const firestoreValueIsValid = (avatarRef: string): boolean => {
-  return avatarRef !== '' && avatarRef !== undefined && avatarRef !== null;
+const firestoreValueIsValid = (value: string): boolean => {
+  return value !== '' && value !== undefined && value !== null;
 };
 
 export default firestoreValueIsValid;

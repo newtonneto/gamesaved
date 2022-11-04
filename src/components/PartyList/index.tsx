@@ -1,7 +1,7 @@
 import React, { MutableRefObject } from 'react';
 import { ListRenderItem, StyleSheet, Alert } from 'react-native';
 import { Heading, useToast } from 'native-base';
-import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
 

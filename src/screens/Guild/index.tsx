@@ -7,6 +7,8 @@ import {
   Heading,
   AspectRatio,
   Text,
+  useToast,
+  Fab,
 } from 'native-base';
 import firestore, {
   FirebaseFirestoreTypes,
@@ -16,7 +18,7 @@ import storage from '@react-native-firebase/storage';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
+import { MagnifyingGlass, SignOut, XCircle } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
@@ -26,13 +28,16 @@ import Loading from '@components/Loading';
 import Input from '@components/Input';
 import FlatList from '@components/FlatList';
 import Button from '@components/Button';
+import Toast from '@components/Toast';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { GuildDto } from '@interfaces/guild.dto';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   RATIO,
+  TOAST_DURATION,
 } from '@utils/constants';
+import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 
 type FormData = {
   searchValue: string;
@@ -43,6 +48,7 @@ const schema = yup.object().shape({
 });
 
 const Guild = () => {
+  const toast = useToast();
   const navigation = useNavigation();
   const { colors } = useTheme();
   const {
@@ -60,6 +66,30 @@ const Guild = () => {
     FirebaseFirestoreTypes.DocumentReference<ProfileDto>
   >(firestore().collection<ProfileDto>('profiles').doc(userSession.uid));
 
+  const getImage = async (bannerRef: string) => {
+    if (firestoreValueIsValid(bannerRef)) {
+      try {
+        const response = await storage().ref(bannerRef).getDownloadURL();
+
+        setImage(response);
+      } catch (err) {
+        toast.show({
+          duration: TOAST_DURATION,
+          render: () => {
+            return (
+              <Toast
+                status="error"
+                title="GameSaved"
+                description="Error to retrieve user avatar"
+                textColor="darkText"
+              />
+            );
+          },
+        });
+      }
+    }
+  };
+
   const getGuild = async (id: string) => {
     setHasGuild(true);
 
@@ -69,8 +99,12 @@ const Guild = () => {
         .doc(id)
         .get();
 
-      if (response.exists) {
-        setGuild(response.data() as GuildDto);
+      const guildData = response.data();
+
+      if (guildData) {
+        await getImage(guildData.bannerRef);
+
+        setGuild(guildData);
       }
     } catch (error) {
       Alert.alert('Error');
@@ -129,6 +163,16 @@ const Guild = () => {
 
   const GuildHeader = () => (
     <VStack>
+      <Fab
+        placement="top-right"
+        renderInPortal={false}
+        shadow={2}
+        bg="danger.700"
+        icon={<SignOut color={colors.white} size={18} />}
+        label="Leave"
+        _pressed={{ bg: 'gray.500' }}
+        disabled={false}
+      />
       <AspectRatio w="100%" ratio={RATIO}>
         {image ? (
           <FastImage
@@ -144,6 +188,33 @@ const Guild = () => {
           </VStack>
         )}
       </AspectRatio>
+      <VStack px={AXIS_X_PADDING_CONTENT} w="full">
+        <Heading
+          fontFamily="body"
+          fontSize="lg"
+          color="white"
+          ml={4}
+          my={4}
+          numberOfLines={1}
+          ellipsizeMode="tail">
+          {guild.name}
+        </Heading>
+        <Heading
+          fontFamily="body"
+          fontSize="sm"
+          color="white"
+          ml={4}
+          mb={4}
+          numberOfLines={1}
+          ellipsizeMode="tail">
+          {guild.warCry}
+        </Heading>
+        <VStack w="full" alignItems="flex-start">
+          <Text color="white" mb={4}>
+            {guild.description}
+          </Text>
+        </VStack>
+      </VStack>
     </VStack>
   );
 
@@ -209,7 +280,7 @@ const Guild = () => {
   );
 
   return (
-    <VStack px={AXIS_X_PADDING_CONTENT}>
+    <VStack>
       {!isLoading ? (
         <Fragment>
           {hasGuild ? (
