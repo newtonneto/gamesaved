@@ -58,6 +58,7 @@ const Guild = () => {
     setValue,
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [hasGuild, setHasGuild] = useState<boolean>(false);
   const [guild, setGuild] = useState<GuildDto>({} as GuildDto);
   const [image, setImage] = useState<string | undefined>(undefined);
@@ -157,6 +158,30 @@ const Guild = () => {
     };
   }, []);
 
+  const handleLeave = async () => {
+    setIsLoadingRequest(true);
+
+    try {
+      await profileRef.current.update({
+        guild: '',
+      });
+
+      setHasGuild(false);
+    } catch (error) {
+      Alert.alert(
+        '>.<',
+        'Não foi possível concluir a sua solicitação, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    } finally {
+      setIsLoadingRequest(false);
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     //TO-DO: search guild
   };
@@ -170,8 +195,9 @@ const Guild = () => {
         bg="danger.700"
         icon={<SignOut color={colors.white} size={18} />}
         label="Leave"
+        onPress={handleLeave}
         _pressed={{ bg: 'gray.500' }}
-        disabled={false}
+        disabled={isLoadingRequest}
       />
       <AspectRatio w="100%" ratio={RATIO}>
         {image ? (
