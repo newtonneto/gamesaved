@@ -112,7 +112,7 @@ const FindFriends = () => {
       setIsLoading(true);
 
       try {
-        const response = await (
+        const response = (
           await profilesRef.current
             .where(
               filterSelected,

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, Fragment } from 'react';
-import { Alert } from 'react-native';
+import { Alert, ListRenderItem, FlatList } from 'react-native';
 import {
   FormControl,
   useTheme,
@@ -26,7 +26,6 @@ import DarkAlley from '@assets/imgs/undraw_dark_alley.svg';
 import VStack from '@components/VStack';
 import Loading from '@components/Loading';
 import Input from '@components/Input';
-import FlatList from '@components/FlatList';
 import Button from '@components/Button';
 import Toast from '@components/Toast';
 import { ProfileDto } from '@interfaces/profile.dto';
@@ -38,6 +37,7 @@ import {
   TOAST_DURATION,
 } from '@utils/constants';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
+import GuildCard from '@src/components/GuildCard';
 
 type FormData = {
   searchValue: string;
@@ -61,11 +61,15 @@ const Guild = () => {
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [hasGuild, setHasGuild] = useState<boolean>(false);
   const [guild, setGuild] = useState<GuildDto>({} as GuildDto);
+  const [guilds, setGuilds] = useState<GuildDto[]>([]);
   const [image, setImage] = useState<string | undefined>(undefined);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<ProfileDto>
   >(firestore().collection<ProfileDto>('profiles').doc(userSession.uid));
+  const guildRef = useRef<FirebaseFirestoreTypes.CollectionReference<GuildDto>>(
+    firestore().collection<GuildDto>('guilds'),
+  );
 
   const getImage = async (bannerRef: string) => {
     if (firestoreValueIsValid(bannerRef)) {
@@ -133,8 +137,6 @@ const Guild = () => {
             .getDownloadURL();
 
           setImage(imageUrl);
-
-          console.log('img: ', imageUrl);
         }
       } catch (err) {
         Alert.alert(
@@ -183,7 +185,38 @@ const Guild = () => {
   };
 
   const onSubmit = async (data: FormData) => {
-    //TO-DO: search guild
+    setIsLoadingRequest(true);
+
+    try {
+      const response = (
+        await guildRef.current
+          .orderBy('name')
+          .startAt(data.searchValue)
+          .endAt(data.searchValue + '\uf8ff')
+          .get()
+      ).docs;
+
+      if (response.length > 0) {
+        const guildsData = response.map(doc => {
+          return doc.data() as GuildDto;
+        });
+
+        setGuilds(guildsData);
+      }
+    } catch (error) {
+      console.log('error: ', error);
+      Alert.alert(
+        '>.<',
+        'Não foi possível concluir a sua solicitação, tente novamente mais tarde.',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+    } finally {
+      setIsLoadingRequest(false);
+    }
   };
 
   const GuildHeader = () => (
@@ -305,6 +338,10 @@ const Guild = () => {
     </VStack>
   );
 
+  const RenderGuild: ListRenderItem<GuildDto> = ({ item }) => (
+    <GuildCard guild={item} />
+  );
+
   return (
     <VStack>
       {!isLoading ? (
@@ -318,8 +355,8 @@ const Guild = () => {
             />
           ) : (
             <FlatList
-              data={[]}
-              renderItem={() => null}
+              data={guilds}
+              renderItem={RenderGuild}
               showsVerticalScrollIndicator={false}
               ListHeaderComponent={NoGuildHeader}
               ListEmptyComponent={RenderEmptyNoGuild}
