@@ -7,6 +7,6 @@ export interface GuildDto {
   description: string;
   members: string[];
   owner: string;
-  createdAt: FirebaseFirestoreTypes.FieldValue;
+  createdAt: FirebaseFirestoreTypes.Timestamp;
   warCry: string;
 }

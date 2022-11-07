@@ -345,13 +345,16 @@ const Guild = () => {
   return (
     <VStack>
       {!isLoading ? (
-        <Fragment>
+        <VStack w="full">
           {hasGuild ? (
             <FlatList
               data={[]}
               renderItem={() => null}
               showsVerticalScrollIndicator={false}
               ListHeaderComponent={GuildHeader}
+              style={{
+                width: '100%',
+              }}
             />
           ) : (
             <FlatList
@@ -360,9 +363,12 @@ const Guild = () => {
               showsVerticalScrollIndicator={false}
               ListHeaderComponent={NoGuildHeader}
               ListEmptyComponent={RenderEmptyNoGuild}
+              style={{
+                width: '100%',
+              }}
             />
           )}
-        </Fragment>
+        </VStack>
       ) : (
         <Loading />
       )}
