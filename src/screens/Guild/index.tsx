@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, Fragment } from 'react';
-import { Alert, ListRenderItem, FlatList } from 'react-native';
+import { Alert, ListRenderItem, FlatList, StyleSheet } from 'react-native';
 import {
   FormControl,
   useTheme,
@@ -19,7 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { MagnifyingGlass, SignOut, XCircle } from 'phosphor-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
 import DarkAlley from '@assets/imgs/undraw_dark_alley.svg';
@@ -35,9 +35,11 @@ import {
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   RATIO,
   TOAST_DURATION,
+  VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 import GuildCard from '@src/components/GuildCard';
+import { FlatListSeparator } from '@src/components/FlatListComponents';
 
 type FormData = {
   searchValue: string;
@@ -50,12 +52,12 @@ const schema = yup.object().shape({
 const Guild = () => {
   const toast = useToast();
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const { colors } = useTheme();
   const {
     control,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
@@ -158,7 +160,7 @@ const Guild = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isFocused]);
 
   const handleLeave = async () => {
     setIsLoadingRequest(true);
@@ -325,6 +327,7 @@ const Guild = () => {
         title="Create your own"
         w="full"
         onPress={() => navigation.navigate('CreateGuild')}
+        mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
       />
     </Fragment>
   );
@@ -357,16 +360,20 @@ const Guild = () => {
               }}
             />
           ) : (
-            <FlatList
-              data={guilds}
-              renderItem={RenderGuild}
-              showsVerticalScrollIndicator={false}
-              ListHeaderComponent={NoGuildHeader}
-              ListEmptyComponent={RenderEmptyNoGuild}
-              style={{
-                width: '100%',
-              }}
-            />
+            <VStack px={AXIS_X_PADDING_CONTENT} w="full">
+              <FlatList
+                data={guilds}
+                renderItem={RenderGuild}
+                showsVerticalScrollIndicator={false}
+                ListHeaderComponent={NoGuildHeader}
+                ListEmptyComponent={RenderEmptyNoGuild}
+                ItemSeparatorComponent={FlatListSeparator}
+                contentContainerStyle={styles.flatListContent}
+                style={{
+                  width: '100%',
+                }}
+              />
+            </VStack>
           )}
         </VStack>
       ) : (
@@ -375,5 +382,11 @@ const Guild = () => {
     </VStack>
   );
 };
+
+const styles = StyleSheet.create({
+  flatListContent: {
+    paddingVertical: VERTICAL_PADDING_LISTS,
+  },
+});
 
 export default Guild;

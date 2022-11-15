@@ -4,7 +4,7 @@ import { Actionsheet, AspectRatio, FormControl, Text } from 'native-base';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
@@ -16,6 +16,7 @@ import ScrollView from '@components/ScrollView';
 import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
 import Input from '@components/Input';
+import Button from '@components/Button';
 import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
@@ -30,7 +31,6 @@ import getPermissions from '@utils/getPermissions';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
 import getPictureFromCamera from '@utils/getPictureFromCamera';
 import getImageType from '@utils/getImageType';
-import Button from '@src/components/Button';
 
 type FormData = {
   name: string;
@@ -42,11 +42,11 @@ const schema = yup.object().shape({
   name: yup
     .string()
     .required('Prenchimento obrigatorio')
-    .min(6, 'Nome deve ter no mínimo 2 caracteres'),
+    .min(6, 'Nome deve ter no mínimo 6 caracteres'),
   description: yup
     .string()
     .required('Prenchimento obrigatorio')
-    .min(6, 'Descrição deve ter no mínimo 2 caracteres'),
+    .min(6, 'Descrição deve ter no mínimo 6 caracteres'),
   warCry: yup
     .string()
     .test(
@@ -59,6 +59,7 @@ const schema = yup.object().shape({
 });
 
 const CreateGuild: React.FC = () => {
+  const navigation = useNavigation();
   const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
   const {
@@ -134,7 +135,12 @@ const CreateGuild: React.FC = () => {
           guild: id,
         });
 
-      Alert.alert('Guild criada com sucesso');
+      Alert.alert('=D', 'Guild criada com sucesso', [
+        {
+          text: 'Ok',
+          onPress: () => navigation.goBack(),
+        },
+      ]);
     } catch (err) {
       Alert.alert(
         '>.<',
