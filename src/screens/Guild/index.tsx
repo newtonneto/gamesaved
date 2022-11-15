@@ -65,6 +65,7 @@ const Guild = () => {
   const [guild, setGuild] = useState<GuildDto>({} as GuildDto);
   const [guilds, setGuilds] = useState<GuildDto[]>([]);
   const [image, setImage] = useState<string | undefined>(undefined);
+  const guildUuid = useRef<string>('');
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<ProfileDto>
@@ -97,13 +98,13 @@ const Guild = () => {
     }
   };
 
-  const getGuild = async (id: string) => {
+  const getGuild = async () => {
     setHasGuild(true);
 
     try {
       const response = await firestore()
         .collection<GuildDto>('guilds')
-        .doc(id)
+        .doc(guildUuid.current)
         .get();
 
       const guildData = response.data();
@@ -129,7 +130,8 @@ const Guild = () => {
           const profile = response.data() as ProfileDto;
 
           if (isMounted && profile.guild) {
-            await getGuild(profile.guild);
+            guildUuid.current = profile.guild;
+            await getGuild();
           }
         }
 
@@ -166,6 +168,12 @@ const Guild = () => {
     setIsLoadingRequest(true);
 
     try {
+      await guildRef.current.doc(guildUuid.current).update({
+        members: firestore.FieldValue.arrayRemove(userSession.uid),
+      });
+
+      guildUuid.current = '';
+
       await profileRef.current.update({
         guild: '',
       });
