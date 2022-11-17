@@ -242,6 +242,16 @@ const Guild = () => {
         _pressed={{ bg: 'gray.500' }}
         disabled={isLoadingRequest}
       />
+      <Fab
+        placement="top-left"
+        renderInPortal={false}
+        shadow={2}
+        bg="secondary.700"
+        icon={<MagnifyingGlass color={colors.white} size={18} />}
+        label="Search"
+        _pressed={{ bg: 'gray.500' }}
+        disabled={isLoadingRequest}
+      />
       <AspectRatio w="100%" ratio={RATIO}>
         {image ? (
           <FastImage
