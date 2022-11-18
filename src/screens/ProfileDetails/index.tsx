@@ -269,6 +269,7 @@ const ProfileDetails = () => {
       if (!image) throw new Error('Something went wrong.');
 
       setSelectedImage(image);
+      setIsOpen(false);
     } catch (err) {
       if (err instanceof Error) {
         Alert.alert('>.<', err.message);

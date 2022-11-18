@@ -83,7 +83,7 @@ const CreateGuild: React.FC = () => {
     };
   }, [isFocused]);
 
-  const uploadBanner = async (): Promise<string | void> => {
+  const uploadBanner = async (): Promise<string> => {
     const filename = selectedImage.filename;
     const uri = selectedImage.uri;
 
@@ -95,24 +95,17 @@ const CreateGuild: React.FC = () => {
 
       return imageRef;
     } catch (err: any) {
-      Alert.alert(
-        '>.<',
+      throw new Error(
         firebaseExceptions[err.code] || 'Não foi possível alterar o banner.',
-        [
-          {
-            text: 'Ok',
-          },
-        ],
       );
     }
   };
 
   const onSubmit = async (data: FormData) => {
     setIsLoadingRequest(true);
+    let imageRef: string = '';
 
     try {
-      let imageRef: string | void;
-
       if (Object.keys(selectedImage).length !== 0) {
         imageRef = await uploadBanner();
       }
@@ -121,7 +114,7 @@ const CreateGuild: React.FC = () => {
         .collection('guilds')
         .add({
           name: data.name,
-          bannerRef: imageRef ? imageRef : '',
+          bannerRef: imageRef !== '' ? imageRef : '',
           description: data.description,
           members: [userSession.uid],
           owner: userSession.uid,
@@ -143,15 +136,23 @@ const CreateGuild: React.FC = () => {
         },
       ]);
     } catch (err) {
-      Alert.alert(
-        '>.<',
-        'Não foi possível concluir a solicitação, tente novamente mais tarde.',
-        [
+      if (err instanceof Error) {
+        Alert.alert('>.<', err.message, [
           {
             text: 'Ok',
           },
-        ],
-      );
+        ]);
+      } else {
+        Alert.alert(
+          '>.<',
+          'Não foi possível concluir a solicitação, tente novamente mais tarde.',
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
+      }
     } finally {
       setIsLoadingRequest(false);
     }
@@ -164,6 +165,7 @@ const CreateGuild: React.FC = () => {
       if (!image) throw new Error('Something went wrong.');
 
       setSelectedImage(image);
+      setIsOpen(false);
     } catch (err) {
       if (err instanceof Error) {
         Alert.alert('>.<', err.message);
