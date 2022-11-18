@@ -31,6 +31,7 @@ import getPermissions from '@utils/getPermissions';
 import getPictureFromStorage from '@utils/getPictureFromStorage';
 import getPictureFromCamera from '@utils/getPictureFromCamera';
 import getImageType from '@utils/getImageType';
+import handleRetrieveSingleImage from '@utils/handleRetrieveSingleImage';
 
 type FormData = {
   name: string;
@@ -156,36 +157,18 @@ const CreateGuild: React.FC = () => {
     }
   };
 
-  const handleGallery = async () => {
-    const permissionStatus = await getPermissions('gallery');
+  const handleImageSelection = async (type: 'camera' | 'gallery') => {
+    try {
+      const image = await handleRetrieveSingleImage(type);
 
-    if (permissionStatus === 'granted') {
-      const imageFromStorage = await getPictureFromStorage();
-      const filename = imageFromStorage.assets?.[0].fileName;
-      const uri = imageFromStorage.assets?.[0].uri;
+      if (!image) throw new Error('Something went wrong.');
 
-      if (filename && uri) {
-        setSelectedImage({
-          filename,
-          uri,
-        });
-      }
-    }
-  };
-
-  const handleCamera = async () => {
-    const permissionStatus = await getPermissions('camera');
-
-    if (permissionStatus === 'granted') {
-      const imageFromCamera = await getPictureFromCamera();
-      const filename = imageFromCamera.assets?.[0].fileName;
-      const uri = imageFromCamera.assets?.[0].uri;
-
-      if (filename && uri) {
-        setSelectedImage({
-          filename,
-          uri,
-        });
+      setSelectedImage(image);
+    } catch (err) {
+      if (err instanceof Error) {
+        Alert.alert('>.<', err.message);
+      } else {
+        Alert.alert('>.<', 'Something went wrong.');
       }
     }
   };
@@ -302,12 +285,16 @@ const CreateGuild: React.FC = () => {
         </ScrollView>
         <Actionsheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
           <Actionsheet.Content bg="gray.900">
-            <Actionsheet.Item bg="gray.900" onPress={handleGallery}>
+            <Actionsheet.Item
+              bg="gray.900"
+              onPress={() => handleImageSelection('gallery')}>
               <Text fontSize="md" color="white">
                 Galeria
               </Text>
             </Actionsheet.Item>
-            <Actionsheet.Item bg="gray.900" onPress={handleCamera}>
+            <Actionsheet.Item
+              bg="gray.900"
+              onPress={() => handleImageSelection('camera')}>
               <Text fontSize="md" color="white">
                 Camera
               </Text>
