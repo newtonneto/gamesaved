@@ -207,9 +207,7 @@ const Guild = () => {
       ).docs;
 
       if (response.length > 0) {
-        const guildsData = response.map(doc => {
-          return doc.data() as GuildDto;
-        });
+        const guildsData = response.map(doc => doc.data() as GuildDto);
 
         setGuilds(guildsData);
       }
