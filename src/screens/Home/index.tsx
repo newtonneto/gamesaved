@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { MagnifyingGlass, XCircle } from 'phosphor-react-native';
 import { useIsFocused } from '@react-navigation/native';
+import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 import NoData from '@assets/imgs/undraw_no_data.svg';
 import VStack from '@components/VStack';
@@ -22,6 +23,7 @@ import {
 import FlatList from '@components/FlatList';
 import Input from '@components/Input';
 import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
 import { Game } from '@interfaces/game.dto';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { GamesPage } from '@interfaces/gamespage.dto';
@@ -29,7 +31,6 @@ import rawg from '@services/rawg.api';
 import { NO_LABEL_INPUT_MARGIN_BOTTOM } from '@utils/constants';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
-import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type FormData = {
   searchValue: string;
@@ -239,25 +240,27 @@ const Home = () => {
   );
 
   return (
-    <VStack>
-      <Header title="Home" />
-      {!isLoading ? (
-        <FlatList
-          data={games}
-          renderItem={RenderItem}
-          keyExtractor={(item: Game) => item.id.toString()}
-          onEndReached={getNextGames}
-          onEndReachedThreshold={0.1}
-          ListHeaderComponent={FlatListHeader}
-          ListFooterComponent={() => FlatListFooter(isLoadingNext)}
-          ListEmptyComponent={RenderEmpty}
-          ItemSeparatorComponent={FlatListSeparator}
-          showsVerticalScrollIndicator={false}
-        />
-      ) : (
-        <Loading />
-      )}
-    </VStack>
+    <ScreenWrapper>
+      <VStack>
+        <Header title="Home" />
+        {!isLoading ? (
+          <FlatList
+            data={games}
+            renderItem={RenderItem}
+            keyExtractor={(item: Game) => item.id.toString()}
+            onEndReached={getNextGames}
+            onEndReachedThreshold={0.1}
+            ListHeaderComponent={FlatListHeader}
+            ListFooterComponent={() => FlatListFooter(isLoadingNext)}
+            ListEmptyComponent={RenderEmpty}
+            ItemSeparatorComponent={FlatListSeparator}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <Loading />
+        )}
+      </VStack>
+    </ScreenWrapper>
   );
 };
 

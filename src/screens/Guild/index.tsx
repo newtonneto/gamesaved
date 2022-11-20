@@ -28,6 +28,8 @@ import Loading from '@components/Loading';
 import Input from '@components/Input';
 import Button from '@components/Button';
 import Toast from '@components/Toast';
+import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { GuildDto } from '@interfaces/guild.dto';
 import {
@@ -362,40 +364,43 @@ const Guild = () => {
   );
 
   return (
-    <VStack>
-      {!isLoading ? (
-        <VStack w="full">
-          {hasGuild ? (
-            <FlatList
-              data={[]}
-              renderItem={() => null}
-              showsVerticalScrollIndicator={false}
-              ListHeaderComponent={GuildHeader}
-              style={{
-                width: '100%',
-              }}
-            />
-          ) : (
-            <VStack px={AXIS_X_PADDING_CONTENT} w="full">
+    <ScreenWrapper>
+      <VStack>
+        <Header title="Guild" />
+        {!isLoading ? (
+          <VStack w="full">
+            {hasGuild ? (
               <FlatList
-                data={guilds}
-                renderItem={RenderGuild}
+                data={[]}
+                renderItem={() => null}
                 showsVerticalScrollIndicator={false}
-                ListHeaderComponent={NoGuildHeader}
-                ListEmptyComponent={RenderEmptyNoGuild}
-                ItemSeparatorComponent={FlatListSeparator}
-                contentContainerStyle={styles.flatListContent}
+                ListHeaderComponent={GuildHeader}
                 style={{
                   width: '100%',
                 }}
               />
-            </VStack>
-          )}
-        </VStack>
-      ) : (
-        <Loading />
-      )}
-    </VStack>
+            ) : (
+              <VStack px={AXIS_X_PADDING_CONTENT} w="full">
+                <FlatList
+                  data={guilds}
+                  renderItem={RenderGuild}
+                  showsVerticalScrollIndicator={false}
+                  ListHeaderComponent={NoGuildHeader}
+                  ListEmptyComponent={RenderEmptyNoGuild}
+                  ItemSeparatorComponent={FlatListSeparator}
+                  contentContainerStyle={styles.flatListContent}
+                  style={{
+                    width: '100%',
+                  }}
+                />
+              </VStack>
+            )}
+          </VStack>
+        ) : (
+          <Loading />
+        )}
+      </VStack>
+    </ScreenWrapper>
   );
 };
 

@@ -17,6 +17,7 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import VStack from '@components/VStack';
 import Input from '@components/Input';
 import Button from '@components/Button';
+import Header from '@components/Header';
 import firebaseExceptions from '@hashmaps/firebaseExceptions';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
@@ -27,9 +28,6 @@ import {
   FORM_INPUT_MARGIN_BOTTOM,
   RATIO,
 } from '@utils/constants';
-import getPermissions from '@utils/getPermissions';
-import getPictureFromStorage from '@utils/getPictureFromStorage';
-import getPictureFromCamera from '@utils/getPictureFromCamera';
 import getImageType from '@utils/getImageType';
 import handleRetrieveSingleImage from '@utils/handleRetrieveSingleImage';
 
@@ -178,6 +176,7 @@ const CreateGuild: React.FC = () => {
   return (
     <ScreenWrapper>
       <VStack>
+        <Header title="Create Guild" />
         <ScrollView>
           <Pressable onPress={() => setIsOpen(true)}>
             <AspectRatio w="100%" ratio={RATIO}>
