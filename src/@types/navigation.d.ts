@@ -8,6 +8,8 @@ export declare global {
       Stats: undefined;
       FindFriendsScreen: undefined;
       UserStats: { uuid: string };
+      GuildScreen: undefined;
+      CreateGuild: undefined;
     }
   }
 }
