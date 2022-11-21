@@ -18,3 +18,4 @@ export const GHOST_BUTTON_HEIGHT = 10;
 export const AVATAR_NORMAL_BORDER_WIDTH = 4;
 export const TOAST_DURATION = 5000;
 export const CARDS_BORDER_WIDTH = 1;
+export const AVOID_FAB_BUTTON_BOTTOM = 80;

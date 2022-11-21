@@ -1,6 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Alert } from 'react-native';
-import { Avatar, Fab, useTheme, useToast } from 'native-base';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
+import {
+  Alert,
+  FlatList,
+  ListRenderItem,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Avatar, Fab, Heading, useTheme, useToast } from 'native-base';
 import storage from '@react-native-firebase/storage';
 import firestore, {
   FirebaseFirestoreTypes,
@@ -15,17 +21,24 @@ import { UserCirclePlus, UserCircleMinus } from 'phosphor-react-native';
 
 import Toast from '@components/Toast';
 import VStack from '@components/VStack';
-import ScrollView from '@components/ScrollView';
 import Loading from '@components/Loading';
 import Attribute from '@components/Attribute';
 import ScreenWrapper from '@components/ScreenWrapper';
 import Header from '@components/Header';
+import LootCard from '@components/LootCard';
+import { FlatListSeparator } from '@components/FlatListComponents';
 import genderTranslator from '@hashmaps/genderTranslator';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { PartyDto } from '@interfaces/party.dto';
+import { InventoryDto } from '@interfaces/inventory.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
-import { AXIS_X_PADDING_CONTENT, TOAST_DURATION } from '@utils/constants';
+import {
+  AVOID_FAB_BUTTON_BOTTOM,
+  AXIS_X_PADDING_CONTENT,
+  TOAST_DURATION,
+  VERTICAL_PADDING_LISTS,
+} from '@utils/constants';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 
 type RouteParams = {
@@ -45,6 +58,7 @@ const UserStats = () => {
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [profile, setProfile] = useState<ProfileDto>({} as ProfileDto);
   const [image, setImage] = useState<string | undefined>(undefined);
+  const [inventory, setInventory] = useState<number[]>([]);
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
     FirebaseFirestoreTypes.DocumentReference<ProfileDto>
@@ -108,6 +122,34 @@ const UserStats = () => {
     }
   };
 
+  const getInventory = async (id: string) => {
+    try {
+      const response = await firestore()
+        .collection<InventoryDto>('lists')
+        .doc(id)
+        .get();
+
+      if (!response.exists) return;
+
+      const list = response.data();
+
+      if (!list) return;
+
+      setInventory(list.games);
+    } catch (err) {
+      Alert.alert('>.<', 'Conteúdo indisponível, tente novamente mais tarde.', [
+        {
+          text: 'Voltar',
+          onPress: () => navigation.goBack(),
+        },
+        {
+          text: 'Tentar Novamente',
+          onPress: () => getInventory(id),
+        },
+      ]);
+    }
+  };
+
   useEffect(() => {
     const getProfile = async () => {
       try {
@@ -117,6 +159,7 @@ const UserStats = () => {
           setProfile(response);
 
           await getImage(response.avatarRef);
+          await getInventory(response.uuid);
         }
       } catch (err) {
         Alert.alert(
@@ -126,6 +169,10 @@ const UserStats = () => {
             {
               text: 'Voltar',
               onPress: () => navigation.goBack(),
+            },
+            {
+              text: 'Tentar Novamente',
+              onPress: () => getProfile(),
             },
           ],
         );
@@ -239,6 +286,92 @@ const UserStats = () => {
     setIsLoadingRequest(false);
   };
 
+  const StatsHeader = () => (
+    <Fragment>
+      <Avatar
+        bg="gray.700"
+        alignSelf="center"
+        size="2xl"
+        mb={8}
+        source={{
+          uri: image,
+        }}>
+        {`${profile.firstName[0]}${profile.lastName[0]}`}
+      </Avatar>
+      <Attribute
+        type="sword"
+        value={profile.username}
+        svg={false}
+        label="Username"
+      />
+      <Attribute
+        type="shield"
+        value={`${profile.firstName} ${profile.lastName}`}
+        svg={false}
+        label="Nome"
+      />
+      <Attribute
+        type="magicWand"
+        value={profile.email}
+        svg={false}
+        label="Email"
+      />
+      <Attribute
+        type="genderIntersex"
+        value={genderTranslator[profile.gender]}
+        svg={false}
+        label="Gênero"
+      />
+      {firestoreValueIsValid(profile.psnId) && (
+        <Attribute
+          type="playstation"
+          value={profile.psnId}
+          svg={true}
+          label="PSN ID"
+        />
+      )}
+      {firestoreValueIsValid(profile.xboxGamertag) && (
+        <Attribute
+          type="xbox"
+          value={profile.psnId}
+          svg={true}
+          label="Xbox Gamertag"
+        />
+      )}
+      {firestoreValueIsValid(profile.nintendoAccount) && (
+        <Attribute
+          type="nintendo"
+          value={profile.psnId}
+          svg={true}
+          label="Nintendo Account"
+        />
+      )}
+      {firestoreValueIsValid(profile.steamProfile) && (
+        <Attribute
+          type="steam"
+          value={profile.psnId}
+          svg={true}
+          label="Steam Profile"
+        />
+      )}
+      <VStack pb={8} pt={4}>
+        <Heading
+          fontFamily="body"
+          fontSize="lg"
+          color="white"
+          ml={4}
+          numberOfLines={1}
+          ellipsizeMode="tail">
+          Inventory
+        </Heading>
+      </VStack>
+    </Fragment>
+  );
+
+  const RenderItem: ListRenderItem<number> = ({ item }) => (
+    <LootCard id={item} key={item} hasPadding={false} width="100%" />
+  );
+
   return (
     <ScreenWrapper>
       <VStack>
@@ -262,73 +395,15 @@ const UserStats = () => {
               _pressed={{ bg: 'gray.500' }}
               disabled={isLoadingRequest}
             />
-            <ScrollView pt={8}>
-              <Avatar
-                bg="gray.700"
-                alignSelf="center"
-                size="2xl"
-                mb={8}
-                source={{
-                  uri: image,
-                }}>{`${profile.firstName[0]}${profile.lastName[0]}`}</Avatar>
-
-              <Attribute
-                type="sword"
-                value={profile.username}
-                svg={false}
-                label="Username"
-              />
-              <Attribute
-                type="shield"
-                value={`${profile.firstName} ${profile.lastName}`}
-                svg={false}
-                label="Nome"
-              />
-              <Attribute
-                type="magicWand"
-                value={profile.email}
-                svg={false}
-                label="Email"
-              />
-              <Attribute
-                type="genderIntersex"
-                value={genderTranslator[profile.gender]}
-                svg={false}
-                label="Gênero"
-              />
-              {firestoreValueIsValid(profile.psnId) && (
-                <Attribute
-                  type="playstation"
-                  value={profile.psnId}
-                  svg={true}
-                  label="PSN ID"
-                />
-              )}
-              {firestoreValueIsValid(profile.xboxGamertag) && (
-                <Attribute
-                  type="xbox"
-                  value={profile.psnId}
-                  svg={true}
-                  label="Xbox Gamertag"
-                />
-              )}
-              {firestoreValueIsValid(profile.nintendoAccount) && (
-                <Attribute
-                  type="nintendo"
-                  value={profile.psnId}
-                  svg={true}
-                  label="Nintendo Account"
-                />
-              )}
-              {firestoreValueIsValid(profile.steamProfile) && (
-                <Attribute
-                  type="steam"
-                  value={profile.psnId}
-                  svg={true}
-                  label="Steam Profile"
-                />
-              )}
-            </ScrollView>
+            <FlatList
+              data={inventory}
+              renderItem={RenderItem}
+              showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={FlatListSeparator}
+              ListHeaderComponent={StatsHeader}
+              contentContainerStyle={styles.flatListContent}
+              style={styles.flatList}
+            />
           </VStack>
         ) : (
           <Loading />
@@ -337,5 +412,15 @@ const UserStats = () => {
     </ScreenWrapper>
   );
 };
+
+const styles = StyleSheet.create({
+  flatListContent: {
+    paddingTop: VERTICAL_PADDING_LISTS,
+    paddingBottom: AVOID_FAB_BUTTON_BOTTOM,
+  },
+  flatList: {
+    width: '100%',
+  },
+});
 
 export default UserStats;

@@ -15,9 +15,11 @@ import { GAMEAPI_KEY } from 'react-native-dotenv';
 
 type Props = {
   id: number;
+  hasPadding?: boolean;
+  width?: string;
 };
 
-const LootCard = ({ id }: Props) => {
+const LootCard = ({ id, hasPadding = true, width = '98%' }: Props) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [game, setGame] = useState<Game>({} as Game);
@@ -58,9 +60,9 @@ const LootCard = ({ id }: Props) => {
     <Pressable
       alignItems="center"
       onPress={handleNavigation}
-      mx={AXIS_X_PADDING_CONTENT}>
+      mx={hasPadding ? AXIS_X_PADDING_CONTENT : 0}>
       <Box
-        w="98%"
+        w={width}
         rounded="lg"
         overflow="hidden"
         borderWidth={CARDS_BORDER_WIDTH}

@@ -389,9 +389,7 @@ const Guild = () => {
                   ListEmptyComponent={RenderEmptyNoGuild}
                   ItemSeparatorComponent={FlatListSeparator}
                   contentContainerStyle={styles.flatListContent}
-                  style={{
-                    width: '100%',
-                  }}
+                  style={styles.flatList}
                 />
               </VStack>
             )}
@@ -407,6 +405,9 @@ const Guild = () => {
 const styles = StyleSheet.create({
   flatListContent: {
     paddingVertical: VERTICAL_PADDING_LISTS,
+  },
+  flatList: {
+    width: '100%',
   },
 });
 
