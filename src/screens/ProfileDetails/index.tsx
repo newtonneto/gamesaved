@@ -25,6 +25,7 @@ import Select from '@components/Select';
 import Input from '@components/Input';
 import Loading from '@components/Loading';
 import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
 import {
   AXIS_X_PADDING_CONTENT,
   FORM_INPUT_MARGIN_BOTTOM,
@@ -35,9 +36,6 @@ import { ProfileDto } from '@interfaces/profile.dto';
 import { Image } from '@interfaces/image.model';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
-import getPermissions from '@src/utils/getPermissions';
-import getPictureFromStorage from '@utils/getPictureFromStorage';
-import getPictureFromCamera from '@utils/getPictureFromCamera';
 import getImageType from '@utils/getImageType';
 import handleRetrieveSingleImage from '@utils/handleRetrieveSingleImage';
 
@@ -281,334 +279,336 @@ const ProfileDetails = () => {
   };
 
   return (
-    <VStack>
-      <Header title="Stats" />
-      {!isLoading ? (
-        <ScrollView pt={8} px={AXIS_X_PADDING_CONTENT}>
-          <Pressable onPress={() => setIsOpen(true)}>
-            <Avatar
-              bg="gray.700"
-              alignSelf="center"
-              size="2xl"
-              source={{
-                uri: selectedImage.uri ? selectedImage.uri : image,
-              }}>
-              {`${profile.firstName[0]}${profile.lastName[0]}`}
-            </Avatar>
-          </Pressable>
-          <FormControl
-            isRequired
-            isInvalid={'username' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Username</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="XCloud"
-                  onChangeText={onChange}
-                  value={value}
-                  autoComplete="name"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  isDisabled={isLoadingRequest}
-                  autoCapitalize="words"
-                />
-              )}
-              name="username"
-              defaultValue={profile.username}
-            />
-            <FormControl.ErrorMessage>
-              {errors.username?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+    <ScreenWrapper>
+      <VStack>
+        <Header title="Stats" />
+        {!isLoading ? (
+          <ScrollView pt={8} px={AXIS_X_PADDING_CONTENT}>
+            <Pressable onPress={() => setIsOpen(true)}>
+              <Avatar
+                bg="gray.700"
+                alignSelf="center"
+                size="2xl"
+                source={{
+                  uri: selectedImage.uri ? selectedImage.uri : image,
+                }}>
+                {`${profile.firstName[0]}${profile.lastName[0]}`}
+              </Avatar>
+            </Pressable>
+            <FormControl
+              isRequired
+              isInvalid={'username' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Username</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="XCloud"
+                    onChangeText={onChange}
+                    value={value}
+                    autoComplete="name"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
+                    autoCapitalize="words"
+                  />
+                )}
+                name="username"
+                defaultValue={profile.username}
+              />
+              <FormControl.ErrorMessage>
+                {errors.username?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={'firstName' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Nome</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="Cloud"
-                  onChangeText={onChange}
-                  value={value}
-                  autoComplete="name"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  isDisabled={isLoadingRequest}
-                />
-              )}
-              name="firstName"
-              defaultValue={profile.firstName}
-            />
-            <FormControl.ErrorMessage>
-              {errors.firstName?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={'firstName' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Nome</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="Cloud"
+                    onChangeText={onChange}
+                    value={value}
+                    autoComplete="name"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
+                  />
+                )}
+                name="firstName"
+                defaultValue={profile.firstName}
+              />
+              <FormControl.ErrorMessage>
+                {errors.firstName?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={'lastName' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Sobrenome</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="Strife"
-                  onChangeText={onChange}
-                  value={value}
-                  autoComplete="name"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  isDisabled={isLoadingRequest}
-                />
-              )}
-              name="lastName"
-              defaultValue={profile.lastName}
-            />
-            <FormControl.ErrorMessage>
-              {errors.lastName?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={'lastName' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Sobrenome</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="Strife"
+                    onChangeText={onChange}
+                    value={value}
+                    autoComplete="name"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
+                  />
+                )}
+                name="lastName"
+                defaultValue={profile.lastName}
+              />
+              <FormControl.ErrorMessage>
+                {errors.lastName?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={'birthDate' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Data de nascimento</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="11/08/1986"
-                  onChangeText={changedValue =>
-                    onChange(handleDateMask(changedValue))
-                  }
-                  value={value}
-                  autoComplete="birthdate-full"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  keyboardType="number-pad"
-                  maxLength={10}
-                  isDisabled={isLoadingRequest}
-                />
-              )}
-              name="birthDate"
-              defaultValue={profile.birthDate}
-            />
-            <FormControl.ErrorMessage>
-              {errors.birthDate?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={'birthDate' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Data de nascimento</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="11/08/1986"
+                    onChangeText={changedValue =>
+                      onChange(handleDateMask(changedValue))
+                    }
+                    value={value}
+                    autoComplete="birthdate-full"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    keyboardType="number-pad"
+                    maxLength={10}
+                    isDisabled={isLoadingRequest}
+                  />
+                )}
+                name="birthDate"
+                defaultValue={profile.birthDate}
+              />
+              <FormControl.ErrorMessage>
+                {errors.birthDate?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={'gender' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Gênero</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  selectedValue={value}
-                  accessibilityLabel="Choose gender"
-                  placeholder="Selecionar..."
-                  onValueChange={onChange}
-                  isDisabled={isLoadingRequest}>
-                  <NativeBaseSelect.Item label="Masculino" value="male" />
-                  <NativeBaseSelect.Item label="Feminino" value="female" />
-                  <NativeBaseSelect.Item label="Outro" value="other" />
-                </Select>
-              )}
-              name="gender"
-              defaultValue={profile.gender}
-            />
-            <FormControl.ErrorMessage>
-              {errors.gender?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={'gender' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Gênero</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    selectedValue={value}
+                    accessibilityLabel="Choose gender"
+                    placeholder="Selecionar..."
+                    onValueChange={onChange}
+                    isDisabled={isLoadingRequest}>
+                    <NativeBaseSelect.Item label="Masculino" value="male" />
+                    <NativeBaseSelect.Item label="Feminino" value="female" />
+                    <NativeBaseSelect.Item label="Outro" value="other" />
+                  </Select>
+                )}
+                name="gender"
+                defaultValue={profile.gender}
+              />
+              <FormControl.ErrorMessage>
+                {errors.gender?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>E-mail</FormControl.Label>
-            <Input
-              placeholder="cloud.exsoldier@avalanche.com"
-              value={userSession.email || ''}
-              autoComplete="email"
-              autoCorrect={false}
-              selectionColor="secondary.700"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              isDisabled
-            />
-          </FormControl>
+            <FormControl mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>E-mail</FormControl.Label>
+              <Input
+                placeholder="cloud.exsoldier@avalanche.com"
+                value={userSession.email || ''}
+                autoComplete="email"
+                autoCorrect={false}
+                selectionColor="secondary.700"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                isDisabled
+              />
+            </FormControl>
 
-          <FormControl
-            isRequired
-            isInvalid={'phone' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Telefone</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="(84) 9 9612-8883"
-                  onChangeText={changedValue =>
-                    onChange(handlePhoneMask(changedValue))
-                  }
-                  value={value}
-                  autoComplete="tel-country-code"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  keyboardType="phone-pad"
-                  maxLength={15}
-                  isDisabled={isLoadingRequest}
-                />
-              )}
-              name="phone"
-              defaultValue={handlePhoneMask(profile.phone)}
-            />
-            <FormControl.ErrorMessage>
-              {errors.phone?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={'phone' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Telefone</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="(84) 9 9612-8883"
+                    onChangeText={changedValue =>
+                      onChange(handlePhoneMask(changedValue))
+                    }
+                    value={value}
+                    autoComplete="tel-country-code"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    keyboardType="phone-pad"
+                    maxLength={15}
+                    isDisabled={isLoadingRequest}
+                  />
+                )}
+                name="phone"
+                defaultValue={handlePhoneMask(profile.phone)}
+              />
+              <FormControl.ErrorMessage>
+                {errors.phone?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isInvalid={'psnId' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>PSN ID</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="CloudAvalanchePS"
-                  onChangeText={onChange}
-                  value={value}
-                  autoComplete="name"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  isDisabled={isLoadingRequest}
-                  autoCapitalize="words"
-                />
-              )}
-              name="psnId"
-              defaultValue={profile.psnId}
-            />
-            <FormControl.ErrorMessage>
-              {errors.psnId?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isInvalid={'psnId' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>PSN ID</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="CloudAvalanchePS"
+                    onChangeText={onChange}
+                    value={value}
+                    autoComplete="name"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
+                    autoCapitalize="words"
+                  />
+                )}
+                name="psnId"
+                defaultValue={profile.psnId}
+              />
+              <FormControl.ErrorMessage>
+                {errors.psnId?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isInvalid={'xboxGamertag' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Xbox Gamertag</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="XCloudAvalanche"
-                  onChangeText={onChange}
-                  value={value}
-                  autoComplete="name"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  isDisabled={isLoadingRequest}
-                  autoCapitalize="words"
-                />
-              )}
-              name="xboxGamertag"
-              defaultValue={profile.xboxGamertag}
-            />
-            <FormControl.ErrorMessage>
-              {errors.xboxGamertag?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isInvalid={'xboxGamertag' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Xbox Gamertag</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="XCloudAvalanche"
+                    onChangeText={onChange}
+                    value={value}
+                    autoComplete="name"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
+                    autoCapitalize="words"
+                  />
+                )}
+                name="xboxGamertag"
+                defaultValue={profile.xboxGamertag}
+              />
+              <FormControl.ErrorMessage>
+                {errors.xboxGamertag?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isInvalid={'nintendoAccount' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Nintendo Account</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="RedCloud"
-                  onChangeText={onChange}
-                  value={value}
-                  autoComplete="name"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  isDisabled={isLoadingRequest}
-                  autoCapitalize="words"
-                />
-              )}
-              name="nintendoAccount"
-              defaultValue={profile.nintendoAccount}
-            />
-            <FormControl.ErrorMessage>
-              {errors.nintendoAccount?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isInvalid={'nintendoAccount' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Nintendo Account</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="RedCloud"
+                    onChangeText={onChange}
+                    value={value}
+                    autoComplete="name"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
+                    autoCapitalize="words"
+                  />
+                )}
+                name="nintendoAccount"
+                defaultValue={profile.nintendoAccount}
+              />
+              <FormControl.ErrorMessage>
+                {errors.nintendoAccount?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <FormControl
-            isInvalid={'steamProfile' in errors}
-            mb={FORM_INPUT_MARGIN_BOTTOM}>
-            <FormControl.Label>Steam Profile</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="Cloud_Ex-Soldier"
-                  onChangeText={onChange}
-                  value={value}
-                  autoComplete="name"
-                  autoCorrect={false}
-                  selectionColor="secondary.700"
-                  isDisabled={isLoadingRequest}
-                  autoCapitalize="words"
-                />
-              )}
-              name="steamProfile"
-              defaultValue={profile.steamProfile}
-            />
-            <FormControl.ErrorMessage>
-              {errors.steamProfile?.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+            <FormControl
+              isInvalid={'steamProfile' in errors}
+              mb={FORM_INPUT_MARGIN_BOTTOM}>
+              <FormControl.Label>Steam Profile</FormControl.Label>
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="Cloud_Ex-Soldier"
+                    onChangeText={onChange}
+                    value={value}
+                    autoComplete="name"
+                    autoCorrect={false}
+                    selectionColor="secondary.700"
+                    isDisabled={isLoadingRequest}
+                    autoCapitalize="words"
+                  />
+                )}
+                name="steamProfile"
+                defaultValue={profile.steamProfile}
+              />
+              <FormControl.ErrorMessage>
+                {errors.steamProfile?.message}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <Button
-            title="Enviar"
-            onPress={handleSubmit(onSubmit)}
-            isLoading={isLoadingRequest}
-            w="full"
-          />
-        </ScrollView>
-      ) : (
-        <Loading />
-      )}
-      <Actionsheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <Actionsheet.Content bg="gray.900">
-          <Actionsheet.Item
-            bg="gray.900"
-            onPress={() => handleImageSelection('gallery')}>
-            <Text fontSize="md" color="white">
-              Galeria
-            </Text>
-          </Actionsheet.Item>
-          <Actionsheet.Item
-            bg="gray.900"
-            onPress={() => handleImageSelection('camera')}>
-            <Text fontSize="md" color="white">
-              Camera
-            </Text>
-          </Actionsheet.Item>
-        </Actionsheet.Content>
-      </Actionsheet>
-    </VStack>
+            <Button
+              title="Enviar"
+              onPress={handleSubmit(onSubmit)}
+              isLoading={isLoadingRequest}
+              w="full"
+            />
+          </ScrollView>
+        ) : (
+          <Loading />
+        )}
+        <Actionsheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
+          <Actionsheet.Content bg="gray.900">
+            <Actionsheet.Item
+              bg="gray.900"
+              onPress={() => handleImageSelection('gallery')}>
+              <Text fontSize="md" color="white">
+                Galeria
+              </Text>
+            </Actionsheet.Item>
+            <Actionsheet.Item
+              bg="gray.900"
+              onPress={() => handleImageSelection('camera')}>
+              <Text fontSize="md" color="white">
+                Camera
+              </Text>
+            </Actionsheet.Item>
+          </Actionsheet.Content>
+        </Actionsheet>
+      </VStack>
+    </ScreenWrapper>
   );
 };
 

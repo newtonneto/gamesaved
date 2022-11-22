@@ -14,6 +14,7 @@ import Loading from '@components/Loading';
 import LootCard from '@components/LootCard';
 import HiddenButton from '@components/HiddenButton';
 import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
 import { FlatListSeparator } from '@components/FlatListComponents';
 import { InventoryDto } from '@interfaces/inventory.dto';
 import { useAppDispatch } from '@store/index';
@@ -158,35 +159,37 @@ const Inventory = () => {
   );
 
   return (
-    <VStack>
-      <Header title="Inventory" />
-      {!isLoading ? (
-        <SwipeListView
-          data={inventory}
-          renderItem={RenderItem}
-          keyExtractor={(item: number) => item.toString()}
-          onEndReached={controlPagination}
-          onEndReachedThreshold={0.1}
-          contentContainerStyle={styles.flatListContent}
-          ItemSeparatorComponent={FlatListSeparator}
-          showsVerticalScrollIndicator={false}
-          style={styles.flatList}
-          renderHiddenItem={(rowData, rowMap) => (
-            <HiddenButton
-              handler={handleRemove}
-              id={rowData.item.toString()}
-              rowMap={rowMap}
-              type="remove_loot"
-            />
-          )}
-          rightOpenValue={-75}
-          stopRightSwipe={-75}
-          stopLeftSwipe={1}
-        />
-      ) : (
-        <Loading />
-      )}
-    </VStack>
+    <ScreenWrapper>
+      <VStack>
+        <Header title="Inventory" />
+        {!isLoading ? (
+          <SwipeListView
+            data={inventory}
+            renderItem={RenderItem}
+            keyExtractor={(item: number) => item.toString()}
+            onEndReached={controlPagination}
+            onEndReachedThreshold={0.1}
+            contentContainerStyle={styles.flatListContent}
+            ItemSeparatorComponent={FlatListSeparator}
+            showsVerticalScrollIndicator={false}
+            style={styles.flatList}
+            renderHiddenItem={(rowData, rowMap) => (
+              <HiddenButton
+                handler={handleRemove}
+                id={rowData.item.toString()}
+                rowMap={rowMap}
+                type="remove_loot"
+              />
+            )}
+            rightOpenValue={-75}
+            stopRightSwipe={-75}
+            stopLeftSwipe={1}
+          />
+        ) : (
+          <Loading />
+        )}
+      </VStack>
+    </ScreenWrapper>
   );
 };
 

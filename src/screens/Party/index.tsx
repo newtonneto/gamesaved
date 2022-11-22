@@ -8,6 +8,7 @@ import VStack from '@components/VStack';
 import Button from '@components/Button';
 import Loading from '@components/Loading';
 import Header from '@components/Header';
+import ScreenWrapper from '@components/ScreenWrapper';
 import { PartyDto } from '@interfaces/party.dto';
 import { useAppDispatch } from '@store/index';
 import { setTitle } from '@store/slices/navigation-slice';
@@ -62,18 +63,20 @@ const Party = () => {
   );
 
   return (
-    <VStack>
-      <Header title="Party" />
-      {!isLoading ? (
-        <PartyList
-          partyRef={partyRef}
-          members={members}
-          flatListHeader={FlatListHeader}
-        />
-      ) : (
-        <Loading />
-      )}
-    </VStack>
+    <ScreenWrapper>
+      <VStack>
+        <Header title="Party" />
+        {!isLoading ? (
+          <PartyList
+            partyRef={partyRef}
+            members={members}
+            flatListHeader={FlatListHeader}
+          />
+        ) : (
+          <Loading />
+        )}
+      </VStack>
+    </ScreenWrapper>
   );
 };
 

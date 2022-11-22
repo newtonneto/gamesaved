@@ -4,7 +4,7 @@ import { RootState } from '@src/store';
 
 const navigationSlice = createSlice({
   name: 'navigationslice',
-  initialState: { showDrawerHeader: true, title: '' },
+  initialState: { showDrawerHeader: false, title: '' },
   reducers: {
     setDrawerHeader: {
       reducer: (state, action: PayloadAction<boolean>) => {
