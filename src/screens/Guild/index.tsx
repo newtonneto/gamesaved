@@ -42,6 +42,7 @@ import {
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 import GuildCard from '@src/components/GuildCard';
 import { FlatListSeparator } from '@src/components/FlatListComponents';
+import PostModal from './modal';
 
 type FormData = {
   searchValue: string;
@@ -67,6 +68,7 @@ const Guild = () => {
   const [guild, setGuild] = useState<GuildDto>({} as GuildDto);
   const [guilds, setGuilds] = useState<GuildDto[]>([]);
   const [image, setImage] = useState<string | undefined>(undefined);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const guildUuid = useRef<string>('');
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
@@ -231,6 +233,7 @@ const Guild = () => {
 
   const GuildHeader = () => (
     <VStack>
+      <PostModal visible={isModalVisible} setVisible={setIsModalVisible} />
       <Fab
         placement="top-right"
         renderInPortal={false}
@@ -293,6 +296,11 @@ const Guild = () => {
             {guild.description}
           </Text>
         </VStack>
+        <Button
+          title="New Post"
+          w="full"
+          onPress={() => setIsModalVisible(true)}
+        />
       </VStack>
     </VStack>
   );
