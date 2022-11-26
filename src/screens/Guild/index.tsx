@@ -233,7 +233,11 @@ const Guild = () => {
 
   const GuildHeader = () => (
     <VStack>
-      <PostModal visible={isModalVisible} setVisible={setIsModalVisible} />
+      <PostModal
+        visible={isModalVisible}
+        setVisible={setIsModalVisible}
+        guildUuid={guildUuid.current}
+      />
       <Fab
         placement="top-right"
         renderInPortal={false}
@@ -265,7 +269,7 @@ const Guild = () => {
         ) : (
           <VStack justifyContent="center">
             <Text fontSize="4xl" color="white">
-              Guild Banner
+              {guild.name}
             </Text>
           </VStack>
         )}

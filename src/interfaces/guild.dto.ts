@@ -9,4 +9,5 @@ export interface GuildDto {
   owner: string;
   createdAt: FirebaseFirestoreTypes.Timestamp;
   warCry: string;
+  posts: string[];
 }
