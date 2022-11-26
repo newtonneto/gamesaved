@@ -30,6 +30,7 @@ import Button from '@components/Button';
 import Toast from '@components/Toast';
 import Header from '@components/Header';
 import ScreenWrapper from '@components/ScreenWrapper';
+import PostCard from '@components/PostCard';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { GuildDto } from '@interfaces/guild.dto';
 import {
@@ -106,20 +107,27 @@ const Guild = () => {
     setHasGuild(true);
 
     try {
-      const response = await firestore()
-        .collection<GuildDto>('guilds')
-        .doc(guildUuid.current)
-        .get();
+      guildRef.current.doc(guildUuid.current).onSnapshot(async snapshot => {
+        if (snapshot.exists) {
+          const guild = snapshot.data() as GuildDto;
 
-      const guildData = response.data();
-
-      if (guildData) {
-        await getImage(guildData.bannerRef);
-
-        setGuild(guildData);
-      }
+          setGuild(guild);
+          await getImage(guild.bannerRef);
+        } else {
+          setHasGuild(false);
+        }
+      });
     } catch (error) {
-      Alert.alert('Error');
+      Alert.alert('>.<', 'Something went wrong', [
+        {
+          text: 'Voltar',
+          onPress: () => navigation.goBack(),
+        },
+        {
+          text: 'Tentar novamente',
+          onPress: () => getGuild(),
+        },
+      ]);
     }
   };
 
@@ -304,6 +312,7 @@ const Guild = () => {
           title="New Post"
           w="full"
           onPress={() => setIsModalVisible(true)}
+          mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
         />
       </VStack>
     </VStack>
@@ -375,6 +384,10 @@ const Guild = () => {
     <GuildCard guild={item} />
   );
 
+  const RenderPosts: ListRenderItem<string> = ({ item }) => (
+    <PostCard uuid={item} />
+  );
+
   return (
     <ScreenWrapper>
       <VStack>
@@ -382,15 +395,17 @@ const Guild = () => {
         {!isLoading ? (
           <VStack w="full">
             {hasGuild ? (
-              <FlatList
-                data={[]}
-                renderItem={() => null}
-                showsVerticalScrollIndicator={false}
-                ListHeaderComponent={GuildHeader}
-                style={{
-                  width: '100%',
-                }}
-              />
+              <VStack w="full">
+                <FlatList
+                  data={guild.posts}
+                  renderItem={RenderPosts}
+                  showsVerticalScrollIndicator={false}
+                  ListHeaderComponent={GuildHeader}
+                  ItemSeparatorComponent={FlatListSeparator}
+                  contentContainerStyle={styles.flatListContent}
+                  style={styles.flatList}
+                />
+              </VStack>
             ) : (
               <VStack px={AXIS_X_PADDING_CONTENT} w="full">
                 <FlatList

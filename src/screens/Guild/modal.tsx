@@ -42,6 +42,7 @@ const PostModal = ({ visible, setVisible, guildUuid }: Props) => {
       const { id } = await firestore().collection('posts').add({
         title: data.title,
         description: data.description,
+        createdAt: firestore.FieldValue.serverTimestamp(),
       });
 
       await firestore()
