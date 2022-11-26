@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Modal } from 'react-native';
-import { Pressable, VStack } from 'native-base';
+import { Pressable, VStack, FormControl } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import firestore from '@react-native-firebase/firestore';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -83,33 +83,47 @@ const PostModal = ({ visible, setVisible, guildUuid }: Props) => {
         flex={1}
         onPress={toggleModal}>
         <VStack w="90%" bgColor="gray.500" borderRadius={16} p={8}>
-          <Controller
-            control={control}
-            name="title"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                placeholder="Title"
-                mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="description"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                placeholder="Content"
-                multiline
-                textAlignVertical="top"
-                h={200}
-                mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
+          <FormControl
+            isRequired
+            isInvalid={'title' in errors}
+            mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
+            <Controller
+              control={control}
+              name="title"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="Title"
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
+            />
+            <FormControl.ErrorMessage>
+              {errors.title?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+          <FormControl
+            isRequired
+            isInvalid={'description' in errors}
+            mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
+            <Controller
+              control={control}
+              name="description"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="Content"
+                  multiline
+                  textAlignVertical="top"
+                  h={200}
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
+            />
+            <FormControl.ErrorMessage>
+              {errors.description?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
           <Button title="Enviar" onPress={handleSubmit(onSubmit)} />
         </VStack>
       </Pressable>
