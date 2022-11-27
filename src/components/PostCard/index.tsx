@@ -1,51 +1,97 @@
-import React, { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   Box,
   Pressable,
   Heading,
   Text,
   VStack,
-  AspectRatio,
   Spinner,
+  Avatar,
   useTheme,
 } from 'native-base';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import { Warning } from 'phosphor-react-native';
 
 import { PostDto } from '@interfaces/post.dto';
+import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_MARGIN_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
 import firestoreDateFormat from '@utils/fireabseDateFormat';
+import firestoreValueIsValid from '@utils/firestoreValueIsValid';
 
 type Props = {
   uuid: string;
 };
 
 const PostCard = ({ uuid }: Props) => {
+  const { colors } = useTheme();
   const [post, setPost] = useState<PostDto>({} as PostDto);
+  const [user, setUser] = useState<ProfileDto>({} as ProfileDto);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [image, setImage] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const getPost = async () => {
-      try {
-        const response = await firestore().collection('posts').doc(uuid).get();
+  const getPost = async (): Promise<PostDto> => {
+    try {
+      const response = await firestore().collection('posts').doc(uuid).get();
 
-        setPost(response.data() as PostDto);
+      if (!response.exists) throw new Error('Post not found');
+
+      return response.data() as PostDto;
+    } catch (err) {
+      throw new Error('Something went wrong');
+    }
+  };
+
+  const getUser = async (ownerUuid: string): Promise<ProfileDto> => {
+    try {
+      const response = await firestore()
+        .collection('profiles')
+        .doc(ownerUuid)
+        .get();
+
+      console.log('uuid: ', ownerUuid);
+      console.log('user: ', response.data());
+
+      if (!response.exists) throw new Error('User not found');
+
+      return response.data() as ProfileDto;
+    } catch (err) {
+      throw new Error('Something went wrong');
+    }
+  };
+
+  const getImage = async (imageRef: string): Promise<string> => {
+    try {
+      if (!firestoreValueIsValid(imageRef)) throw new Error('Image not found');
+
+      const imageUrl = await storage().ref(imageRef).getDownloadURL();
+
+      return imageUrl;
+    } catch (err) {
+      throw new Error('Something went wrong');
+    }
+  };
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const postData = await getPost();
+        setPost(postData);
+
+        const userData = await getUser(postData.owner);
+        setUser(userData);
+
+        const imageData = await getImage(userData.avatarRef);
+        setImage(imageData);
       } catch (err) {
-        Alert.alert(
-          '>.<',
-          'Conteúdo indisponível, tente novamente mais tarde.',
-          [
-            {
-              text: 'Ok',
-            },
-          ],
-        );
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
     };
 
-    getPost();
+    initialize();
   }, []);
 
   return (
@@ -70,39 +116,67 @@ const PostCard = ({ uuid }: Props) => {
           </VStack>
         ) : (
           <VStack w="full" py={2} px={4}>
-            <Heading
-              size="sm"
-              color="white"
-              ellipsizeMode="tail"
-              numberOfLines={1}
-              w="full">
-              {post.title}
-            </Heading>
-            <Text
-              color="white"
-              ellipsizeMode="tail"
-              numberOfLines={2}
-              width="100%">
-              {post.description}
-            </Text>
-            <VStack width="full" alignItems="flex-end">
-              <Text
-                color="white"
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                fontSize="xs">
-                Criado em: {firestoreDateFormat(post.createdAt)}
-              </Text>
-            </VStack>
-            {post.updatedAt && (
-              <VStack width="full" justifyContent="flex-end">
-                <Text
+            {!hasError ? (
+              <Fragment>
+                <VStack w="full" alignItems="center" flexDirection="row" mb={1}>
+                  <Avatar
+                    bg="gray.700"
+                    alignSelf="center"
+                    size="xs"
+                    mr={2}
+                    source={{
+                      uri: image,
+                    }}
+                  />
+                  <Text
+                    color="white"
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                    fontSize="xs">
+                    @{user.username}
+                  </Text>
+                </VStack>
+                <Heading
+                  size="sm"
                   color="white"
                   ellipsizeMode="tail"
                   numberOfLines={1}
-                  fontSize="xs">
-                  Atualizado em: {firestoreDateFormat(post.updatedAt)}
+                  w="full"
+                  mb={2}>
+                  {post.title}
+                </Heading>
+                <Text
+                  color="white"
+                  ellipsizeMode="tail"
+                  numberOfLines={2}
+                  width="100%">
+                  {post.description}
                 </Text>
+                <VStack width="full" alignItems="flex-end">
+                  <Text
+                    color="white"
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                    fontSize="xs">
+                    Criado em: {firestoreDateFormat(post.createdAt)}
+                  </Text>
+                </VStack>
+                {post.updatedAt && (
+                  <VStack width="full" justifyContent="flex-end">
+                    <Text
+                      color="white"
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      fontSize="xs">
+                      Atualizado em: {firestoreDateFormat(post.updatedAt)}
+                    </Text>
+                  </VStack>
+                )}
+              </Fragment>
+            ) : (
+              <VStack w="full" justifyContent="center" alignItems="center">
+                <Warning color={colors.secondary[700]} />
+                <Text color="white">{'Something went wrong :('}</Text>
               </VStack>
             )}
           </VStack>
