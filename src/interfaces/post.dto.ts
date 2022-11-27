@@ -5,4 +5,5 @@ export interface PostDto {
   description: string;
   createdAt: FirebaseFirestoreTypes.Timestamp;
   updatedAt?: FirebaseFirestoreTypes.Timestamp;
+  owner: string;
 }

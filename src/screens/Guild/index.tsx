@@ -245,6 +245,7 @@ const Guild = () => {
         visible={isModalVisible}
         setVisible={setIsModalVisible}
         guildUuid={guildUuid.current}
+        userUuid={userSession.uid}
       />
       <Fab
         placement="top-right"
