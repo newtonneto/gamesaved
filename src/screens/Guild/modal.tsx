@@ -126,6 +126,7 @@ const PostModal = ({ visible, setVisible, guildUuid }: Props) => {
             </FormControl.ErrorMessage>
           </FormControl>
           <Button title="Enviar" onPress={handleSubmit(onSubmit)} />
+          <Button title="Cancelar" onPress={toggleModal} />
         </VStack>
       </Pressable>
     </Modal>

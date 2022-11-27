@@ -16,7 +16,7 @@ const FlatList = ({ ...rest }: FlatListProps<Game>) => {
 
 const styles = StyleSheet.create({
   flatListContent: {
-    paddingVertical: VERTICAL_PADDING_LISTS,
+    paddingBottom: VERTICAL_PADDING_LISTS,
     paddingHorizontal: HORIZONTAL_PADDING_LISTS,
   },
 });
