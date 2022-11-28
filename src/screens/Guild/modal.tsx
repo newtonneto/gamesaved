@@ -54,6 +54,10 @@ const PostModal = ({ visible, setVisible, guildUuid, userUuid }: Props) => {
           posts: firestore.FieldValue.arrayUnion(id),
         });
 
+      await firestore().collection('comments').doc(id).set({
+        comments: [],
+      });
+
       Alert.alert('=D', 'Post published!', [
         {
           text: 'Ok',

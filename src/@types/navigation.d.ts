@@ -17,6 +17,7 @@ export declare global {
         postData: PostDto;
         userData: ProfileDto;
         imageData: string | undefined;
+        postUuid: string;
       };
     }
   }

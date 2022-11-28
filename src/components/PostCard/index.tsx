@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Pressable,
@@ -32,6 +32,7 @@ const PostCard = ({ uuid }: Props) => {
   const [user, setUser] = useState<ProfileDto>({} as ProfileDto);
   const [hasError, setHasError] = useState<boolean>(false);
   const [image, setImage] = useState<string | undefined>(undefined);
+  const postUuid = useRef<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getPost = async (): Promise<PostDto> => {
@@ -39,6 +40,8 @@ const PostCard = ({ uuid }: Props) => {
       const response = await firestore().collection('posts').doc(uuid).get();
 
       if (!response.exists) throw new Error('Post not found');
+
+      postUuid.current = response.id;
 
       return response.data() as PostDto;
     } catch (err) {
@@ -99,6 +102,7 @@ const PostCard = ({ uuid }: Props) => {
       postData: post,
       userData: user,
       imageData: image,
+      postUuid: postUuid.current,
     });
   };
 
