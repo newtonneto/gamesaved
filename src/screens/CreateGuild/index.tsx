@@ -57,7 +57,7 @@ const schema = yup.object().shape({
     .max(32, 'Grito de Guerra deve ter no máximo 32 caracteres'),
 });
 
-const CreateGuild: React.FC = () => {
+const CreateGuild = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const dispatch = useAppDispatch();

@@ -12,7 +12,9 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { Warning } from 'phosphor-react-native';
+import { useNavigation } from '@react-navigation/native';
 
+import UserLabel from '@components/UserLabel';
 import { PostDto } from '@interfaces/post.dto';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { AXIS_X_MARGIN_CONTENT, CARDS_BORDER_WIDTH } from '@utils/constants';
@@ -24,6 +26,7 @@ type Props = {
 };
 
 const PostCard = ({ uuid }: Props) => {
+  const navigation = useNavigation();
   const { colors } = useTheme();
   const [post, setPost] = useState<PostDto>({} as PostDto);
   const [user, setUser] = useState<ProfileDto>({} as ProfileDto);
@@ -49,9 +52,6 @@ const PostCard = ({ uuid }: Props) => {
         .collection('profiles')
         .doc(ownerUuid)
         .get();
-
-      console.log('uuid: ', ownerUuid);
-      console.log('user: ', response.data());
 
       if (!response.exists) throw new Error('User not found');
 
@@ -94,8 +94,16 @@ const PostCard = ({ uuid }: Props) => {
     initialize();
   }, []);
 
+  const handleNavigation = () => {
+    navigation.navigate('PostDetails', {
+      postData: post,
+      userData: user,
+      imageData: image,
+    });
+  };
+
   return (
-    <Pressable mx={AXIS_X_MARGIN_CONTENT}>
+    <Pressable mx={AXIS_X_MARGIN_CONTENT} onPress={handleNavigation}>
       <Box
         w="full"
         minH={90}
@@ -118,24 +126,7 @@ const PostCard = ({ uuid }: Props) => {
           <VStack w="full" py={2} px={4}>
             {!hasError ? (
               <Fragment>
-                <VStack w="full" alignItems="center" flexDirection="row" mb={1}>
-                  <Avatar
-                    bg="gray.700"
-                    alignSelf="center"
-                    size="xs"
-                    mr={2}
-                    source={{
-                      uri: image,
-                    }}
-                  />
-                  <Text
-                    color="white"
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                    fontSize="xs">
-                    @{user.username}
-                  </Text>
-                </VStack>
+                <UserLabel image={image} username={user.username} />
                 <Heading
                   size="sm"
                   color="white"
@@ -149,7 +140,7 @@ const PostCard = ({ uuid }: Props) => {
                   color="white"
                   ellipsizeMode="tail"
                   numberOfLines={2}
-                  width="100%">
+                  width="full">
                   {post.description}
                 </Text>
                 <VStack width="full" alignItems="flex-end">
