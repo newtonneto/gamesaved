@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { Alert, FlatList, ListRenderItem, StyleSheet } from 'react-native';
 import {
   Heading,
@@ -29,7 +29,6 @@ import { CommentsDto } from '@interfaces/comments.dto';
 import { CommentModel } from '@interfaces/comment.model';
 import { UserBasicInfo } from '@interfaces/userBasicInfo.model';
 import {
-  AXIS_X_MARGIN_CONTENT,
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   TOAST_DURATION,
@@ -38,7 +37,6 @@ import {
 import firestoreDateFormat from '@utils/fireabseDateFormat';
 import { generateErrorMessage } from '@utils/generateErrorMessage';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
-import { FlatListSeparator } from '@src/components/FlatListComponents';
 import Comment from '@src/components/Comment';
 
 type RouteParams = {
@@ -69,10 +67,12 @@ const PostDetails = () => {
   const {
     control,
     handleSubmit,
+    resetField,
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const { postData, userData, imageData, postUuid } =
     route.params as RouteParams;
+  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [usersInfo, setUsersInfo] = useState<Record<string, UserBasicInfo>>({});
@@ -82,7 +82,7 @@ const PostDetails = () => {
     userData: userData ? userData : ({} as ProfileDto),
     imageData,
   });
-  const userSession: FirebaseAuthTypes.User = auth().currentUser!;
+  const flatListRef = useRef<FlatList>(null);
 
   const getPost = async (uuid: string): Promise<PostDto> => {
     try {
@@ -247,6 +247,9 @@ const PostDetails = () => {
           );
         },
       });
+
+      resetField('comment');
+      flatListRef.current?.scrollToEnd({ animated: true });
     } catch (err) {
       toast.show({
         duration: TOAST_DURATION,
@@ -304,6 +307,7 @@ const PostDetails = () => {
         {!isLoading ? (
           <VStack w="full" px={AXIS_X_PADDING_CONTENT}>
             <FlatList
+              ref={flatListRef}
               data={comments}
               renderItem={RenderItem}
               showsVerticalScrollIndicator={false}
@@ -319,6 +323,7 @@ const PostDetails = () => {
                 <Controller
                   control={control}
                   name="comment"
+                  defaultValue=""
                   render={({ field: { onChange, value } }) => (
                     <Input
                       multiline
