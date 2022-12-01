@@ -4,6 +4,7 @@ import { VStack, Text } from 'native-base';
 import UserLabel from '@components/UserLabel';
 import { CommentModel } from '@interfaces/comment.model';
 import { UserBasicInfo } from '@interfaces/userBasicInfo.model';
+import firestoreDateFormat from '@utils/fireabseDateFormat';
 
 type Props = {
   commentData: CommentModel;
@@ -30,7 +31,7 @@ const Comment = ({ commentData, usersInfo }: Props) => {
       </Text>
       <VStack alignItems="flex-end">
         <Text color="white" fontWeight={100}>
-          {commentData.createdAt}
+          {firestoreDateFormat(commentData.createdAt)}
         </Text>
       </VStack>
     </VStack>

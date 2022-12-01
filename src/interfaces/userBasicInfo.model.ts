@@ -1,4 +1,4 @@
 export interface UserBasicInfo {
   username: string;
-  imageUrl: string;
+  imageUrl: string | undefined;
 }

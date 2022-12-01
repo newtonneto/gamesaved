@@ -124,6 +124,7 @@ const PostDetails = () => {
   };
 
   const getCommentsInfo = async (comments: CommentModel[]) => {
+    console.log('comments', comments);
     let infos: Record<string, UserBasicInfo> = {};
     let uuids: string[] = [];
 
@@ -133,38 +134,23 @@ const PostDetails = () => {
 
     uuids = [...new Set(uuids)];
 
-    await Promise.all(
-      uuids.map(async uuid => {
-        const user = await getUser(uuid);
-        const imageUrl = await getImage(user.avatarRef);
-
-        infos[uuid] = {
-          username: user.username,
-          imageUrl,
-        };
-      }),
-    );
-
-    setUsersInfo(infos);
-  };
-
-  const getComments = async () => {
     try {
-      const response = await firestore()
-        .collection<CommentsDto>('comments')
-        .doc(postUuid)
-        .get();
+      await Promise.all(
+        uuids.map(async uuid => {
+          const user = await getUser(uuid);
+          let imageUrl: string | undefined = undefined;
 
-      if (!response.exists) throw new Error('Comments not found');
+          if (user.avatarRef) {
+            imageUrl = await getImage(user.avatarRef);
+          }
 
-      const commentsData = response.data() as CommentsDto;
-
-      if (!commentsData) throw new Error('Comments not found');
-
-      await getCommentsInfo(commentsData.comments);
-      setComments(commentsData.comments);
+          infos[uuid] = {
+            username: user.username,
+            imageUrl,
+          };
+        }),
+      );
     } catch (err) {
-      console.log('getComments: ', err);
       Alert.alert(
         '>.<',
         generateErrorMessage(
@@ -179,6 +165,8 @@ const PostDetails = () => {
         ],
       );
     }
+
+    setUsersInfo(infos);
   };
 
   useEffect(() => {
@@ -194,7 +182,6 @@ const PostDetails = () => {
           imageData: fetchedImage,
         });
       } catch (err) {
-        console.log('getPostData: ', err);
         Alert.alert(
           '>.<',
           generateErrorMessage(
@@ -215,9 +202,22 @@ const PostDetails = () => {
       getPostData();
     }
 
-    getComments();
+    const subscriber = firestore()
+      .collection<CommentsDto>('comments')
+      .doc(postUuid)
+      .onSnapshot(async snapshot => {
+        if (snapshot.exists) {
+          const comments = snapshot.data()?.comments;
+          if (comments) {
+            await getCommentsInfo(comments);
+            setComments(comments);
+          }
+        }
+      });
 
     setIsLoading(false);
+
+    return subscriber;
   }, []);
 
   const onSubmit = async (formData: FormData) => {
