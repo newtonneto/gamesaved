@@ -117,8 +117,9 @@ const Guild = () => {
       if (!guildData) throw new Error('Guild not found');
 
       const { posts, ...rest } = guildData;
+
+      if (posts) setPostsData(posts);
       setGuild({ posts, ...rest });
-      setPostsData(posts.reverse());
       await getImage(guildData.bannerRef);
     } catch (err) {
       Alert.alert('>.<', 'Something went wrong', [

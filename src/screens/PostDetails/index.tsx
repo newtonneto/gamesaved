@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Alert, FlatList, ListRenderItem, StyleSheet } from 'react-native';
 import {
   Heading,
   VStack as NativeBaseVStack,
@@ -20,7 +20,6 @@ import VStack from '@components/VStack';
 import Input from '@components/Input';
 import Header from '@components/Header';
 import Button from '@components/Button';
-import ScrollView from '@components/ScrollView';
 import Toast from '@components/Toast';
 import UserLabel from '@components/UserLabel';
 import Loading from '@components/Loading';
@@ -28,15 +27,19 @@ import { PostDto } from '@interfaces/post.dto';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { CommentsDto } from '@interfaces/comments.dto';
 import { CommentModel } from '@interfaces/comment.model';
+import { UserBasicInfo } from '@interfaces/userBasicInfo.model';
 import {
   AXIS_X_MARGIN_CONTENT,
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
   TOAST_DURATION,
+  VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
 import firestoreDateFormat from '@utils/fireabseDateFormat';
 import { generateErrorMessage } from '@utils/generateErrorMessage';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
+import { FlatListSeparator } from '@src/components/FlatListComponents';
+import Comment from '@src/components/Comment';
 
 type RouteParams = {
   postUuid: string;
@@ -72,6 +75,7 @@ const PostDetails = () => {
     route.params as RouteParams;
   const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [usersInfo, setUsersInfo] = useState<Record<string, UserBasicInfo>>({});
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [post, setPost] = useState<Post>({
     postData: postData ? postData : ({} as PostDto),
@@ -119,6 +123,31 @@ const PostDetails = () => {
     }
   };
 
+  const getCommentsInfo = async (comments: CommentModel[]) => {
+    let infos: Record<string, UserBasicInfo> = {};
+    let uuids: string[] = [];
+
+    comments.forEach(comment => {
+      uuids.push(comment.owner);
+    });
+
+    uuids = [...new Set(uuids)];
+
+    await Promise.all(
+      uuids.map(async uuid => {
+        const user = await getUser(uuid);
+        const imageUrl = await getImage(user.avatarRef);
+
+        infos[uuid] = {
+          username: user.username,
+          imageUrl,
+        };
+      }),
+    );
+
+    setUsersInfo(infos);
+  };
+
   const getComments = async () => {
     try {
       const response = await firestore()
@@ -132,10 +161,10 @@ const PostDetails = () => {
 
       if (!commentsData) throw new Error('Comments not found');
 
-      console.log('commentsData', commentsData.comments);
-
+      await getCommentsInfo(commentsData.comments);
       setComments(commentsData.comments);
     } catch (err) {
+      console.log('getComments: ', err);
       Alert.alert(
         '>.<',
         generateErrorMessage(
@@ -165,6 +194,7 @@ const PostDetails = () => {
           imageData: fetchedImage,
         });
       } catch (err) {
+        console.log('getPostData: ', err);
         Alert.alert(
           '>.<',
           generateErrorMessage(
@@ -201,7 +231,7 @@ const PostDetails = () => {
           comments: firestore.FieldValue.arrayUnion({
             owner: userSession.uid,
             comment: formData.comment,
-            createdAt: 'kkk',
+            createdAt: firestore.Timestamp.now(),
           }),
         });
 
@@ -237,37 +267,52 @@ const PostDetails = () => {
     }
   };
 
+  const RenderItem: ListRenderItem<CommentModel> = ({ item }) => (
+    <Comment commentData={item} usersInfo={usersInfo} />
+  );
+
+  const HeaderComponent = () => (
+    <Fragment>
+      <UserLabel
+        image={imageData}
+        username={post.userData.username ? post.userData.username : ''}
+      />
+      <Heading size="md" color="white" w="full" mb={2}>
+        {postData ? postData.title : post.postData.title}
+      </Heading>
+      <Text color="white" width="full">
+        {post.postData.description ? post.postData.description : ''}
+      </Text>
+      <VStack width="full" alignItems="flex-end">
+        <Text
+          color="white"
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          fontSize="xs">
+          Criado em:{' '}
+          {post.postData.createdAt
+            ? firestoreDateFormat(post.postData.createdAt)
+            : ''}
+        </Text>
+      </VStack>
+    </Fragment>
+  );
+
   return (
     <ScreenWrapper>
       <VStack>
         <Header title={post.postData.title ? post.postData.title : ''} />
         {!isLoading ? (
-          <VStack w="full">
-            <ScrollView px={AXIS_X_PADDING_CONTENT}>
-              <UserLabel
-                image={imageData}
-                username={post.userData.username ? post.userData.username : ''}
-              />
-              <Heading size="md" color="white" w="full" mb={2}>
-                {postData ? postData.title : post.postData.title}
-              </Heading>
-              <Text color="white" width="full">
-                {post.postData.description ? post.postData.description : ''}
-              </Text>
-              <VStack width="full" alignItems="flex-end">
-                <Text
-                  color="white"
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                  fontSize="xs">
-                  Criado em:{' '}
-                  {post.postData.createdAt
-                    ? firestoreDateFormat(post.postData.createdAt)
-                    : ''}
-                </Text>
-              </VStack>
-            </ScrollView>
-            <NativeBaseVStack w="full" px={AXIS_X_MARGIN_CONTENT}>
+          <VStack w="full" px={AXIS_X_PADDING_CONTENT}>
+            <FlatList
+              data={comments}
+              renderItem={RenderItem}
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={HeaderComponent}
+              contentContainerStyle={styles.flatListContent}
+              style={styles.flatList}
+            />
+            <NativeBaseVStack w="full">
               <FormControl
                 isRequired
                 isInvalid={'comment' in errors}
@@ -304,5 +349,14 @@ const PostDetails = () => {
     </ScreenWrapper>
   );
 };
+
+const styles = StyleSheet.create({
+  flatListContent: {
+    paddingBottom: VERTICAL_PADDING_LISTS,
+  },
+  flatList: {
+    width: '100%',
+  },
+});
 
 export default PostDetails;

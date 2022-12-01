@@ -60,6 +60,7 @@ const PostCard = ({ uuid }: Props) => {
 
       return response.data() as ProfileDto;
     } catch (err) {
+      console.log('getUser: ', err);
       throw new Error('Something went wrong');
     }
   };
@@ -85,8 +86,10 @@ const PostCard = ({ uuid }: Props) => {
         const userData = await getUser(postData.owner);
         setUser(userData);
 
-        const imageData = await getImage(userData.avatarRef);
-        setImage(imageData);
+        if (userData.avatarRef) {
+          const imageData = await getImage(userData.avatarRef);
+          setImage(imageData);
+        }
       } catch (err) {
         setHasError(true);
       } finally {
