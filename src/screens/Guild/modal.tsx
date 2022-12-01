@@ -14,6 +14,7 @@ import { NO_LABEL_INPUT_MARGIN_BOTTOM } from '@utils/constants';
 type Props = {
   visible: boolean;
   setVisible: (value: boolean) => void;
+  setPostsData: (value: string[]) => void;
   guildUuid: string;
   userUuid: string;
 };
@@ -28,7 +29,13 @@ const schema = yup.object().shape({
   description: yup.string().required('Prenchimento obrigatorio'),
 });
 
-const PostModal = ({ visible, setVisible, guildUuid, userUuid }: Props) => {
+const PostModal = ({
+  visible,
+  setVisible,
+  setPostsData,
+  guildUuid,
+  userUuid,
+}: Props) => {
   const {
     control,
     handleSubmit,
@@ -61,6 +68,7 @@ const PostModal = ({ visible, setVisible, guildUuid, userUuid }: Props) => {
       });
 
       toggleModal();
+      setPostsData([]);
 
       Alert.alert('=D', 'Post published!', [
         {

@@ -118,8 +118,8 @@ const Guild = () => {
       if (!guildData) throw new Error('Guild not found');
 
       const { posts, ...rest } = guildData;
-      setGuild({ posts: posts.reverse(), ...rest });
-
+      setGuild({ posts, ...rest });
+      setPostsData(posts.reverse());
       await getImage(guildData.bannerRef);
     } catch (err) {
       Alert.alert('>.<', 'Something went wrong', [
@@ -248,6 +248,7 @@ const Guild = () => {
       <PostModal
         visible={isModalVisible}
         setVisible={setIsModalVisible}
+        setPostsData={setPostsData}
         guildUuid={guildUuid.current}
         userUuid={userSession.uid}
       />
@@ -402,7 +403,7 @@ const Guild = () => {
             {hasGuild ? (
               <VStack w="full">
                 <FlatList
-                  data={guild.posts}
+                  data={postsData}
                   renderItem={RenderPosts}
                   showsVerticalScrollIndicator={false}
                   ListHeaderComponent={GuildHeader}
