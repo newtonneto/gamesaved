@@ -14,10 +14,10 @@ export declare global {
       GuildScreen: undefined;
       CreateGuild: undefined;
       PostDetails: {
-        postData: PostDto;
-        userData: ProfileDto;
-        imageData: string | undefined;
         postUuid: string;
+        postData?: PostDto;
+        userData?: ProfileDto;
+        imageData?: string | undefined;
       };
     }
   }

@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import firestore from '@react-native-firebase/firestore';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useNavigation } from '@react-navigation/native';
 
 import Input from '@components/Input';
 import Button from '@components/Button';
@@ -33,6 +34,7 @@ const PostModal = ({ visible, setVisible, guildUuid, userUuid }: Props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(schema) });
+  const navigation = useNavigation();
 
   const toggleModal = () => {
     setVisible(!visible);
@@ -58,10 +60,15 @@ const PostModal = ({ visible, setVisible, guildUuid, userUuid }: Props) => {
         comments: [],
       });
 
+      toggleModal();
+
       Alert.alert('=D', 'Post published!', [
         {
           text: 'Ok',
-          onPress: toggleModal,
+          onPress: () =>
+            navigation.navigate('PostDetails', {
+              postUuid: id,
+            }),
         },
       ]);
     } catch (err) {

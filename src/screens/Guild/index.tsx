@@ -33,6 +33,7 @@ import ScreenWrapper from '@components/ScreenWrapper';
 import PostCard from '@components/PostCard';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { GuildDto } from '@interfaces/guild.dto';
+import { PostDto } from '@interfaces/post.dto';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
@@ -70,6 +71,7 @@ const Guild = () => {
   const [guilds, setGuilds] = useState<GuildDto[]>([]);
   const [image, setImage] = useState<string | undefined>(undefined);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [postsData, setPostsData] = useState<string[]>([]);
   const guildUuid = useRef<string>('');
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
@@ -107,17 +109,19 @@ const Guild = () => {
     setHasGuild(true);
 
     try {
-      guildRef.current.doc(guildUuid.current).onSnapshot(async snapshot => {
-        if (snapshot.exists) {
-          const guild = snapshot.data() as GuildDto;
+      const response = await guildRef.current.doc(guildUuid.current).get();
 
-          setGuild(guild);
-          await getImage(guild.bannerRef);
-        } else {
-          setHasGuild(false);
-        }
-      });
-    } catch (error) {
+      if (!response.exists) throw new Error('Guild not found');
+
+      const guildData = response.data();
+
+      if (!guildData) throw new Error('Guild not found');
+
+      const { posts, ...rest } = guildData;
+      setGuild({ posts: posts.reverse(), ...rest });
+
+      await getImage(guildData.bannerRef);
+    } catch (err) {
       Alert.alert('>.<', 'Something went wrong', [
         {
           text: 'Voltar',
