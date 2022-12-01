@@ -31,9 +31,10 @@ import Toast from '@components/Toast';
 import Header from '@components/Header';
 import ScreenWrapper from '@components/ScreenWrapper';
 import PostCard from '@components/PostCard';
+import GuildCard from '@components/GuildCard';
+import { FlatListSeparator } from '@components/FlatListComponents';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { GuildDto } from '@interfaces/guild.dto';
-import { PostDto } from '@interfaces/post.dto';
 import {
   AXIS_X_PADDING_CONTENT,
   NO_LABEL_INPUT_MARGIN_BOTTOM,
@@ -42,8 +43,6 @@ import {
   VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
-import GuildCard from '@src/components/GuildCard';
-import { FlatListSeparator } from '@src/components/FlatListComponents';
 import PostModal from './modal';
 
 type FormData = {

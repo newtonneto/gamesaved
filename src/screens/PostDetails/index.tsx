@@ -23,9 +23,11 @@ import Button from '@components/Button';
 import ScrollView from '@components/ScrollView';
 import Toast from '@components/Toast';
 import UserLabel from '@components/UserLabel';
+import Loading from '@components/Loading';
 import { PostDto } from '@interfaces/post.dto';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { CommentsDto } from '@interfaces/comments.dto';
+import { CommentModel } from '@interfaces/comment.model';
 import {
   AXIS_X_MARGIN_CONTENT,
   AXIS_X_PADDING_CONTENT,
@@ -35,7 +37,6 @@ import {
 import firestoreDateFormat from '@utils/fireabseDateFormat';
 import { generateErrorMessage } from '@utils/generateErrorMessage';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
-import Loading from '@src/components/Loading';
 
 type RouteParams = {
   postUuid: string;
@@ -69,7 +70,7 @@ const PostDetails = () => {
   } = useForm<FormData>({ resolver: yupResolver(schema) });
   const { postData, userData, imageData, postUuid } =
     route.params as RouteParams;
-  const [comments, setComments] = useState<CommentsDto[]>([]);
+  const [comments, setComments] = useState<CommentModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false);
   const [post, setPost] = useState<Post>({
@@ -118,6 +119,39 @@ const PostDetails = () => {
     }
   };
 
+  const getComments = async () => {
+    try {
+      const response = await firestore()
+        .collection<CommentsDto>('comments')
+        .doc(postUuid)
+        .get();
+
+      if (!response.exists) throw new Error('Comments not found');
+
+      const commentsData = response.data() as CommentsDto;
+
+      if (!commentsData) throw new Error('Comments not found');
+
+      console.log('commentsData', commentsData.comments);
+
+      setComments(commentsData.comments);
+    } catch (err) {
+      Alert.alert(
+        '>.<',
+        generateErrorMessage(
+          err,
+          'Conteúdo indisponível, tente novamente mais tarde.',
+        ),
+        [
+          {
+            text: 'Ok',
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    }
+  };
+
   useEffect(() => {
     const getPostData = async () => {
       try {
@@ -150,6 +184,8 @@ const PostDetails = () => {
     if (!postData || !userData) {
       getPostData();
     }
+
+    getComments();
 
     setIsLoading(false);
   }, []);
@@ -199,12 +235,6 @@ const PostDetails = () => {
     } finally {
       setIsLoadingRequest(false);
     }
-  };
-
-  const getHeaderTitle = () => {
-    if (isLoading) return 'Loading...';
-
-    return postData ? postData.title : post.postData.title;
   };
 
   return (
