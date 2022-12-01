@@ -124,7 +124,6 @@ const PostDetails = () => {
   };
 
   const getCommentsInfo = async (comments: CommentModel[]) => {
-    console.log('comments', comments);
     let infos: Record<string, UserBasicInfo> = {};
     let uuids: string[] = [];
 

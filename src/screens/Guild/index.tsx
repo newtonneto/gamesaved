@@ -228,7 +228,6 @@ const Guild = () => {
         setGuilds(guildsData);
       }
     } catch (error) {
-      console.log('error: ', error);
       Alert.alert(
         '>.<',
         'Não foi possível concluir a sua solicitação, tente novamente mais tarde.',

@@ -60,7 +60,6 @@ const PostCard = ({ uuid }: Props) => {
 
       return response.data() as ProfileDto;
     } catch (err) {
-      console.log('getUser: ', err);
       throw new Error('Something went wrong');
     }
   };
