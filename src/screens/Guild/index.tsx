@@ -150,14 +150,6 @@ const Guild = () => {
             await getGuild();
           }
         }
-
-        if (userSession.photoURL) {
-          const imageUrl = await storage()
-            .ref(userSession.photoURL)
-            .getDownloadURL();
-
-          setImage(imageUrl);
-        }
       } catch (err) {
         Alert.alert(
           '>.<',
