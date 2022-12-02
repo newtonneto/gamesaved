@@ -124,11 +124,13 @@ const PostDetails = () => {
   };
 
   const getCommentsInfo = async (comments: CommentModel[]) => {
-    let infos: Record<string, UserBasicInfo> = {};
+    let infos: Record<string, UserBasicInfo> = { ...usersInfo };
     let uuids: string[] = [];
 
     comments.forEach(comment => {
-      uuids.push(comment.owner);
+      if (!infos[comment.owner]) {
+        uuids.push(comment.owner);
+      }
     });
 
     uuids = [...new Set(uuids)];
