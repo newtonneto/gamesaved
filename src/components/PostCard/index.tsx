@@ -6,7 +6,6 @@ import {
   Text,
   VStack,
   Spinner,
-  Avatar,
   useTheme,
 } from 'native-base';
 import firestore from '@react-native-firebase/firestore';

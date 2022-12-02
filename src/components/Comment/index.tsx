@@ -1,5 +1,6 @@
 import React from 'react';
-import { VStack, Text } from 'native-base';
+import { VStack, Text, useTheme, HStack } from 'native-base';
+import { ThumbsUp, ThumbsDown } from 'phosphor-react-native';
 
 import UserLabel from '@components/UserLabel';
 import { CommentModel } from '@interfaces/comment.model';
@@ -12,6 +13,8 @@ type Props = {
 };
 
 const Comment = ({ commentData, usersInfo }: Props) => {
+  const { colors } = useTheme();
+
   return (
     <VStack
       borderBottomColor="secondary.700"
@@ -29,11 +32,19 @@ const Comment = ({ commentData, usersInfo }: Props) => {
       <Text color="white" fontWeight={500}>
         {commentData.comment}
       </Text>
-      <VStack alignItems="flex-end">
+      <HStack alignItems="center" justifyContent="space-between">
+        <HStack>
+          <ThumbsUp
+            color={colors.secondary[700]}
+            size={16}
+            style={{ marginRight: 16 }}
+          />
+          <ThumbsDown color={colors.secondary[700]} size={16} />
+        </HStack>
         <Text color="white" fontWeight={100}>
           {firestoreDateFormat(commentData.createdAt)}
         </Text>
-      </VStack>
+      </HStack>
     </VStack>
   );
 };
