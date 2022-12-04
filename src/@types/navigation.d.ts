@@ -1,3 +1,6 @@
+import { PostDto } from '@interfaces/post.dto';
+import { ProfileDto } from '@interfaces/profile.dto';
+
 export declare global {
   namespace ReactNavigation {
     interface RootParamList {
@@ -10,6 +13,12 @@ export declare global {
       UserStats: { uuid: string };
       GuildScreen: undefined;
       CreateGuild: undefined;
+      PostDetails: {
+        postUuid: string;
+        postData?: PostDto;
+        userData?: ProfileDto;
+        imageData?: string | undefined;
+      };
     }
   }
 }

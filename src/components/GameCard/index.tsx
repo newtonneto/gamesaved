@@ -37,8 +37,8 @@ type Props = {
 const GameCard = ({ game, inventory, inventoryRef }: Props) => {
   const toast = useToast();
   const navigation = useNavigation();
-  const [isSaved, setIsSaved] = useState<boolean>(false);
   const { colors } = useTheme();
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   const released = formatDate(game.released);
 
   useEffect(() => {

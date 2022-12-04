@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   flatListContent: {
-    paddingVertical: VERTICAL_PADDING_LISTS,
+    paddingBottom: VERTICAL_PADDING_LISTS,
   },
 });
 

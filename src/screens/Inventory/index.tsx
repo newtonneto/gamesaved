@@ -195,7 +195,7 @@ const Inventory = () => {
 
 const styles = StyleSheet.create({
   flatListContent: {
-    paddingVertical: VERTICAL_PADDING_LISTS,
+    paddingBottom: VERTICAL_PADDING_LISTS,
   },
   flatList: {
     width: '100%',

@@ -30,6 +30,9 @@ import Button from '@components/Button';
 import Toast from '@components/Toast';
 import Header from '@components/Header';
 import ScreenWrapper from '@components/ScreenWrapper';
+import PostCard from '@components/PostCard';
+import GuildCard from '@components/GuildCard';
+import { FlatListSeparator } from '@components/FlatListComponents';
 import { ProfileDto } from '@interfaces/profile.dto';
 import { GuildDto } from '@interfaces/guild.dto';
 import {
@@ -40,8 +43,7 @@ import {
   VERTICAL_PADDING_LISTS,
 } from '@utils/constants';
 import firestoreValueIsValid from '@utils/firestoreValueIsValid';
-import GuildCard from '@src/components/GuildCard';
-import { FlatListSeparator } from '@src/components/FlatListComponents';
+import PostModal from './modal';
 
 type FormData = {
   searchValue: string;
@@ -67,6 +69,8 @@ const Guild = () => {
   const [guild, setGuild] = useState<GuildDto>({} as GuildDto);
   const [guilds, setGuilds] = useState<GuildDto[]>([]);
   const [image, setImage] = useState<string | undefined>(undefined);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [postsData, setPostsData] = useState<string[]>([]);
   const guildUuid = useRef<string>('');
   const userSession: FirebaseAuthTypes.User = auth().currentUser!;
   const profileRef = useRef<
@@ -104,20 +108,30 @@ const Guild = () => {
     setHasGuild(true);
 
     try {
-      const response = await firestore()
-        .collection<GuildDto>('guilds')
-        .doc(guildUuid.current)
-        .get();
+      const response = await guildRef.current.doc(guildUuid.current).get();
+
+      if (!response.exists) throw new Error('Guild not found');
 
       const guildData = response.data();
 
-      if (guildData) {
-        await getImage(guildData.bannerRef);
+      if (!guildData) throw new Error('Guild not found');
 
-        setGuild(guildData);
-      }
-    } catch (error) {
-      Alert.alert('Error');
+      const { posts, ...rest } = guildData;
+
+      if (posts) setPostsData(posts);
+      setGuild({ posts, ...rest });
+      await getImage(guildData.bannerRef);
+    } catch (err) {
+      Alert.alert('>.<', 'Something went wrong', [
+        {
+          text: 'Voltar',
+          onPress: () => navigation.goBack(),
+        },
+        {
+          text: 'Tentar novamente',
+          onPress: () => getGuild(),
+        },
+      ]);
     }
   };
 
@@ -135,14 +149,6 @@ const Guild = () => {
             guildUuid.current = profile.guild;
             await getGuild();
           }
-        }
-
-        if (userSession.photoURL) {
-          const imageUrl = await storage()
-            .ref(userSession.photoURL)
-            .getDownloadURL();
-
-          setImage(imageUrl);
         }
       } catch (err) {
         Alert.alert(
@@ -214,7 +220,6 @@ const Guild = () => {
         setGuilds(guildsData);
       }
     } catch (error) {
-      console.log('error: ', error);
       Alert.alert(
         '>.<',
         'Não foi possível concluir a sua solicitação, tente novamente mais tarde.',
@@ -231,6 +236,13 @@ const Guild = () => {
 
   const GuildHeader = () => (
     <VStack>
+      <PostModal
+        visible={isModalVisible}
+        setVisible={setIsModalVisible}
+        setPostsData={setPostsData}
+        guildUuid={guildUuid.current}
+        userUuid={userSession.uid}
+      />
       <Fab
         placement="top-right"
         renderInPortal={false}
@@ -262,7 +274,7 @@ const Guild = () => {
         ) : (
           <VStack justifyContent="center">
             <Text fontSize="4xl" color="white">
-              Guild Banner
+              {guild.name}
             </Text>
           </VStack>
         )}
@@ -293,6 +305,12 @@ const Guild = () => {
             {guild.description}
           </Text>
         </VStack>
+        <Button
+          title="New Post"
+          w="full"
+          onPress={() => setIsModalVisible(true)}
+          mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
+        />
       </VStack>
     </VStack>
   );
@@ -363,6 +381,10 @@ const Guild = () => {
     <GuildCard guild={item} />
   );
 
+  const RenderPosts: ListRenderItem<string> = ({ item }) => (
+    <PostCard uuid={item} />
+  );
+
   return (
     <ScreenWrapper>
       <VStack>
@@ -370,15 +392,17 @@ const Guild = () => {
         {!isLoading ? (
           <VStack w="full">
             {hasGuild ? (
-              <FlatList
-                data={[]}
-                renderItem={() => null}
-                showsVerticalScrollIndicator={false}
-                ListHeaderComponent={GuildHeader}
-                style={{
-                  width: '100%',
-                }}
-              />
+              <VStack w="full">
+                <FlatList
+                  data={postsData}
+                  renderItem={RenderPosts}
+                  showsVerticalScrollIndicator={false}
+                  ListHeaderComponent={GuildHeader}
+                  ItemSeparatorComponent={FlatListSeparator}
+                  contentContainerStyle={styles.flatListContent}
+                  style={styles.flatList}
+                />
+              </VStack>
             ) : (
               <VStack px={AXIS_X_PADDING_CONTENT} w="full">
                 <FlatList
@@ -404,7 +428,7 @@ const Guild = () => {
 
 const styles = StyleSheet.create({
   flatListContent: {
-    paddingVertical: VERTICAL_PADDING_LISTS,
+    paddingBottom: VERTICAL_PADDING_LISTS,
   },
   flatList: {
     width: '100%',

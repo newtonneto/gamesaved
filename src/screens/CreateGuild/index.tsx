@@ -41,7 +41,7 @@ const schema = yup.object().shape({
   name: yup
     .string()
     .required('Prenchimento obrigatorio')
-    .min(6, 'Nome deve ter no mínimo 6 caracteres'),
+    .min(4, 'Nome deve ter no mínimo 4 caracteres'),
   description: yup
     .string()
     .required('Prenchimento obrigatorio')
@@ -57,7 +57,7 @@ const schema = yup.object().shape({
     .max(32, 'Grito de Guerra deve ter no máximo 32 caracteres'),
 });
 
-const CreateGuild: React.FC = () => {
+const CreateGuild = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
@@ -239,7 +239,7 @@ const CreateGuild: React.FC = () => {
                     autoCorrect={false}
                     selectionColor="secondary.700"
                     isDisabled={isLoadingRequest}
-                    autoCapitalize="words"
+                    autoCapitalize="sentences"
                   />
                 )}
                 name="description"
@@ -265,7 +265,7 @@ const CreateGuild: React.FC = () => {
                     autoCorrect={false}
                     selectionColor="secondary.700"
                     isDisabled={isLoadingRequest}
-                    autoCapitalize="words"
+                    autoCapitalize="sentences"
                   />
                 )}
                 name="warCry"

@@ -5,12 +5,13 @@ import { BUTTON_HEIGHT } from '@utils/constants';
 
 type Props = IButtonProps & {
   title: string;
+  color?: string;
 };
 
-const Button = ({ title, ...rest }: Props) => {
+const Button = ({ title, color = 'green.700', ...rest }: Props) => {
   return (
     <NativeBaseButton
-      bg="green.700"
+      bg={color}
       h={BUTTON_HEIGHT}
       fontSize="sm"
       rounded="sm"

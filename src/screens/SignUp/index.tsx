@@ -193,7 +193,6 @@ const SignUp = () => {
       await firestore().collection('parties').doc(uid).set({ members: [] });
       await auth().signOut();
     } catch (err: any) {
-      console.log('createProfile: ', err);
       throw new Error(err.code);
     }
   };
