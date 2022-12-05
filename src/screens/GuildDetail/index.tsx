@@ -151,13 +151,13 @@ const GuildDetail = () => {
                   fontSize="sm"
                   color="white"
                   ml={4}
-                  mb={4}
+                  mb={NO_LABEL_INPUT_MARGIN_BOTTOM}
                   numberOfLines={1}
                   ellipsizeMode="tail">
                   {guild.warCry}
                 </Heading>
                 <VStack w="full" alignItems="flex-start">
-                  <Text color="white" mb={4}>
+                  <Text color="white" mb={NO_LABEL_INPUT_MARGIN_BOTTOM}>
                     {guild.description}
                   </Text>
                 </VStack>
