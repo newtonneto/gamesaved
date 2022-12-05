@@ -9,6 +9,7 @@ import {
   Text,
   useToast,
   Fab,
+  HStack,
 } from 'native-base';
 import firestore, {
   FirebaseFirestoreTypes,
@@ -18,7 +19,12 @@ import storage from '@react-native-firebase/storage';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { MagnifyingGlass, SignOut, XCircle } from 'phosphor-react-native';
+import {
+  MagnifyingGlass,
+  SignOut,
+  XCircle,
+  UsersFour,
+} from 'phosphor-react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
@@ -305,6 +311,13 @@ const Guild = () => {
             {guild.description}
           </Text>
         </VStack>
+        <HStack width="full" mb={4}>
+          <UsersFour color={colors.white} />
+          <Text ml={4} color="white">
+            Membros:{' '}
+          </Text>
+          <Text color="white">{guild.members.length}</Text>
+        </HStack>
         <Button
           title="New Post"
           w="full"
