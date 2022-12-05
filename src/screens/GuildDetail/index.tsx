@@ -81,6 +81,13 @@ const GuildDetail = () => {
           guild: guildUuid.current,
         });
 
+      firestore()
+        .collection<GuildDto>('guilds')
+        .doc(guildUuid.current)
+        .update({
+          members: firestore.FieldValue.arrayUnion(userSession.uid),
+        });
+
       Alert.alert('=D', 'Guild joined with success', [
         {
           text: 'Ok',
