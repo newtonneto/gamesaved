@@ -12,6 +12,7 @@ import {
 } from 'native-base';
 import storage from '@react-native-firebase/storage';
 import { Warning } from 'phosphor-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { LinearGradientView } from './styles';
 import { GuildDto } from '@interfaces/guild.dto';
@@ -25,6 +26,7 @@ type Props = {
 
 const GuildCard = ({ guild }: Props) => {
   const { colors } = useTheme();
+  const navigation = useNavigation();
   const [image, setImage] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
@@ -50,8 +52,12 @@ const GuildCard = ({ guild }: Props) => {
     getImage();
   }, []);
 
+  const handleNavigation = () => {
+    navigation.navigate('GuildDetail', { guild, imageUrl: image });
+  };
+
   return (
-    <Pressable>
+    <Pressable onPress={handleNavigation}>
       <Box
         w="full"
         height="100px"

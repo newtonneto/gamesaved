@@ -50,7 +50,7 @@ type FormData = {
 };
 
 const schema = yup.object().shape({
-  searchValue: yup.string(),
+  searchValue: yup.string().min(3),
 });
 
 const Guild = () => {
