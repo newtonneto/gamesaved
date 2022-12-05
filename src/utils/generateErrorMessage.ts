@@ -11,8 +11,6 @@ export const generateErrorMessage = (
   if (error instanceof Error) {
     errorMessage = error.message;
   } else if (error instanceof NativeFirebaseError) {
-    console.log('???');
-
     firebaseExceptions[error.code]
       ? (errorMessage = firebaseExceptions[error.code])
       : (errorMessage = defaultMessage);
