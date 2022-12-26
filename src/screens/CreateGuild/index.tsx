@@ -41,7 +41,8 @@ const schema = yup.object().shape({
   name: yup
     .string()
     .required('Prenchimento obrigatorio')
-    .min(4, 'Nome deve ter no mínimo 4 caracteres'),
+    .min(4, 'Nome deve ter no mínimo 4 caracteres')
+    .max(20, 'Nome deve ter no máximo 20 caracteres'),
   description: yup
     .string()
     .required('Prenchimento obrigatorio')

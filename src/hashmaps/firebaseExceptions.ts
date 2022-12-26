@@ -4,6 +4,7 @@ const firebaseExceptions: { [key: string]: string } = {
   'auth/user-not-found': 'Usuário não encontrado',
   'auth/email-already-in-use': 'E-mail já cadastrado',
   'storage/unauthorized': 'Usuário não autorizado',
+  'firestore/not-found': 'As informações solicitadas não existem',
 };
 
 export default firebaseExceptions;
