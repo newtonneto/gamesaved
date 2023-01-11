@@ -82,6 +82,14 @@ const Home = () => {
     }
   };
 
+  const handleInvalidGames = (games: Game[]) => {
+    const filtredGames = games.filter(
+      game => game.background_image && game.released && game.metacritic,
+    );
+
+    setGames(filtredGames);
+  };
+
   const getGames = useCallback(async () => {
     setValue('searchValue', '');
     setIsLoading(true);
@@ -92,7 +100,7 @@ const Home = () => {
         `games?ordering=-metacritic&key=${GAMEAPI_KEY}`,
       );
 
-      setGames(response.data.results);
+      handleInvalidGames(response.data.results);
       handleNextPage(response.data);
     } catch (err) {
       Alert.alert('>.<', 'Conteúdo indisponível, tente novamente mais tarde.', [
