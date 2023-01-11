@@ -120,6 +120,8 @@ const Guild = () => {
 
       const guildData = response.data();
 
+      console.log('guild: ', guildData);
+
       if (!guildData) throw new Error('Guild not found');
 
       const { posts, ...rest } = guildData;
@@ -311,13 +313,15 @@ const Guild = () => {
             {guild.description}
           </Text>
         </VStack>
-        <HStack width="full" mb={4}>
-          <UsersFour color={colors.white} />
-          <Text ml={4} color="white">
-            Membros:{' '}
-          </Text>
-          <Text color="white">{guild.members.length}</Text>
-        </HStack>
+        {guild && guild.members && (
+          <HStack width="full" mb={4}>
+            <UsersFour color={colors.white} />
+            <Text ml={4} color="white">
+              Membros:{' '}
+            </Text>
+            <Text color="white">{guild.members.length}</Text>
+          </HStack>
+        )}
         <Button
           title="New Post"
           w="full"

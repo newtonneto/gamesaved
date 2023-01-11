@@ -82,6 +82,14 @@ const Home = () => {
     }
   };
 
+  const handleInvalidGames = (games: Game[]) => {
+    const filteredGames = games.filter(
+      game => game.background_image && game.released && game.metacritic,
+    );
+
+    return filteredGames;
+  };
+
   const getGames = useCallback(async () => {
     setValue('searchValue', '');
     setIsLoading(true);
@@ -92,7 +100,8 @@ const Home = () => {
         `games?ordering=-metacritic&key=${GAMEAPI_KEY}`,
       );
 
-      setGames(response.data.results);
+      const filteredGames = handleInvalidGames(response.data.results);
+      setGames(filteredGames);
       handleNextPage(response.data);
     } catch (err) {
       Alert.alert('>.<', 'Conteúdo indisponível, tente novamente mais tarde.', [
@@ -130,7 +139,8 @@ const Home = () => {
     try {
       const response = await rawg.get<GamesPage>(nextUrl.current);
 
-      setGames([...games, ...response.data.results]);
+      const filteredGames = handleInvalidGames(response.data.results);
+      setGames([...games, ...filteredGames]);
       handleNextPage(response.data);
     } catch (err) {
       Alert.alert('>.<', 'Conteúdo indisponível, tente novamente mais tarde.', [
@@ -171,7 +181,8 @@ const Home = () => {
           `games?search=${data.searchValue}&key=${GAMEAPI_KEY}`,
         );
 
-        setGames(response.data.results);
+        const filteredGames = handleInvalidGames(response.data.results);
+        setGames(filteredGames);
         handleNextPage(response.data);
         searchDone.current = true;
       } catch (err) {
